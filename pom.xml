@@ -15,7 +15,7 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>war</packaging>
 	<name>StudentJobPortal</name>
-	<description>Website Tìm Kiếm Việc Làm Cho Sinh Viên (Student Job Portal) - Chuẩn WebApp JSP + Spring Boot 3</description>
+	<description>Website Tìm Kiếm Việc Làm Cho Sinh Viên - Chuẩn Spring Boot MVC &amp; Thymeleaf FPT Polytechnic</description>
 
 	<properties>
 		<java.version>21</java.version>
@@ -23,57 +23,19 @@
 	</properties>
 
 	<dependencies>
-		<!-- 1. Spring Boot Web (MVC, REST, Tomcat nhúng) -->
+		<!-- 1. Spring Boot Web (MVC, DispatcherServlet, Tomcat nhúng) -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
 
-		<!-- 2. Hỗ trợ Render giao diện JSP trong WebApp -->
-		<dependency>
-			<groupId>org.apache.tomcat.embed</groupId>
-			<artifactId>tomcat-embed-jasper</artifactId>
-			<scope>provided</scope>
-		</dependency>
-
-		<!-- 3. Thư viện thẻ JSTL (Jakarta EE 10 / Spring Boot 3) -->
-		<dependency>
-			<groupId>jakarta.servlet.jsp.jstl</groupId>
-			<artifactId>jakarta.servlet.jsp.jstl-api</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.glassfish.web</groupId>
-			<artifactId>jakarta.servlet.jsp.jstl</artifactId>
-		</dependency>
-
-		<!-- 4. Spring Data JPA (Hibernate ORM) -->
+		<!-- 2. Thymeleaf Template Engine (Chuẩn theo Slide bài giảng FPT Polytechnic) -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-data-jpa</artifactId>
+			<artifactId>spring-boot-starter-thymeleaf</artifactId>
 		</dependency>
 
-		<!-- 5. Driver kết nối SQL Server (Chuẩn Java 5) -->
-		<dependency>
-			<groupId>com.microsoft.sqlserver</groupId>
-			<artifactId>mssql-jdbc</artifactId>
-			<scope>runtime</scope>
-		</dependency>
-
-		<!-- H2 in-memory Database for safe & fast JUnit 5 Testing -->
-		<dependency>
-			<groupId>com.h2database</groupId>
-			<artifactId>h2</artifactId>
-			<scope>test</scope>
-		</dependency>
-
-		<!-- 6. Lombok (Tự động sinh Getter, Setter, Constructors, Builder) -->
-		<dependency>
-			<groupId>org.projectlombok</groupId>
-			<artifactId>lombok</artifactId>
-			<optional>true</optional>
-		</dependency>
-
-		<!-- 7. Spring Boot DevTools (Hot Reload khi sửa JSP/Java) -->
+		<!-- 3. Spring Boot DevTools (Hot reload khi sửa file html/templates/java) -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-devtools</artifactId>
@@ -81,7 +43,34 @@
 			<optional>true</optional>
 		</dependency>
 
-		<!-- 8. Thư viện Kiểm thử (JUnit 5 Jupiter, Mockito, AssertJ) -->
+		<!-- 4. Project Lombok (Giảm thiểu mã boilerplate @Data, @Builder) -->
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<optional>true</optional>
+		</dependency>
+
+		<!-- 5. Spring Data JPA (Hibernate ORM) -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-jpa</artifactId>
+		</dependency>
+
+		<!-- 6. Driver Microsoft SQL Server -->
+		<dependency>
+			<groupId>com.microsoft.sqlserver</groupId>
+			<artifactId>mssql-jdbc</artifactId>
+			<scope>runtime</scope>
+		</dependency>
+
+		<!-- 7. H2 Database In-Memory cho Test Suite độc lập -->
+		<dependency>
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<!-- 8. Thư viện Kiểm thử JUnit 5 & Mockito -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>

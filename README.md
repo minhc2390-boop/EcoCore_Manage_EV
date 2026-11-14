@@ -1,5 +1,5 @@
 # StudentJobPortal - Nền Tảng Tìm Việc Làm & Thực Tập Cho Sinh Viên
-> **Dự án Môn học Java 5 / Spring Boot WebApp - FPT Polytechnic**
+> **Dự án Chuẩn Spring Boot MVC & Thymeleaf theo Slide bài giảng Java 5 - FPT Polytechnic**
 
 ---
 
@@ -10,45 +10,52 @@
 - **Trang chủ tìm kiếm thông minh**: Lọc việc làm theo ngành nghề, từ khóa và hình thức làm việc.
 - **Việc làm ca linh hoạt**: Doanh nghiệp công khai lịch ca sáng/chiều/tối để sinh viên đăng ký khớp với thời khóa biểu học tập.
 - **Nộp hồ sơ ứng tuyển trực tuyến**: Sinh viên gửi thông tin, ghi chú lịch rảnh và CV online trực tiếp cho nhà tuyển dụng.
-- **Doanh nghiệp uy tín**: Hệ thống phân loại doanh nghiệp rõ ràng, ngăn ngừa bẫy lừa đảo/đa cấp.
+- **Trang Demo Hello World**: Minh họa chuẩn Slide 1.1 (`/poly/hello`).
 - **REST API**: Cung cấp API (`/api/jobs`) phục vụ tra cứu dữ liệu dạng JSON.
 
 ---
 
-## 2. Công nghệ & Kiến trúc Hệ thống
+## 2. Công nghệ & Kiến trúc Hệ thống (Chuẩn Slide 1.1, 1.2, 2.1, 2.2)
 - **Ngôn ngữ**: Java 21 LTS
 - **Framework**: Spring Boot 3.2.5 (Spring MVC, Spring Data JPA)
-- **Giao diện Web**: WebApp JSP & JSTL (`src/main/webapp/WEB-INF/views/`), Bootstrap 5, Bootstrap Icons
-- **Đóng gói**: Đóng gói dạng WAR (`<packaging>war</packaging>` và `SpringBootServletInitializer`)
+- **Template Engine**: **Thymeleaf** (`src/main/resources/templates/`), Bootstrap 5, Bootstrap Icons
+- **Thư mục tĩnh**: `src/main/resources/static/` (CSS, JS, Images)
+- **Đóng gói**: Đóng gói WAR (`<packaging>war</packaging>` và `ServletInitializer.java`)
 - **Cơ sở dữ liệu**: Microsoft SQL Server (`StudentJobDB`) qua Hibernate ORM
 - **Thư viện hỗ trợ**: Project Lombok (`@Data`, `@Builder`, `@NoArgsConstructor`, `@AllArgsConstructor`)
 - **Kiểm thử tự động**: JUnit 5 (Jupiter), Mockito, `maven-surefire-plugin`
 
 ---
 
-## 3. Cấu trúc thư mục (Phân tầng Chuẩn Java 5)
+## 3. Cấu trúc thư mục (Chuẩn Slide 1.1 FPT Polytechnic)
 ```text
 StudentJobPortal/
 ├── src/
 │   ├── main/
 │   │   ├── java/com/studentjob/
 │   │   │   ├── config/          # Cấu hình hệ thống & Khởi tạo dữ liệu mẫu (DataInitializer)
-│   │   │   ├── controller/      # Web Controllers (JSP) & REST API Controllers
+│   │   │   ├── controller/      # Web Controllers (Thymeleaf) & REST API Controllers
 │   │   │   ├── dto/             # Data Transfer Objects & ApiResponse
 │   │   │   ├── entity/          # JPA Entities (User, Employer, JobPosting, JobCategory, JobApplication)
 │   │   │   ├── repository/      # Spring Data JPA Repositories
 │   │   │   ├── service/         # Interfaces & Implementations nghiệp vụ
 │   │   │   │   └── impl/
 │   │   │   ├── exception/       # Xử lý ngoại lệ tập trung (ResourceNotFoundException, GlobalExceptionHandler)
-│   │   │   └── StudentJobApplication.java  # File khởi chạy ứng dụng (kế thừa SpringBootServletInitializer)
-│   │   ├── resources/
-│   │   │   └── application.properties       # Cấu hình CSDL SQL Server, port, view resolver
-│   │   └── webapp/
-│   │       ├── WEB-INF/views/   # Giao diện JSP & JSTL (common header/footer, index, jobs)
-│   │       └── assets/          # Thư mục tĩnh (CSS, JS, hình ảnh)
+│   │   │   ├── ServletInitializer.java     # Cấu hình WAR deployment (Slide 1.1 Trang 15)
+│   │   │   └── StudentJobApplication.java  # File khởi chạy ứng dụng (Slide 1.1 Trang 15)
+│   │   └── resources/
+│   │       ├── static/          # Thư mục tĩnh CSS, JS (Slide 1.1 Trang 15)
+│   │       │   └── css/style.css
+│   │       ├── templates/       # Thư mục chứa template Thymeleaf (Slide 1.1 Trang 15, 22)
+│   │       │   ├── common/      # header.html, footer.html (Fragments)
+│   │       │   ├── demo/        # hello.html (Trang Demo Slide 1.1 Trang 23)
+│   │       │   ├── jobs/        # list.html, detail.html
+│   │       │   ├── index.html   # Trang chủ tìm việc sinh viên
+│   │       │   └── error.html   # Trang báo lỗi
+│   │       └── application.properties # Cấu hình Thymeleaf, CSDL SQL Server, port
 │   └── test/
 │       ├── java/com/studentjob/ # Thư mục kiểm thử JUnit 5 & Mockito
-│       └── resources/           # Cấu hình H2 In-Memory cho kiểm thử tự động độc lập
+│       └── resources/           # Cấu hình H2 In-Memory cho kiểm thử tự động
 ├── pom.xml                      # Cấu hình Maven dependencies & plugins
 └── README.md                    # Tài liệu hướng dẫn dự án
 ```
@@ -75,5 +82,7 @@ mvn spring-boot:run
 ```
 
 ### Bước 4: Trải nghiệm ứng dụng
-- Mở trình duyệt web truy cập: `http://localhost:8080/`
-- Hệ thống sẽ tự động khởi tạo dữ liệu danh mục và tin tuyển dụng mẫu sinh viên (Highlands Coffee, FPT Software...) thông qua `DataInitializer`.
+- **Trang chủ tìm việc**: `http://localhost:8080/`
+- **Trang Demo Slide 1.1**: `http://localhost:8080/poly/hello`
+- **Danh sách việc làm**: `http://localhost:8080/jobs`
+- **REST API việc làm**: `http://localhost:8080/api/jobs`
