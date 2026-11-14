@@ -3,7 +3,7 @@
 <head th:fragment="header-head">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>StudentJob - Nền Tảng Tìm Việc Làm & Thực Tập Cho Sinh Viên</title>
+    <title>UniWork - Nền Tảng Tìm Việc Làm &amp; Thực Tập Cho Sinh Viên</title>
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -17,8 +17,8 @@
 <nav th:fragment="header-nav" class="navbar navbar-expand-lg navbar-dark bg-gradient-primary shadow-sm sticky-top">
     <div class="container">
         <a class="navbar-brand fw-bold d-flex align-items-center" th:href="@{/}">
-            <span class="badge bg-warning text-dark me-2 py-2 px-2.5 rounded-3"><i class="bi bi-mortarboard-fill fs-5"></i></span>
-            <span>Student<span class="text-warning">Job</span></span>
+            <span class="badge bg-warning text-dark me-2 py-2 px-2.5 rounded-3"><i class="bi bi-briefcase-fill fs-5"></i></span>
+            <span>Uni<span class="text-warning">Work</span></span>
         </a>
         <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain">
             <span class="navbar-toggler-icon"></span>
@@ -32,7 +32,7 @@
                 </li>
                 <li class="nav-item">
                     <a class="nav-link text-white fw-medium" th:href="@{/jobs}">
-                        <i class="bi bi-briefcase me-1"></i>Tìm Việc Làm
+                        <i class="bi bi-search me-1"></i>Tìm Việc Làm
                     </a>
                 </li>
                 <li class="nav-item">
@@ -53,7 +53,7 @@
             </ul>
             <div class="d-flex align-items-center gap-2">
                 <a th:href="@{/jobs}" class="btn btn-outline-light btn-sm px-3 rounded-pill">
-                    <i class="bi bi-search me-1"></i>Khám phá
+                    <i class="bi bi-compass me-1"></i>Khám phá
                 </a>
                 <a href="#" class="btn btn-warning btn-sm px-3 rounded-pill fw-semibold text-dark shadow-sm">
                     <i class="bi bi-building-add me-1"></i>Nhà Tuyển Dụng

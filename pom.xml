@@ -10,12 +10,12 @@
 		<relativePath/>
 	</parent>
 
-	<groupId>com.studentjob</groupId>
-	<artifactId>StudentJobPortal</artifactId>
+	<groupId>com.uniwork</groupId>
+	<artifactId>UniWork</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>war</packaging>
-	<name>StudentJobPortal</name>
-	<description>Website Tìm Kiếm Việc Làm Cho Sinh Viên - Chuẩn Spring Boot MVC &amp; Thymeleaf FPT Polytechnic</description>
+	<name>UniWork</name>
+	<description>UniWork - Nền Tảng Tìm Việc Làm &amp; Thực Tập Linh Hoạt Cho Sinh Viên - Chuẩn Spring Boot &amp; Thymeleaf FPT Polytechnic</description>
 
 	<properties>
 		<java.version>21</java.version>
