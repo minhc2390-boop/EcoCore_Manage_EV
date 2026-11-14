@@ -1,17 +1,73 @@
+/* ===============================================
+   StudentJob Portal - Stylesheet Chuẩn UI Hiện Đại
+   =============================================== */
+
 body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-    color: #2d3748;
+    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    color: #1e293b;
+    background-color: #f8fafc;
 }
 
-.navbar {
-    background: linear-gradient(135deg, #0d6efd 0%, #0a58ca 100%) !important;
+/* Gradient Navigation Bar */
+.bg-gradient-primary {
+    background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%) !important;
 }
 
-.card {
-    border-radius: 0.5rem;
+/* Hero Section */
+.hero-section {
+    background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 60%, #1d4ed8 100%);
 }
 
-.table th {
-    font-weight: 600;
+.hero-stats-card {
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
 }
 
+.icon-circle {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Card Transitions */
+.transition {
+    transition: all 0.25s ease-in-out;
+}
+
+.category-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 24px -10px rgba(37, 99, 235, 0.15) !important;
+    border: 1px solid #93c5fd !important;
+}
+
+.job-card {
+    transition: all 0.25s ease-in-out;
+    border: 1px solid #e2e8f0;
+}
+
+.job-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 28px -10px rgba(0, 0, 0, 0.1) !important;
+    border-color: #3b82f6;
+}
+
+.job-list-card {
+    border: 1px solid #e2e8f0;
+}
+
+.job-list-card:hover {
+    border-color: #2563eb;
+    box-shadow: 0 8px 20px -8px rgba(37, 99, 235, 0.15) !important;
+}
+
+.hover-primary {
+    transition: color 0.2s;
+}
+
+.hover-primary:hover {
+    color: #2563eb !important;
+}

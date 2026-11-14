@@ -1,0 +1,135 @@
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
+<jsp:include page="../common/header.jsp" />
+
+<div class="container py-4">
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="<c:url value='/' />" class="text-decoration-none">Trang Chủ</a></li>
+            <li class="breadcrumb-item"><a href="<c:url value='/jobs' />" class="text-decoration-none">Tìm Việc</a></li>
+            <li class="breadcrumb-item active" aria-current="page">${job.title}</li>
+        </ol>
+    </nav>
+
+    <div class="row g-4">
+        <!-- Job Details Left Column -->
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-sm rounded-4 p-4 mb-4 bg-white">
+                <div class="d-flex justify-content-between align-items-start mb-3">
+                    <span class="badge bg-primary bg-opacity-10 text-primary px-3 py-1.5 rounded-pill fw-semibold">
+                        <i class="bi bi-clock me-1"></i>${job.jobType}
+                    </span>
+                    <span class="text-muted small"><i class="bi bi-eye me-1"></i>${job.viewCount} lượt xem</span>
+                </div>
+                <h3 class="fw-bold text-dark mb-2">${job.title}</h3>
+                <h5 class="text-secondary mb-3">
+                    <i class="bi bi-building me-1 text-primary"></i>${job.employer != null ? job.employer.companyName : 'Doanh nghiệp'}
+                </h5>
+                <div class="d-flex flex-wrap gap-3 p-3 bg-light rounded-3 mb-4">
+                    <div>
+                        <small class="text-muted d-block">Mức Lương:</small>
+                        <strong class="text-success fs-5">${job.salaryRange}</strong>
+                    </div>
+                    <div class="border-start ps-3">
+                        <small class="text-muted d-block">Địa điểm:</small>
+                        <strong class="text-dark">${job.location}</strong>
+                    </div>
+                    <div class="border-start ps-3">
+                        <small class="text-muted d-block">Hạn nộp hồ sơ:</small>
+                        <strong class="text-danger">${job.deadline}</strong>
+                    </div>
+                </div>
+
+                <!-- Job Sections -->
+                <div class="mb-4">
+                    <h5 class="fw-bold text-primary mb-2"><i class="bi bi-card-text me-2"></i>Mô tả công việc:</h5>
+                    <p class="text-secondary leading-relaxed">${job.description}</p>
+                </div>
+
+                <div class="mb-4">
+                    <h5 class="fw-bold text-primary mb-2"><i class="bi bi-check2-circle me-2"></i>Yêu cầu ứng viên:</h5>
+                    <p class="text-secondary leading-relaxed">${job.requirements}</p>
+                </div>
+
+                <div class="mb-4">
+                    <h5 class="fw-bold text-primary mb-2"><i class="bi bi-gift me-2"></i>Quyền lợi & Đãi ngộ cho sinh viên:</h5>
+                    <p class="text-secondary leading-relaxed">${job.benefits}</p>
+                </div>
+
+                <div class="p-3 bg-info bg-opacity-10 border border-info border-opacity-25 rounded-3">
+                    <h6 class="fw-bold text-info mb-1"><i class="bi bi-calendar-event me-2"></i>Lịch ca làm việc:</h6>
+                    <p class="mb-0 text-dark small">${job.shiftSchedule}</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Column: Quick Apply & Employer Info -->
+        <div class="col-lg-4">
+            <!-- Apply Card -->
+            <div class="card border-0 shadow-sm rounded-4 p-4 mb-4 bg-white text-center">
+                <h5 class="fw-bold mb-3">Ứng Tuyển Công Việc Này</h5>
+                <p class="text-muted small mb-4">Hồ sơ sẽ được gửi trực tiếp đến bộ phận tuyển dụng của doanh nghiệp.</p>
+                <button type="button" class="btn btn-warning w-100 py-2.5 rounded-pill fw-bold text-dark shadow-sm mb-2" data-bs-toggle="modal" data-bs-target="#applyModal">
+                    <i class="bi bi-send-fill me-1"></i>Nộp Hồ Sơ Ngay
+                </button>
+                <a href="<c:url value='/jobs' />" class="btn btn-outline-secondary btn-sm w-100 rounded-pill py-2">
+                    <i class="bi bi-arrow-left me-1"></i>Tìm việc khác
+                </a>
+            </div>
+
+            <!-- Employer Card -->
+            <c:if test="${job.employer != null}">
+                <div class="card border-0 shadow-sm rounded-4 p-4 bg-white">
+                    <h6 class="fw-bold text-uppercase small text-muted mb-3">Thông Tin Nhà Tuyển Dụng</h6>
+                    <h5 class="fw-bold text-dark mb-2">${job.employer.companyName}</h5>
+                    <p class="text-secondary small mb-3">${job.employer.description}</p>
+                    <p class="text-muted small mb-1"><i class="bi bi-geo-alt me-2 text-danger"></i>${job.employer.address}</p>
+                    <p class="text-muted small mb-1"><i class="bi bi-globe me-2 text-primary"></i><a href="${job.employer.website}" target="_blank" class="text-decoration-none">${job.employer.website}</a></p>
+                    <p class="text-muted small mb-0"><i class="bi bi-envelope me-2 text-warning"></i>${job.employer.contactEmail}</p>
+                </div>
+            </c:if>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Nộp Hồ Sơ -->
+<div class="modal fade" id="applyModal" tabindex="-1" aria-labelledby="applyModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content rounded-4 border-0 shadow">
+            <div class="modal-header border-0 pb-0">
+                <h5 class="modal-title fw-bold" id="applyModalLabel"><i class="bi bi-send-check text-primary me-2"></i>Nộp Hồ Sơ Ứng Tuyển</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold small">Họ và tên của bạn:</label>
+                        <input type="text" class="form-control rounded-3" placeholder="Nguyễn Văn A" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold small">Email liên hệ / Trường đang học:</label>
+                        <input type="email" class="form-control rounded-3" placeholder="student@poly.edu.vn" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold small">Ghi chú lịch rảnh / Lịch học trong tuần:</label>
+                        <input type="text" class="form-control rounded-3" placeholder="Rảnh ca tối 2, 4, 6 và cả ngày Chủ Nhật...">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold small">Link CV online hoặc File đính kèm:</label>
+                        <input type="text" class="form-control rounded-3" placeholder="https://topcv.vn/cv/... hoặc Google Drive link">
+                    </div>
+                    <div class="alert alert-warning border-0 small mb-0 py-2">
+                        <i class="bi bi-info-circle me-1"></i>Hệ thống cam kết bảo mật thông tin sinh viên và không thu bất kỳ khoản phí nào.
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer border-0 pt-0">
+                <button type="button" class="btn btn-light rounded-pill px-3" data-bs-dismiss="modal">Đóng</button>
+                <button type="button" class="btn btn-primary rounded-pill px-4" onclick="alert('Đã gửi hồ sơ ứng tuyển thành công!'); location.reload();">Xác Nhận Nộp</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<jsp:include page="../common/footer.jsp" />

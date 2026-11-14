@@ -5,32 +5,58 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EVCSMS - Quản Lý Trạm Sạc Xe Điện</title>
+    <title>StudentJob - Nền Tảng Tìm Việc Làm & Thực Tập Cho Sinh Viên</title>
+    <!-- Google Fonts: Inter & Plus Jakarta Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <!-- Bootstrap 5 CSS CDN -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="<c:url value='/assets/css/style.css' />">
 </head>
 <body class="bg-light">
-<nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm mb-4">
+<nav class="navbar navbar-expand-lg navbar-dark bg-gradient-primary shadow-sm sticky-top">
     <div class="container">
-        <a class="navbar-brand fw-bold" href="<c:url value='/stations' />">
-            <i class="bi bi-ev-station-fill me-2"></i>EVCSMS - Quản Lý Trạm Sạc
+        <a class="navbar-brand fw-bold d-flex align-items-center" href="<c:url value='/' />">
+            <span class="badge bg-warning text-dark me-2 py-2 px-2.5 rounded-3"><i class="bi bi-mortarboard-fill fs-5"></i></span>
+            <span>Student<span class="text-warning">Job</span></span>
         </a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain">
             <span class="navbar-toggler-icon"></span>
         </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav ms-auto">
+        <div class="collapse navbar-collapse" id="navbarMain">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
                 <li class="nav-item">
-                    <a class="nav-link active" href="<c:url value='/stations' />"><i class="bi bi-list-ul me-1"></i>Danh sách</a>
+                    <a class="nav-link text-white fw-medium" href="<c:url value='/' />">
+                        <i class="bi bi-house-door me-1"></i>Trang Chủ
+                    </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-white fw-semibold" href="<c:url value='/stations/new' />"><i class="bi bi-plus-circle me-1"></i>Thêm mới</a>
+                    <a class="nav-link text-white fw-medium" href="<c:url value='/jobs' />">
+                        <i class="bi bi-briefcase me-1"></i>Tìm Việc Làm
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white-50 fw-medium" href="<c:url value='/jobs?jobType=Part-time' />">
+                        <i class="bi bi-clock-history me-1"></i>Việc Part-time
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white-50 fw-medium" href="<c:url value='/jobs?jobType=Internship' />">
+                        <i class="bi bi-award me-1"></i>Thực Tập Sinh
+                    </a>
                 </li>
             </ul>
+            <div class="d-flex align-items-center gap-2">
+                <a href="<c:url value='/jobs' />" class="btn btn-outline-light btn-sm px-3 rounded-pill">
+                    <i class="bi bi-search me-1"></i>Khám phá
+                </a>
+                <a href="#" class="btn btn-warning btn-sm px-3 rounded-pill fw-semibold text-dark shadow-sm">
+                    <i class="bi bi-building-add me-1"></i>Nhà Tuyển Dụng
+                </a>
+            </div>
         </div>
     </div>
 </nav>
-<div class="container">
-
+<main>

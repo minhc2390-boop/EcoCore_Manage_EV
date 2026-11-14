@@ -1,11 +1,55 @@
-</div>
-<footer class="footer mt-5 py-3 bg-white border-top text-center text-muted">
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
+</main>
+<footer class="bg-dark text-white pt-5 pb-4 mt-5 border-top border-secondary">
     <div class="container">
-        <small>&copy; 2026 EVCSMS - Electric Vehicle Charging Station Management System (Dự Án Java 5)</small>
+        <div class="row g-4">
+            <div class="col-lg-4 col-md-6">
+                <div class="d-flex align-items-center mb-3">
+                    <span class="badge bg-warning text-dark me-2 p-2 rounded-3"><i class="bi bi-mortarboard-fill fs-5"></i></span>
+                    <h5 class="fw-bold mb-0 text-white">Student<span class="text-warning">Job</span> Portal</h5>
+                </div>
+                <p class="text-secondary small">
+                    Hệ thống việc làm hàng đầu dành riêng cho sinh viên các trường Đại học & Cao đẳng. 
+                    Cam kết kết nối cơ hội việc làm thêm uy tín, lịch làm việc linh hoạt, bảo vệ quyền lợi sinh viên.
+                </p>
+                <div class="d-flex gap-2">
+                    <span class="badge bg-secondary">Spring Boot 3</span>
+                    <span class="badge bg-secondary">JSP & JSTL</span>
+                    <span class="badge bg-secondary">SQL Server</span>
+                </div>
+            </div>
+            <div class="col-lg-2 col-md-6 col-6">
+                <h6 class="text-warning fw-bold mb-3">Dành Cho Sinh Viên</h6>
+                <ul class="list-unstyled small text-secondary">
+                    <li class="mb-2"><a href="<c:url value='/jobs?jobType=Part-time' />" class="text-decoration-none text-secondary">Việc làm theo ca</a></li>
+                    <li class="mb-2"><a href="<c:url value='/jobs?jobType=Internship' />" class="text-decoration-none text-secondary">Thực tập sinh IT/Kinh tế</a></li>
+                    <li class="mb-2"><a href="<c:url value='/jobs' />" class="text-decoration-none text-secondary">Việc làm gần trường</a></li>
+                </ul>
+            </div>
+            <div class="col-lg-2 col-md-6 col-6">
+                <h6 class="text-warning fw-bold mb-3">Doanh Nghiệp</h6>
+                <ul class="list-unstyled small text-secondary">
+                    <li class="mb-2"><a href="#" class="text-decoration-none text-secondary">Đăng tin tuyển dụng</a></li>
+                    <li class="mb-2"><a href="#" class="text-decoration-none text-secondary">Tìm hồ sơ sinh viên</a></li>
+                    <li class="mb-2"><a href="#" class="text-decoration-none text-secondary">Hợp tác trường học</a></li>
+                </ul>
+            </div>
+            <div class="col-lg-4 col-md-6">
+                <h6 class="text-warning fw-bold mb-3">Hỗ Trợ Sinh Viên</h6>
+                <p class="text-secondary small mb-2"><i class="bi bi-geo-alt me-2 text-warning"></i>Toà nhà FPT Polytechnic, TP. Hồ Chí Minh</p>
+                <p class="text-secondary small mb-2"><i class="bi bi-envelope me-2 text-warning"></i>support.studentjob@poly.edu.vn</p>
+                <p class="text-secondary small"><i class="bi bi-telephone me-2 text-warning"></i>Hotline: (028) 7300 5588</p>
+            </div>
+        </div>
+        <hr class="border-secondary my-4">
+        <div class="text-center text-secondary small">
+            © 2026 StudentJob Portal. Đồ án môn học Java 5 - FPT Polytechnic. Thiết kế kiến trúc chuẩn MVC & Clean Layered Architecture.
+        </div>
     </div>
 </footer>
+
 <!-- Bootstrap 5 Bundle JS CDN -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
-

@@ -10,12 +10,12 @@
 		<relativePath/>
 	</parent>
 
-	<groupId>com.evcsms</groupId>
-	<artifactId>DA_EVCSMS</artifactId>
+	<groupId>com.studentjob</groupId>
+	<artifactId>StudentJobPortal</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>war</packaging>
-	<name>DA_EVCSMS</name>
-	<description>Hệ thống Quản lý Trạm Sạc Xe Điện (EVCSMS) - Chuẩn WebApp JSP + Spring Boot</description>
+	<name>StudentJobPortal</name>
+	<description>Website Tìm Kiếm Việc Làm Cho Sinh Viên (Student Job Portal) - Chuẩn WebApp JSP + Spring Boot 3</description>
 
 	<properties>
 		<java.version>21</java.version>
@@ -57,6 +57,13 @@
 			<groupId>com.microsoft.sqlserver</groupId>
 			<artifactId>mssql-jdbc</artifactId>
 			<scope>runtime</scope>
+		</dependency>
+
+		<!-- H2 in-memory Database for safe & fast JUnit 5 Testing -->
+		<dependency>
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
+			<scope>test</scope>
 		</dependency>
 
 		<!-- 6. Lombok (Tự động sinh Getter, Setter, Constructors, Builder) -->
