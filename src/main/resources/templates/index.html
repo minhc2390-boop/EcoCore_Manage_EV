@@ -1,172 +1,743 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<head th:replace="~{common/header :: header-head}"></head>
-<body class="bg-light">
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Job Portal - Nền tảng tuyển dụng và kết nối cơ hội nghề nghiệp cao cấp hàng đầu Việt Nam. Tìm kiếm việc làm chất lượng từ các doanh nghiệp uy tín.">
+  <meta name="keywords" content="tuyển dụng, việc làm, job portal, tìm việc, nghề nghiệp, FPT, VNG, Viettel">
+  <meta property="og:title" content="Job Portal - Nền Tảng Tuyển Dụng & Cơ Hội Nghề Nghiệp Cao Cấp">
+  <meta property="og:description" content="Khám phá hàng ngàn công việc chất lượng cao từ các doanh nghiệp uy tín hàng đầu Việt Nam.">
+  <meta property="og:image" content="images/job-hero.jpg">
+  <meta property="og:type" content="website">
+  <title>Job Portal - Nền Tảng Tuyển Dụng & Cơ Hội Nghề Nghiệp Cao Cấp</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%23142B4A'/><text x='50%25' y='55%25' text-anchor='middle' dominant-baseline='middle' font-family='sans-serif' font-weight='800' font-size='14' fill='white'>JP</text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap">
+  <link rel="stylesheet" th:href="@{/css/style.css}" href="css/style.css">
+</head>
+<body>
+  <!-- Scroll Progress Bar -->
+  <div class="scroll-progress" id="scrollProgress"></div>
 
-<!-- Navbar Fragment -->
-<nav th:replace="~{common/header :: header-nav}"></nav>
+  <header class="main-header">
+    <div class="container header-inner">
+      <a th:href="@{/}" href="index.html" class="brand-logo">JOB <span class="brand-logo-accent">PORTAL</span></a>
 
-<main>
-    <!-- Hero Banner Search Section -->
-    <section class="hero-section text-white py-5 position-relative overflow-hidden">
-        <div class="container py-4 position-relative z-1">
-            <div class="row align-items-center g-4">
-                <div class="col-lg-8 text-center text-lg-start">
-                    <span class="badge bg-warning text-dark px-3 py-2 rounded-pill fw-semibold mb-3">
-                        <i class="bi bi-stars me-1"></i>Nền Tảng Việc Làm &amp; Thực Tập Sinh Viên
-                    </span>
-                    <h1 class="display-4 fw-extrabold mb-3">
-                        Uni<span class="text-warning">Work</span> – Tìm Việc Làm Thêm <br class="d-none d-md-block">
-                        <span class="text-warning">Linh Hoạt Theo Lịch Học</span> Của Bạn
-                    </h1>
-                    <p class="lead text-white-50 mb-4 pe-lg-5">
-                        Hơn 1.500+ cơ hội việc làm part-time, ca xoay, thực tập sinh doanh nghiệp với mức lương minh bạch và đảm bảo quyền lợi.
-                    </p>
+      <nav class="main-nav" id="mainNav" role="navigation" aria-label="Menu chính">
+        <a th:href="@{/}" href="index.html" class="nav-link active">Trang chủ</a>
+        <a th:href="@{/#jobs}" href="#jobs" class="nav-link">Việc làm</a>
+        <a th:href="@{/#categories}" href="#categories" class="nav-link">Ngành nghề</a>
+        <a th:href="@{/#companies}" href="#companies" class="nav-link">Doanh nghiệp</a>
+        <a th:href="@{/#employer}" href="#employer" class="nav-link">Nhà tuyển dụng</a>
+      </nav>
 
-                    <!-- Search Card Form -->
-                    <div class="card p-3 shadow-lg border-0 rounded-4 bg-white text-dark">
-                        <form th:action="@{/jobs}" method="get" class="row g-2 align-items-center">
-                            <div class="col-md-5">
-                                <div class="input-group">
-                                    <span class="input-group-text bg-transparent border-0 text-primary"><i class="bi bi-search"></i></span>
-                                    <input type="text" name="keyword" class="form-control border-0 shadow-none ps-0" 
-                                           placeholder="Tên công việc (vd: Barista, Thực tập Java, Gia sư)...">
-                                </div>
-                            </div>
-                            <div class="col-md-4 border-start border-light-subtle">
-                                <div class="input-group">
-                                    <span class="input-group-text bg-transparent border-0 text-primary"><i class="bi bi-grid"></i></span>
-                                    <select name="categoryId" class="form-select border-0 shadow-none ps-0">
-                                        <option value="">-- Tất cả ngành nghề --</option>
-                                        <option th:each="cat : ${categories}" th:value="${cat.id}" th:text="${cat.name}"></option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <button type="submit" class="btn btn-primary w-100 rounded-3 py-2 fw-semibold shadow-sm">
-                                    <i class="bi bi-search me-1"></i>Tìm Kiếm
-                                </button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-                <div class="col-lg-4 d-none d-lg-block text-center">
-                    <div class="hero-stats-card p-4 rounded-4 shadow-lg text-start">
-                        <h5 class="fw-bold text-white mb-3"><i class="bi bi-lightning-charge-fill text-warning me-2"></i>Vì Sao Sinh Viên Chọn UniWork?</h5>
-                        <div class="d-flex align-items-center gap-3 mb-3">
-                            <div class="icon-circle bg-primary bg-opacity-25 text-warning"><i class="bi bi-calendar-check fs-5"></i></div>
-                            <div>
-                                <h6 class="mb-0 fw-semibold text-white">Đăng ký ca theo lịch học</h6>
-                                <small class="text-white-50">Linh động đổi ca khi bận lịch thi cử</small>
-                            </div>
-                        </div>
-                        <div class="d-flex align-items-center gap-3 mb-3">
-                            <div class="icon-circle bg-primary bg-opacity-25 text-warning"><i class="bi bi-shield-check fs-5"></i></div>
-                            <div>
-                                <h6 class="mb-0 fw-semibold text-white">Xác thực doanh nghiệp 100%</h6>
-                                <small class="text-white-50">Không lo bẫy đa cấp hay lừa đảo</small>
-                            </div>
-                        </div>
-                        <div class="d-flex align-items-center gap-3">
-                            <div class="icon-circle bg-primary bg-opacity-25 text-warning"><i class="bi bi-cash-stack fs-5"></i></div>
-                            <div>
-                                <h6 class="mb-0 fw-semibold text-white">Lương thưởng minh bạch</h6>
-                                <small class="text-white-50">Rõ ràng theo giờ hoặc theo tháng</small>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+      <div class="header-actions">
+        <button type="button" class="dark-mode-toggle" id="darkModeToggle" aria-label="Chuyển chế độ sáng/tối" title="Chế độ sáng/tối">
+          <i data-lucide="moon" class="dark-icon"></i>
+          <i data-lucide="sun" class="light-icon"></i>
+        </button>
+        <a th:href="@{/login}" href="login.html" class="btn btn-outline">Đăng nhập</a>
+        <a th:href="@{/register}" href="register.html" class="btn btn-primary">Đăng ký</a>
+        <button type="button" class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Mở menu điều hướng" aria-expanded="false" aria-controls="mainNav">
+          <i data-lucide="menu" class="menu-open-icon"></i>
+          <i data-lucide="x" class="menu-close-icon"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- Hero Section -->
+    <section class="hero-fullwidth">
+      <div class="container">
+        <div class="hero-grid">
+          <div class="hero-content">
+            <span class="hero-badge"><i data-lucide="zap" style="width:14px;height:14px;vertical-align:-2px;margin-right:4px;"></i> NỀN TẢNG TUYỂN DỤNG CAO CẤP</span>
+            <h1 class="hero-title">Tìm Kiếm Cơ Hội. Kiến Tạo Tương Lai.</h1>
+            <p class="hero-desc">
+              Khám phá hàng ngàn công việc chất lượng cao từ các doanh nghiệp uy tín hàng đầu. Kết nối trực tiếp, tối ưu hồ sơ và phát triển sự nghiệp vững chắc.
+            </p>
+            <div class="hero-actions">
+              <a th:href="@{/#jobs}" href="#jobs" class="btn btn-white"><i data-lucide="search" style="width:16px;height:16px;margin-right:6px;"></i> Khám phá việc làm</a>
+              <a th:href="@{/#employer}" href="#employer" class="btn btn-outline-white">Dành cho nhà tuyển dụng <i data-lucide="arrow-right" style="width:16px;height:16px;margin-left:6px;"></i></a>
             </div>
+            <!-- Trusted Logos -->
+            <div class="hero-trusted">
+              <span class="hero-trusted-label">Tin tưởng bởi:</span>
+              <div class="hero-trusted-logos">
+                <span class="trusted-logo-item">FPT</span>
+                <span class="trusted-logo-item">VNG</span>
+                <span class="trusted-logo-item">Viettel</span>
+                <span class="trusted-logo-item">Shopee</span>
+                <span class="trusted-logo-item">Tiki</span>
+              </div>
+            </div>
+          </div>
+          <div class="hero-image-col">
+            <img th:src="@{/images/job-hero.jpg}" src="images/job-hero.jpg" alt="Môi trường làm việc văn phòng chuyên nghiệp với nhân viên đang trao đổi công việc" class="hero-image">
+          </div>
         </div>
+      </div>
     </section>
 
-    <!-- Job Categories Section -->
-    <section class="py-5 bg-white">
-        <div class="container py-2">
-            <div class="d-flex justify-content-between align-items-end mb-4">
-                <div>
-                    <span class="text-primary fw-bold text-uppercase small">Khám Phá Theo Nhóm</span>
-                    <h3 class="fw-bold mb-0">Ngành Nghề Phổ Biến Cho Sinh Viên</h3>
-                </div>
-                <a th:href="@{/jobs}" class="btn btn-outline-primary btn-sm rounded-pill px-3">
-                    Xem tất cả <i class="bi bi-arrow-right ms-1"></i>
-                </a>
+    <!-- Search Section -->
+    <section class="search-section">
+      <div class="container">
+        <form class="search-panel" action="#jobs" method="GET">
+          <div class="search-fields-grid">
+            <div class="search-input-wrap">
+              <i data-lucide="search" class="search-input-icon"></i>
+              <input type="text" class="search-input has-icon" placeholder="Từ khóa, chức danh hoặc kỹ năng..." aria-label="Tìm kiếm theo từ khóa">
             </div>
-            <div class="row g-3">
-                <div class="col-lg-3 col-md-6" th:each="cat : ${categories}">
-                    <a th:href="@{/jobs(categoryId=${cat.id})}" class="text-decoration-none">
-                        <div class="card category-card h-100 border-0 shadow-sm p-3 rounded-4 transition">
-                            <div class="d-flex align-items-center gap-3">
-                                <div class="category-icon p-3 rounded-3 bg-light text-primary fs-3">
-                                    <i class="bi" th:classappend="${cat.icon != null ? cat.icon : 'bi-briefcase'}"></i>
-                                </div>
-                                <div>
-                                    <h6 class="fw-bold text-dark mb-1" th:text="${cat.name}">Tên ngành nghề</h6>
-                                    <small class="text-muted" th:text="${cat.description}">Mô tả</small>
-                                </div>
-                            </div>
-                        </div>
-                    </a>
-                </div>
+            <div class="search-input-wrap">
+              <i data-lucide="map-pin" class="search-input-icon"></i>
+              <input type="text" class="search-input has-icon" placeholder="Địa điểm (Hà Nội, TP.HCM...)" aria-label="Tìm kiếm theo địa điểm">
             </div>
-        </div>
+            <select class="search-select" aria-label="Chọn ngành nghề">
+              <option value="">Tất cả ngành nghề</option>
+              <option value="it">Công nghệ thông tin</option>
+              <option value="marketing">Marketing & Truyền thông</option>
+              <option value="business">Kinh doanh & Bán hàng</option>
+              <option value="finance">Tài chính - Kế toán</option>
+              <option value="design">Thiết kế & Sáng tạo</option>
+              <option value="hr">Nhân sự & Đào tạo</option>
+              <option value="logistics">Logistics & Chuỗi cung ứng</option>
+              <option value="education">Giáo dục & Khóa học</option>
+            </select>
+            <button type="submit" class="btn btn-primary btn-search"><i data-lucide="search" style="width:16px;height:16px;margin-right:6px;"></i> Tìm kiếm</button>
+          </div>
+          <!-- Popular Tags -->
+          <div class="search-popular">
+            <span class="search-popular-label">Phổ biến:</span>
+            <a href="#" class="search-tag">Java Developer</a>
+            <a href="#" class="search-tag">React</a>
+            <a href="#" class="search-tag">Marketing</a>
+            <a href="#" class="search-tag">Remote</a>
+            <a href="#" class="search-tag">Intern</a>
+            <a href="#" class="search-tag">Data Analyst</a>
+          </div>
+        </form>
+      </div>
     </section>
 
-    <!-- Featured Jobs Section -->
-    <section class="py-5">
-        <div class="container py-2">
-            <div class="d-flex justify-content-between align-items-end mb-4">
-                <div>
-                    <span class="text-primary fw-bold text-uppercase small">Tin Tuyển Dụng Nổi Bật</span>
-                    <h3 class="fw-bold mb-0">Việc Làm Mới Nhất Dành Cho Sinh Viên</h3>
-                </div>
-                <a th:href="@{/jobs}" class="btn btn-primary btn-sm rounded-pill px-3">
-                    Xem thêm việc làm <i class="bi bi-chevron-right ms-1"></i>
-                </a>
-            </div>
-            <div class="row g-4">
-                <div class="col-lg-4 col-md-6" th:each="job : ${latestJobs}">
-                    <div class="card job-card h-100 border-0 shadow-sm rounded-4 p-4 d-flex flex-column justify-content-between">
-                        <div>
-                            <div class="d-flex justify-content-between align-items-start mb-3">
-                                <span class="badge bg-primary bg-opacity-10 text-primary px-3 py-1.5 rounded-pill fw-semibold">
-                                    <i class="bi bi-clock me-1"></i><span th:text="${job.jobType}">Part-time</span>
-                                </span>
-                                <span class="text-success fw-bold small">
-                                    <i class="bi bi-cash me-1"></i><span th:text="${job.salaryRange}">25k/h</span>
-                                </span>
-                            </div>
-                            <h5 class="fw-bold text-dark mb-2">
-                                <a th:href="@{/jobs/{id}(id=${job.id})}" class="text-decoration-none text-dark hover-primary" th:text="${job.title}">
-                                    Tiêu đề công việc
-                                </a>
-                            </h5>
-                            <p class="text-secondary small mb-2">
-                                <i class="bi bi-building me-1 text-primary"></i>
-                                <strong th:text="${job.employer != null ? job.employer.companyName : 'Doanh nghiệp đối tác'}">Tên công ty</strong>
-                            </p>
-                            <p class="text-muted small mb-3">
-                                <i class="bi bi-geo-alt me-1 text-danger"></i><span th:text="${job.location}">TP. HCM</span>
-                            </p>
-                            <div class="p-2.5 bg-light rounded-3 mb-3 small text-secondary">
-                                <i class="bi bi-calendar2-range me-1 text-info"></i>
-                                <strong>Lịch ca:</strong> <span th:text="${job.shiftSchedule}">Ca sáng/tối</span>
-                            </div>
-                        </div>
-                        <div class="d-flex justify-content-between align-items-center pt-3 border-top">
-                            <span class="text-muted small"><i class="bi bi-eye me-1"></i><span th:text="${job.viewCount}">0</span> lượt xem</span>
-                            <a th:href="@{/jobs/{id}(id=${job.id})}" class="btn btn-outline-primary btn-sm rounded-pill px-3 fw-medium">
-                                Chi tiết <i class="bi bi-arrow-right ms-1"></i>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
+    <!-- Stats Section -->
+    <section class="stats-section">
+      <div class="container">
+        <div class="stats-grid">
+          <div class="stat-item">
+            <div class="stat-icon"><i data-lucide="file-text"></i></div>
+            <div class="stat-number" data-count="10000">0</div>
+            <div class="stat-title">Việc làm chất lượng</div>
+            <div class="stat-desc">Tuyển dụng liên tục từ các doanh nghiệp</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-icon"><i data-lucide="building-2"></i></div>
+            <div class="stat-number" data-count="3500">0</div>
+            <div class="stat-title">Doanh nghiệp đối tác</div>
+            <div class="stat-desc">Các tập đoàn và thương hiệu hàng đầu</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-icon"><i data-lucide="users"></i></div>
+            <div class="stat-number" data-count="120000">0</div>
+            <div class="stat-title">Ứng viên tiềm năng</div>
+            <div class="stat-desc">Đã tham gia kết nối cơ hội nghề nghiệp</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-icon"><i data-lucide="layers"></i></div>
+            <div class="stat-number" data-count="50">0</div>
+            <div class="stat-title">Ngành nghề đa dạng</div>
+            <div class="stat-desc">Bao phủ đầy đủ các lĩnh vực then chốt</div>
+          </div>
         </div>
+      </div>
     </section>
-</main>
 
-<!-- Footer Fragment -->
-<footer th:replace="~{common/footer :: footer}"></footer>
+    <!-- Categories Section -->
+    <section id="categories" class="section section-alt">
+      <div class="container">
+        <div class="section-head reveal">
+          <span class="section-badge">LĨNH VỰC TUYỂN DỤNG</span>
+          <h2 class="section-title">Khám Phá Các Ngành Nghề Nổi Bật</h2>
+          <p class="section-subtitle">Đa dạng lĩnh vực nghề nghiệp phù hợp với chuyên môn và định hướng phát triển của bạn.</p>
+        </div>
+
+        <div class="categories-grid">
+          <div class="category-card reveal">
+            <div>
+              <div class="category-icon"><i data-lucide="monitor"></i></div>
+              <h3 class="category-name">Công Nghệ Thông Tin</h3>
+              <p class="category-desc">Phát triển phần mềm, an toàn thông tin, dữ liệu lớn và trí tuệ nhân tạo.</p>
+            </div>
+            <div class="category-count">1.420 việc làm đang tuyển</div>
+          </div>
+
+          <div class="category-card reveal">
+            <div>
+              <div class="category-icon"><i data-lucide="megaphone"></i></div>
+              <h3 class="category-name">Marketing & Truyền Thông</h3>
+              <p class="category-desc">Tiếp thị kỹ thuật số, quản trị thương hiệu, quảng cáo và phát triển nội dung.</p>
+            </div>
+            <div class="category-count">860 việc làm đang tuyển</div>
+          </div>
+
+          <div class="category-card reveal">
+            <div>
+              <div class="category-icon"><i data-lucide="briefcase"></i></div>
+              <h3 class="category-name">Kinh Doanh & Bán Hàng</h3>
+              <p class="category-desc">Phát triển thị trường, kinh doanh B2B/B2C, đàm phán hợp đồng và đối tác chiến lược.</p>
+            </div>
+            <div class="category-count">980 việc làm đang tuyển</div>
+          </div>
+
+          <div class="category-card reveal">
+            <div>
+              <div class="category-icon"><i data-lucide="calculator"></i></div>
+              <h3 class="category-name">Tài Chính - Kế Toán</h3>
+              <p class="category-desc">Kiểm toán tài chính, kế toán tổng hợp, phân tích đầu tư và quản trị rủi ro.</p>
+            </div>
+            <div class="category-count">650 việc làm đang tuyển</div>
+          </div>
+
+          <div class="category-card reveal">
+            <div>
+              <div class="category-icon"><i data-lucide="palette"></i></div>
+              <h3 class="category-name">Thiết Kế & Sáng Tạo</h3>
+              <p class="category-desc">Thiết kế UI/UX, đồ họa thương hiệu, biên tập video và mỹ thuật đa phương tiện.</p>
+            </div>
+            <div class="category-count">430 việc làm đang tuyển</div>
+          </div>
+
+          <div class="category-card reveal">
+            <div>
+              <div class="category-icon"><i data-lucide="user-check"></i></div>
+              <h3 class="category-name">Nhân Sự & Đào Tạo</h3>
+              <p class="category-desc">Tuyển dụng tài năng, quản trị nhân sự, đào tạo nội bộ và phát triển văn hóa công ty.</p>
+            </div>
+            <div class="category-count">390 việc làm đang tuyển</div>
+          </div>
+
+          <div class="category-card reveal">
+            <div>
+              <div class="category-icon"><i data-lucide="truck"></i></div>
+              <h3 class="category-name">Logistics & Vận Tải</h3>
+              <p class="category-desc">Quản trị chuỗi cung ứng, kho vận xuất nhập khẩu và điều phối vận tải quốc tế.</p>
+            </div>
+            <div class="category-count">510 việc làm đang tuyển</div>
+          </div>
+
+          <div class="category-card reveal">
+            <div>
+              <div class="category-icon"><i data-lucide="book-open"></i></div>
+              <h3 class="category-name">Giáo Dục & Khóa Học</h3>
+              <p class="category-desc">Giảng dạy chuyên môn, đào tạo kỹ năng doanh nghiệp và cố vấn học tập.</p>
+            </div>
+            <div class="category-count">320 việc làm đang tuyển</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Jobs Section -->
+    <section id="jobs" class="section">
+      <div class="container">
+        <div class="section-head reveal">
+          <span class="section-badge">CƠ HỘI NGHỀ NGHIỆP</span>
+          <h2 class="section-title">Việc Làm Tuyển Gấp</h2>
+          <p class="section-subtitle">Tuyển tập những vị trí việc làm mới nhất với chế độ đãi ngộ hấp dẫn từ các nhà tuyển dụng hàng đầu.</p>
+        </div>
+
+        <div class="job-filter-tabs" role="tablist" aria-label="Lọc việc làm theo ngành">
+          <button type="button" class="job-tab-btn active" data-filter="all" role="tab" aria-selected="true">Tất cả việc làm</button>
+          <button type="button" class="job-tab-btn" data-filter="it" role="tab" aria-selected="false">IT - Phần mềm</button>
+          <button type="button" class="job-tab-btn" data-filter="marketing" role="tab" aria-selected="false">Marketing</button>
+          <button type="button" class="job-tab-btn" data-filter="business" role="tab" aria-selected="false">Kinh doanh</button>
+        </div>
+
+        <div class="jobs-grid">
+          <article class="job-card reveal" data-category="it">
+            <div>
+              <div class="job-card-top">
+                <div class="company-logo-badge">FPT</div>
+                <div class="job-company-title-wrap">
+                  <div class="job-company-name">FPT Software</div>
+                  <h3 class="job-title">Senior Fullstack Java Developer</h3>
+                </div>
+              </div>
+              <div class="job-badge-row">
+                <span class="job-badge job-badge-hot"><i data-lucide="flame" style="width:12px;height:12px;margin-right:3px;"></i> HOT</span>
+              </div>
+              <div class="job-salary"><i data-lucide="banknote" style="width:15px;height:15px;margin-right:5px;vertical-align:-2px;"></i> 25 - 45 triệu/tháng</div>
+              <div class="job-meta-line"><i data-lucide="map-pin" style="width:13px;height:13px;margin-right:4px;vertical-align:-2px;"></i> Hà Nội &bull; <i data-lucide="clock" style="width:13px;height:13px;margin:0 4px;vertical-align:-2px;"></i> 3+ năm &bull; Toàn thời gian</div>
+              <div class="job-tags">
+                <span class="job-skill-tag">Java</span>
+                <span class="job-skill-tag">Spring Boot</span>
+                <span class="job-skill-tag">React</span>
+              </div>
+            </div>
+            <div class="job-card-bottom">
+              <span class="job-post-time">Đăng hôm nay</span>
+              <div class="job-card-actions">
+                <button type="button" class="job-save-btn" aria-label="Lưu việc làm"><i data-lucide="heart"></i></button>
+                <a th:href="@{/login}" href="login.html" class="btn btn-primary btn-sm">Ứng tuyển</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="job-card reveal" data-category="it">
+            <div>
+              <div class="job-card-top">
+                <div class="company-logo-badge">VNG</div>
+                <div class="job-company-title-wrap">
+                  <div class="job-company-name">VNG Corporation</div>
+                  <h3 class="job-title">Frontend React Developer</h3>
+                </div>
+              </div>
+              <div class="job-badge-row">
+                <span class="job-badge job-badge-new"><i data-lucide="sparkles" style="width:12px;height:12px;margin-right:3px;"></i> MỚI</span>
+              </div>
+              <div class="job-salary"><i data-lucide="banknote" style="width:15px;height:15px;margin-right:5px;vertical-align:-2px;"></i> 18 - 32 triệu/tháng</div>
+              <div class="job-meta-line"><i data-lucide="map-pin" style="width:13px;height:13px;margin-right:4px;vertical-align:-2px;"></i> TP. Hồ Chí Minh &bull; <i data-lucide="clock" style="width:13px;height:13px;margin:0 4px;vertical-align:-2px;"></i> 1-2 năm &bull; Toàn thời gian</div>
+              <div class="job-tags">
+                <span class="job-skill-tag">React</span>
+                <span class="job-skill-tag">TypeScript</span>
+                <span class="job-skill-tag">Next.js</span>
+              </div>
+            </div>
+            <div class="job-card-bottom">
+              <span class="job-post-time">Đăng 1 ngày trước</span>
+              <div class="job-card-actions">
+                <button type="button" class="job-save-btn" aria-label="Lưu việc làm"><i data-lucide="heart"></i></button>
+                <a th:href="@{/login}" href="login.html" class="btn btn-primary btn-sm">Ứng tuyển</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="job-card reveal" data-category="marketing">
+            <div>
+              <div class="job-card-top">
+                <div class="company-logo-badge tiki-bg">TIKI</div>
+                <div class="job-company-title-wrap">
+                  <div class="job-company-name">Tiki Corporation</div>
+                  <h3 class="job-title">Digital Marketing Lead</h3>
+                </div>
+              </div>
+              <div class="job-badge-row">
+                <span class="job-badge job-badge-hot"><i data-lucide="flame" style="width:12px;height:12px;margin-right:3px;"></i> HOT</span>
+              </div>
+              <div class="job-salary"><i data-lucide="banknote" style="width:15px;height:15px;margin-right:5px;vertical-align:-2px;"></i> 20 - 35 triệu/tháng</div>
+              <div class="job-meta-line"><i data-lucide="map-pin" style="width:13px;height:13px;margin-right:4px;vertical-align:-2px;"></i> TP. Hồ Chí Minh &bull; <i data-lucide="clock" style="width:13px;height:13px;margin:0 4px;vertical-align:-2px;"></i> 2+ năm &bull; Toàn thời gian</div>
+              <div class="job-tags">
+                <span class="job-skill-tag">Google Ads</span>
+                <span class="job-skill-tag">SEO</span>
+                <span class="job-skill-tag">Analytics</span>
+              </div>
+            </div>
+            <div class="job-card-bottom">
+              <span class="job-post-time">Đăng 2 ngày trước</span>
+              <div class="job-card-actions">
+                <button type="button" class="job-save-btn" aria-label="Lưu việc làm"><i data-lucide="heart"></i></button>
+                <a th:href="@{/login}" href="login.html" class="btn btn-primary btn-sm">Ứng tuyển</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="job-card reveal" data-category="it">
+            <div>
+              <div class="job-card-top">
+                <div class="company-logo-badge">VTL</div>
+                <div class="job-company-title-wrap">
+                  <div class="job-company-name">Viettel Solutions</div>
+                  <h3 class="job-title">DevOps & Cloud Engineer</h3>
+                </div>
+              </div>
+              <div class="job-badge-row">
+                <span class="job-badge job-badge-new"><i data-lucide="sparkles" style="width:12px;height:12px;margin-right:3px;"></i> MỚI</span>
+              </div>
+              <div class="job-salary"><i data-lucide="banknote" style="width:15px;height:15px;margin-right:5px;vertical-align:-2px;"></i> 22 - 38 triệu/tháng</div>
+              <div class="job-meta-line"><i data-lucide="map-pin" style="width:13px;height:13px;margin-right:4px;vertical-align:-2px;"></i> Hà Nội &bull; <i data-lucide="clock" style="width:13px;height:13px;margin:0 4px;vertical-align:-2px;"></i> 2+ năm &bull; Toàn thời gian</div>
+              <div class="job-tags">
+                <span class="job-skill-tag">AWS</span>
+                <span class="job-skill-tag">Docker</span>
+                <span class="job-skill-tag">K8s</span>
+              </div>
+            </div>
+            <div class="job-card-bottom">
+              <span class="job-post-time">Đăng 3 ngày trước</span>
+              <div class="job-card-actions">
+                <button type="button" class="job-save-btn" aria-label="Lưu việc làm"><i data-lucide="heart"></i></button>
+                <a th:href="@{/login}" href="login.html" class="btn btn-primary btn-sm">Ứng tuyển</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="job-card reveal" data-category="business">
+            <div>
+              <div class="job-card-top">
+                <div class="company-logo-badge">MSN</div>
+                <div class="job-company-title-wrap">
+                  <div class="job-company-name">Masan Consumer</div>
+                  <h3 class="job-title">B2B Key Account Manager</h3>
+                </div>
+              </div>
+              <div class="job-salary"><i data-lucide="banknote" style="width:15px;height:15px;margin-right:5px;vertical-align:-2px;"></i> 20 - 30 triệu/tháng</div>
+              <div class="job-meta-line"><i data-lucide="map-pin" style="width:13px;height:13px;margin-right:4px;vertical-align:-2px;"></i> Đà Nẵng &bull; <i data-lucide="clock" style="width:13px;height:13px;margin:0 4px;vertical-align:-2px;"></i> 2+ năm &bull; Toàn thời gian</div>
+              <div class="job-tags">
+                <span class="job-skill-tag">B2B Sales</span>
+                <span class="job-skill-tag">CRM</span>
+                <span class="job-skill-tag">KPI</span>
+              </div>
+            </div>
+            <div class="job-card-bottom">
+              <span class="job-post-time">Đăng 3 ngày trước</span>
+              <div class="job-card-actions">
+                <button type="button" class="job-save-btn" aria-label="Lưu việc làm"><i data-lucide="heart"></i></button>
+                <a th:href="@{/login}" href="login.html" class="btn btn-primary btn-sm">Ứng tuyển</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="job-card reveal" data-category="marketing">
+            <div>
+              <div class="job-card-top">
+                <div class="company-logo-badge shp-bg">SHP</div>
+                <div class="job-company-title-wrap">
+                  <div class="job-company-name">Shopee Vietnam</div>
+                  <h3 class="job-title">Content & Social Media Specialist</h3>
+                </div>
+              </div>
+              <div class="job-salary"><i data-lucide="banknote" style="width:15px;height:15px;margin-right:5px;vertical-align:-2px;"></i> 12 - 18 triệu/tháng</div>
+              <div class="job-meta-line"><i data-lucide="map-pin" style="width:13px;height:13px;margin-right:4px;vertical-align:-2px;"></i> TP. Hồ Chí Minh &bull; <i data-lucide="clock" style="width:13px;height:13px;margin:0 4px;vertical-align:-2px;"></i> 1+ năm &bull; Toàn thời gian</div>
+              <div class="job-tags">
+                <span class="job-skill-tag">Content</span>
+                <span class="job-skill-tag">Social Media</span>
+                <span class="job-skill-tag">Canva</span>
+              </div>
+            </div>
+            <div class="job-card-bottom">
+              <span class="job-post-time">Đăng 4 ngày trước</span>
+              <div class="job-card-actions">
+                <button type="button" class="job-save-btn" aria-label="Lưu việc làm"><i data-lucide="heart"></i></button>
+                <a th:href="@{/login}" href="login.html" class="btn btn-primary btn-sm">Ứng tuyển</a>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Companies Section -->
+    <section id="companies" class="section section-alt">
+      <div class="container">
+        <div class="section-head reveal">
+          <span class="section-badge">ĐỐI TÁC CHIẾN LƯỢC</span>
+          <h2 class="section-title">Doanh Nghiệp Hàng Đầu</h2>
+          <p class="section-subtitle">Gia nhập các tập đoàn công nghệ và tổ chức hàng đầu với chế độ đãi ngộ vượt trội.</p>
+        </div>
+
+        <div class="companies-grid">
+          <div class="company-card reveal">
+            <div class="company-avatar">FPT</div>
+            <h3 class="company-name">FPT Software</h3>
+            <div class="company-location"><i data-lucide="map-pin" style="width:13px;height:13px;margin-right:3px;vertical-align:-2px;"></i> Hà Nội • TP.HCM • Đà Nẵng</div>
+            <div class="company-job-count">120+ Việc làm đang tuyển</div>
+            <a th:href="@{/#jobs}" href="#jobs" class="btn btn-outline btn-sm btn-block">Xem việc làm <i data-lucide="arrow-right" style="width:14px;height:14px;margin-left:4px;"></i></a>
+          </div>
+
+          <div class="company-card reveal">
+            <div class="company-avatar">VNG</div>
+            <h3 class="company-name">VNG Corporation</h3>
+            <div class="company-location"><i data-lucide="map-pin" style="width:13px;height:13px;margin-right:3px;vertical-align:-2px;"></i> TP. Hồ Chí Minh</div>
+            <div class="company-job-count">65+ Việc làm đang tuyển</div>
+            <a th:href="@{/#jobs}" href="#jobs" class="btn btn-outline btn-sm btn-block">Xem việc làm <i data-lucide="arrow-right" style="width:14px;height:14px;margin-left:4px;"></i></a>
+          </div>
+
+          <div class="company-card reveal">
+            <div class="company-avatar">VTL</div>
+            <h3 class="company-name">Viettel Solutions</h3>
+            <div class="company-location"><i data-lucide="map-pin" style="width:13px;height:13px;margin-right:3px;vertical-align:-2px;"></i> Hà Nội</div>
+            <div class="company-job-count">85+ Việc làm đang tuyển</div>
+            <a th:href="@{/#jobs}" href="#jobs" class="btn btn-outline btn-sm btn-block">Xem việc làm <i data-lucide="arrow-right" style="width:14px;height:14px;margin-left:4px;"></i></a>
+          </div>
+
+          <div class="company-card reveal">
+            <div class="company-avatar">TIKI</div>
+            <h3 class="company-name">Tiki Corporation</h3>
+            <div class="company-location"><i data-lucide="map-pin" style="width:13px;height:13px;margin-right:3px;vertical-align:-2px;"></i> TP. Hồ Chí Minh</div>
+            <div class="company-job-count">40+ Việc làm đang tuyển</div>
+            <a th:href="@{/#jobs}" href="#jobs" class="btn btn-outline btn-sm btn-block">Xem việc làm <i data-lucide="arrow-right" style="width:14px;height:14px;margin-left:4px;"></i></a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Experience Levels Section -->
+    <section class="section">
+      <div class="container">
+        <div class="section-head reveal">
+          <span class="section-badge">LỘ TRÌNH PHÁT TRIỂN</span>
+          <h2 class="section-title">Việc Làm Theo Cấp Bậc Kinh Nghiệm</h2>
+          <p class="section-subtitle">Dễ dàng tìm thấy vị trí tuyển dụng tương ứng với giai đoạn phát triển nghề nghiệp hiện tại của bạn.</p>
+        </div>
+
+        <div class="experience-grid">
+          <div class="exp-card reveal">
+            <div>
+              <div class="exp-stage">GIAI ĐOẠN 01</div>
+              <h3 class="exp-title">Sinh Viên & Thực Tập</h3>
+              <p class="exp-desc">Dành cho sinh viên năm 3, năm cuối muốn cọ xát thực tế, học hỏi quy trình doanh nghiệp và tích lũy trải nghiệm.</p>
+            </div>
+            <a th:href="@{/#jobs}" href="#jobs" class="exp-link">Khám phá việc làm <i data-lucide="arrow-right" style="width:14px;height:14px;margin-left:4px;vertical-align:-2px;"></i></a>
+          </div>
+
+          <div class="exp-card reveal">
+            <div>
+              <div class="exp-stage">GIAI ĐOẠN 02</div>
+              <h3 class="exp-title">Fresher Mới Tốt Nghiệp</h3>
+              <p class="exp-desc">Dành cho người mới ra trường dưới 1 năm kinh nghiệm, tràn đầy năng lượng và khao khát phát triển chuyên môn.</p>
+            </div>
+            <a th:href="@{/#jobs}" href="#jobs" class="exp-link">Khám phá việc làm <i data-lucide="arrow-right" style="width:14px;height:14px;margin-left:4px;vertical-align:-2px;"></i></a>
+          </div>
+
+          <div class="exp-card reveal">
+            <div>
+              <div class="exp-stage">GIAI ĐOẠN 03</div>
+              <h3 class="exp-title">Junior Đã Có Kinh Nghiệm</h3>
+              <p class="exp-desc">Dành cho nhân sự từ 1 đến 3 năm kinh nghiệm thực chiến, có khả năng giải quyết độc lập các bài toán kỹ thuật.</p>
+            </div>
+            <a th:href="@{/#jobs}" href="#jobs" class="exp-link">Khám phá việc làm <i data-lucide="arrow-right" style="width:14px;height:14px;margin-left:4px;vertical-align:-2px;"></i></a>
+          </div>
+
+          <div class="exp-card reveal">
+            <div>
+              <div class="exp-stage">GIAI ĐOẠN 04</div>
+              <h3 class="exp-title">Senior & Quản Lý</h3>
+              <p class="exp-desc">Dành cho chuyên gia từ 3+ năm trở lên và cấp quản lý dẫn dắt dự án, hoạch định chiến lược phát triển mạnh mẽ.</p>
+            </div>
+            <a th:href="@{/#jobs}" href="#jobs" class="exp-link">Khám phá việc làm <i data-lucide="arrow-right" style="width:14px;height:14px;margin-left:4px;vertical-align:-2px;"></i></a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section class="section section-alt">
+      <div class="container">
+        <div class="section-head reveal">
+          <span class="section-badge">QUY TRÌNH TINH GỌN</span>
+          <h2 class="section-title">Quy Trình Tìm Việc 3 Bước</h2>
+          <p class="section-subtitle">Phương thức chuyên nghiệp, tối ưu giúp bạn kết nối nhanh chóng với cơ hội nghề nghiệp phù hợp.</p>
+        </div>
+
+        <div class="how-grid">
+          <div class="how-step reveal">
+            <div class="step-icon-wrap"><i data-lucide="search"></i></div>
+            <div class="step-num">01</div>
+            <h3 class="step-title">Tìm kiếm việc làm</h3>
+            <p class="step-desc">Khám phá những cơ hội nghề nghiệp phù hợp với kỹ năng, mức thu nhập mong muốn và địa điểm làm việc thuận lợi.</p>
+          </div>
+
+          <div class="how-step reveal">
+            <div class="step-icon-wrap"><i data-lucide="eye"></i></div>
+            <div class="step-num">02</div>
+            <h3 class="step-title">Khám phá cơ hội</h3>
+            <p class="step-desc">Xem chi tiết yêu cầu công việc, chế độ đãi ngộ, văn hóa doanh nghiệp trước khi đưa ra quyết định ứng tuyển.</p>
+          </div>
+
+          <div class="how-step reveal">
+            <div class="step-icon-wrap"><i data-lucide="send"></i></div>
+            <div class="step-num">03</div>
+            <h3 class="step-title">Ứng tuyển trực tiếp</h3>
+            <p class="step-desc">Gửi hồ sơ trực tiếp đến nhà tuyển dụng và nhận phản hồi phỏng vấn trong thời gian sớm nhất mà không mất phí.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section class="section">
+      <div class="container">
+        <div class="section-head reveal">
+          <span class="section-badge">ĐÁNH GIÁ TỪ CỘNG ĐỒNG</span>
+          <h2 class="section-title">Ứng Viên Nói Gì Về Chúng Tôi?</h2>
+          <p class="section-subtitle">Hàng ngàn ứng viên đã tìm được công việc mơ ước thông qua nền tảng của chúng tôi.</p>
+        </div>
+
+        <div class="testimonials-grid">
+          <div class="testimonial-card reveal">
+            <div class="testimonial-stars">
+              <i data-lucide="star" class="star-filled"></i>
+              <i data-lucide="star" class="star-filled"></i>
+              <i data-lucide="star" class="star-filled"></i>
+              <i data-lucide="star" class="star-filled"></i>
+              <i data-lucide="star" class="star-filled"></i>
+            </div>
+            <p class="testimonial-quote">"Chỉ sau 2 tuần đăng ký, tôi đã nhận được offer từ FPT Software với mức lương tăng 40% so với công ty cũ. Giao diện dễ dùng và việc làm chất lượng!"</p>
+            <div class="testimonial-author">
+              <div class="testimonial-avatar">NT</div>
+              <div>
+                <div class="testimonial-name">Nguyễn Thanh Tùng</div>
+                <div class="testimonial-role">Java Developer tại FPT Software</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="testimonial-card reveal">
+            <div class="testimonial-stars">
+              <i data-lucide="star" class="star-filled"></i>
+              <i data-lucide="star" class="star-filled"></i>
+              <i data-lucide="star" class="star-filled"></i>
+              <i data-lucide="star" class="star-filled"></i>
+              <i data-lucide="star" class="star-filled"></i>
+            </div>
+            <p class="testimonial-quote">"Nền tảng rất chuyên nghiệp! Tôi thích tính năng lọc theo ngành nghề và địa điểm. Đã giới thiệu cho nhiều bạn bè cùng sử dụng."</p>
+            <div class="testimonial-author">
+              <div class="testimonial-avatar">TL</div>
+              <div>
+                <div class="testimonial-name">Trần Thị Lan</div>
+                <div class="testimonial-role">Marketing Manager tại Tiki</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="testimonial-card reveal">
+            <div class="testimonial-stars">
+              <i data-lucide="star" class="star-filled"></i>
+              <i data-lucide="star" class="star-filled"></i>
+              <i data-lucide="star" class="star-filled"></i>
+              <i data-lucide="star" class="star-filled"></i>
+              <i data-lucide="star" class="star-filled"></i>
+            </div>
+            <p class="testimonial-quote">"Là sinh viên mới ra trường, tôi rất lo lắng khi tìm việc. Nhờ Job Portal mà tôi đã có được vị trí Intern tại VNG chỉ sau 1 tuần!"</p>
+            <div class="testimonial-author">
+              <div class="testimonial-avatar">PH</div>
+              <div>
+                <div class="testimonial-name">Phạm Hoàng Minh</div>
+                <div class="testimonial-role">Frontend Intern tại VNG</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Employer CTA Section -->
+    <section id="employer" class="employer-section">
+      <div class="container">
+        <div class="employer-banner reveal">
+          <div class="employer-content">
+            <h2 class="employer-title">Tìm kiếm nhân tài phù hợp cho doanh nghiệp?</h2>
+            <p class="employer-desc">Kết nối với ứng viên tiềm năng và mở rộng đội ngũ của bạn với công cụ quản lý và tuyển dụng thông minh hàng đầu.</p>
+            <a th:href="@{/register}" href="register.html" class="btn btn-white"><i data-lucide="plus-circle" style="width:16px;height:16px;margin-right:6px;"></i> Đăng tin tuyển dụng</a>
+          </div>
+          <div class="employer-image-box">
+            <img th:src="@{/images/employer-hero.jpg}" src="images/employer-hero.jpg" alt="Đội ngũ nhân sự doanh nghiệp đang tuyển dụng và phỏng vấn ứng viên" class="employer-img" loading="lazy">
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Newsletter Section -->
+    <section class="newsletter-section">
+      <div class="container">
+        <div class="newsletter-inner reveal">
+          <div class="newsletter-content">
+            <div class="newsletter-icon"><i data-lucide="bell-ring"></i></div>
+            <h2 class="newsletter-title">Nhận Thông Báo Việc Làm Mới</h2>
+            <p class="newsletter-desc">Đăng ký để nhận email thông báo về những cơ hội việc làm phù hợp nhất với bạn mỗi tuần.</p>
+          </div>
+          <form class="newsletter-form" onsubmit="return false;">
+            <div class="newsletter-input-wrap">
+              <i data-lucide="mail" class="newsletter-mail-icon"></i>
+              <input type="email" class="newsletter-input" placeholder="Nhập email của bạn..." aria-label="Địa chỉ email đăng ký nhận tin">
+            </div>
+            <button type="submit" class="btn btn-primary newsletter-btn">Đăng ký ngay</button>
+          </form>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="main-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <div class="footer-brand-title">JOB PORTAL</div>
+          <p class="footer-brand-desc">
+            Nền tảng kết nối nhân tài và cơ hội việc làm cao cấp. Đồng hành cùng sinh viên và người đi làm kiến tạo sự nghiệp vững bền.
+          </p>
+          <!-- Social Links -->
+          <div class="footer-social">
+            <a href="#" class="social-link" aria-label="Facebook"><i data-lucide="facebook"></i></a>
+            <a href="#" class="social-link" aria-label="LinkedIn"><i data-lucide="linkedin"></i></a>
+            <a href="#" class="social-link" aria-label="Youtube"><i data-lucide="youtube"></i></a>
+            <a href="#" class="social-link" aria-label="Instagram"><i data-lucide="instagram"></i></a>
+          </div>
+        </div>
+
+        <div>
+          <h4 class="footer-col-title">Dành Cho Ứng Viên</h4>
+          <div class="footer-links">
+            <a th:href="@{/#jobs}" href="#jobs" class="footer-link">Tìm kiếm việc làm</a>
+            <a th:href="@{/#categories}" href="#categories" class="footer-link">Danh mục ngành nghề</a>
+            <a th:href="@{/#companies}" href="#companies" class="footer-link">Danh sách doanh nghiệp</a>
+            <a href="#" class="footer-link">Cẩm nang nghề nghiệp</a>
+          </div>
+        </div>
+
+        <div>
+          <h4 class="footer-col-title">Nhà Tuyển Dụng</h4>
+          <div class="footer-links">
+            <a th:href="@{/register}" href="register.html" class="footer-link">Đăng tin tuyển dụng</a>
+            <a href="#" class="footer-link">Tìm kiếm ứng viên</a>
+            <a href="#" class="footer-link">Giải pháp doanh nghiệp</a>
+            <a href="#" class="footer-link">Báo giá dịch vụ</a>
+          </div>
+        </div>
+
+        <div>
+          <h4 class="footer-col-title">Hỗ Trợ</h4>
+          <div class="footer-links">
+            <a href="#" class="footer-link">Trung tâm trợ giúp</a>
+            <a href="#" class="footer-link">Quy chế hoạt động</a>
+            <a href="#" class="footer-link">Chính sách bảo mật</a>
+            <a href="#" class="footer-link">Điều khoản dịch vụ</a>
+          </div>
+        </div>
+
+        <div>
+          <h4 class="footer-col-title">Liên Hệ</h4>
+          <div class="footer-links">
+            <span class="footer-link"><i data-lucide="phone" style="width:14px;height:14px;margin-right:6px;vertical-align:-2px;"></i> 1900 8888</span>
+            <span class="footer-link"><i data-lucide="mail" style="width:14px;height:14px;margin-right:6px;vertical-align:-2px;"></i> support@jobportal.vn</span>
+            <span class="footer-link"><i data-lucide="map-pin" style="width:14px;height:14px;margin-right:6px;vertical-align:-2px;"></i> Hà Nội & TP. Hồ Chí Minh</span>
+            <span class="footer-link"><i data-lucide="headphones" style="width:14px;height:14px;margin-right:6px;vertical-align:-2px;"></i> Hỗ trợ 24/7</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p>© 2026 JOB PORTAL. Tất cả các quyền được bảo lưu.</p>
+        <div class="footer-legal-links">
+          <a href="#" class="footer-link">Bảo mật thông tin</a>
+          <a href="#" class="footer-link">Điều khoản sử dụng</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Back to Top Button -->
+  <button type="button" class="back-to-top" id="backToTop" aria-label="Quay lại đầu trang">
+    <i data-lucide="arrow-up"></i>
+  </button>
+
+  <!-- Scripts -->
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <script th:src="@{/js/main.js}" src="main.js"></script>
+  <script>
+    if (window.lucide && typeof window.lucide.createIcons === 'function') {
+      window.lucide.createIcons();
+    }
+  </script>
 </body>
 </html>

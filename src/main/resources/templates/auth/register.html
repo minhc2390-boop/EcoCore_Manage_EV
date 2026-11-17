@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Đăng Ký - Job Portal</title>
+  <link rel="stylesheet" th:href="@{/css/style.css}" href="css/style.css">
+</head>
+<body class="login-full-page">
+  <div class="login-page-overlay">
+    <div class="login-content-wrapper">
+      <div class="login-intro-col">
+        <a th:href="@{/}" href="index.html" class="login-main-logo">JOB PORTAL</a>
+        <div class="login-intro-body">
+          <h1 class="login-headline">Kiến tạo sự nghiệp<br>của bạn.</h1>
+          <p class="login-subtext">Kết nối với những cơ hội việc làm phù hợp và bắt đầu hành trình phát triển nghề nghiệp ngay hôm nay.</p>
+          <div class="login-points-stack">
+            <div class="login-point-item">
+              <span class="login-point-bar"></span>
+              <span>Tạo hồ sơ năng lực chuyên nghiệp nhanh chóng.</span>
+            </div>
+            <div class="login-point-item">
+              <span class="login-point-bar"></span>
+              <span>Tiếp cận hơn 3.500+ nhà tuyển dụng uy tín.</span>
+            </div>
+            <div class="login-point-item">
+              <span class="login-point-bar"></span>
+              <span>Chủ động nắm bắt cơ hội nghề nghiệp tương lai.</span>
+            </div>
+          </div>
+        </div>
+        <div class="login-intro-footer">
+          <p>© 2026 JOB PORTAL. ALL RIGHTS RESERVED.</p>
+        </div>
+      </div>
+
+      <div class="login-form-col">
+        <div class="register-card-standalone">
+          <div class="login-card-header">
+            <h2 class="login-form-title">Tạo tài khoản mới</h2>
+            <p class="login-form-subtitle">Tham gia JOB PORTAL để khám phá những cơ hội nghề nghiệp.</p>
+          </div>
+
+          <form class="login-main-form" action="#" method="POST" autocomplete="off">
+            <div class="form-row-2">
+              <div class="form-group">
+                <label class="form-label" for="regFullName">Họ và tên</label>
+                <input type="text" id="regFullName" name="fullName" class="form-control" placeholder="Nguyễn Văn A" required autocomplete="off">
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="regEmail">Email</label>
+                <input type="email" id="regEmail" name="email" class="form-control" placeholder="vidu@congty.com" required autocomplete="off">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="regRole">Vai trò tài khoản</label>
+              <select id="regRole" name="role" class="form-control" required>
+                <option value="" disabled selected>Chọn vai trò của bạn</option>
+                <option value="candidate">Tôi là Ứng viên tìm việc</option>
+                <option value="employer">Tôi là Nhà tuyển dụng doanh nghiệp</option>
+              </select>
+            </div>
+
+            <div class="form-row-2">
+              <div class="form-group">
+                <label class="form-label" for="regPassword">Mật khẩu</label>
+                <input type="password" id="regPassword" name="password" class="form-control" placeholder="Tối thiểu 8 ký tự" required autocomplete="new-password">
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="regConfirmPassword">Xác nhận mật khẩu</label>
+                <input type="password" id="regConfirmPassword" name="confirmPassword" class="form-control" placeholder="Nhập lại mật khẩu" required autocomplete="new-password">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-checkbox-label">
+                <input type="checkbox" id="regTerms" required>
+                <span>Tôi đồng ý với Điều khoản sử dụng và Chính sách bảo mật</span>
+              </label>
+            </div>
+
+            <button type="submit" class="login-btn-submit">TẠO TÀI KHOẢN</button>
+          </form>
+
+          <p class="login-switch-prompt">
+            Đã có tài khoản?
+            <a th:href="@{/login}" href="login.html" class="login-switch-link">Đăng nhập ngay</a>
+          </p>
+
+          <div class="login-return-box">
+            <a th:href="@{/}" href="index.html" class="login-return-link">Quay về Trang chủ</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
