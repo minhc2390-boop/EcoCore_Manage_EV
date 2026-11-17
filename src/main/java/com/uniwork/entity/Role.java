@@ -2,6 +2,6 @@ package com.uniwork.entity;
 
 public enum Role {
     STUDENT,
-    RECRUITER,
-    ADMIN
+    COMPANY_ADMIN,
+    SUPER_ADMIN
 }
