@@ -41,15 +41,20 @@
             <p class="login-form-subtitle">Đăng nhập để tiếp tục hành trình nghề nghiệp của bạn.</p>
           </div>
 
-          <form class="login-main-form" action="#" method="POST" autocomplete="off">
+          <!-- Thông báo lỗi hoặc thành công -->
+          <div th:if="${error}" style="padding: 12px; border-radius: 6px; background-color: #fee2e2; color: #b91c1c; border: 1px solid #f87171; margin-bottom: 15px; font-size: 14px;" th:text="${error}"></div>
+          <div th:if="${success}" style="padding: 12px; border-radius: 6px; background-color: #dcfce7; color: #15803d; border: 1px solid #86efac; margin-bottom: 15px; font-size: 14px;" th:text="${success}"></div>
+          <div th:if="${info}" style="padding: 12px; border-radius: 6px; background-color: #e0f2fe; color: #0369a1; border: 1px solid #7dd3fc; margin-bottom: 15px; font-size: 14px;" th:text="${info}"></div>
+
+          <form class="login-main-form" th:action="@{/login}" method="POST" autocomplete="off">
             <div class="form-group">
-              <label class="form-label" for="loginEmail">Email</label>
-              <input type="email" id="loginEmail" name="email" class="form-control" placeholder="Nhập địa chỉ email của bạn" required autocomplete="off">
+              <label class="form-label" for="loginUsername">Tên đăng nhập / Email</label>
+              <input type="text" id="loginUsername" name="username" th:value="${username}" class="form-control" placeholder="Nhập tên đăng nhập hoặc email" required autocomplete="off">
             </div>
 
             <div class="form-group">
               <label class="form-label" for="loginPassword">Mật khẩu</label>
-              <input type="password" id="loginPassword" name="password" class="form-control" placeholder="Nhập mật khẩu của bạn" required autocomplete="new-password">
+              <input type="password" id="loginPassword" name="password" class="form-control" placeholder="Nhập mật khẩu của bạn" required autocomplete="current-password">
             </div>
 
             <div class="form-forgot-row">

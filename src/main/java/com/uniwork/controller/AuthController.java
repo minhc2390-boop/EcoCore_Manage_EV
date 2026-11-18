@@ -83,9 +83,9 @@ public class AuthController {
 
     // xử lý form đăng ký account mới
     @PostMapping("/register")
-    public String processRegister(@RequestParam("fullname") String fullName,
+    public String processRegister(@RequestParam("fullName") String fullName,
             @RequestParam("username") String username,
-            @RequestParam("emaiil") String email,
+            @RequestParam("email") String email,
             @RequestParam(value = "phone", required = false) String phone,
             @RequestParam("password") String password,
             @RequestParam("confirmPassword") String confirmPassword,
@@ -93,7 +93,7 @@ public class AuthController {
             Model model) {
         // kiểm tra xác nhận mật khẩu
         if (!password.equals(confirmPassword)) {
-            model.addAttribute("error", "Mật khẩu xác nhận thành công");
+            model.addAttribute("error", "Mật khẩu xác nhận không trùng khớp!");
             preserveFormData(model, fullName, username, email, phone);
             return "register";
         }
