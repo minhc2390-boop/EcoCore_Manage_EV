@@ -17,8 +17,12 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+/**
+ * Unit Test cho UserService
+ * @author Cao Trần Duy Minh - PC11166 (Trưởng nhóm / Lead Backend)
+ */
 @ExtendWith(MockitoExtension.class)
-@DisplayName("Unit Test cho UserService (Phụ trách: Minh - Lead Backend)")
+@DisplayName("Unit Test cho UserService (Phụ trách: Cao Trần Duy Minh - PC11166)")
 class UserServiceTest {
 
     @Mock
