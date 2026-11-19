@@ -6,6 +6,11 @@ import lombok.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+/**
+ * Entity Tin Tuyển Dụng (JobPosting)
+ * Khóa ngoại liên kết Doanh nghiệp (@ManyToOne Employer) và Danh mục ngành nghề (@ManyToOne JobCategory)
+ * @author Hùng Anh - Company Admin Portal (Phần Tin Tuyển Dụng)
+ */
 @Entity
 @Table(name = "job_postings")
 @Data
@@ -57,7 +62,7 @@ public class JobPosting {
 
     @Builder.Default
     @Column(length = 20, nullable = false)
-    private String status = "ACTIVE"; // ACTIVE, CLOSED, EXPIRED
+    private String status = "ACTIVE"; // ACTIVE, HIDDEN, CLOSED, EXPIRED
 
     @Builder.Default
     private Integer viewCount = 0;
@@ -65,4 +70,11 @@ public class JobPosting {
     @Builder.Default
     @Column(name = "created_at")
     private LocalDateTime createdAt = LocalDateTime.now();
+
+    /**
+     * Helper lấy thông tin User (Tài khoản Nhà tuyển dụng) đại diện công ty
+     */
+    public User getUser() {
+        return employer != null ? employer.getUser() : null;
+    }
 }

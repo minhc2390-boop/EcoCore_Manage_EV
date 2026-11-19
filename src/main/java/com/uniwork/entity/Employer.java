@@ -3,6 +3,11 @@ package com.uniwork.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+/**
+ * Entity Nhà Tuyển Dụng / Doanh Nghiệp (Employer)
+ * Đại diện công ty tuyển dụng tại TP. Cần Thơ, liên kết với tài khoản User (@OneToOne User)
+ * @author Hùng Anh - Company Admin Portal (Phần Tin Tuyển Dụng)
+ */
 @Entity
 @Table(name = "employers")
 @Data

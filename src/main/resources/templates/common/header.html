@@ -50,14 +50,28 @@
                         <i class="bi bi-play-circle me-1"></i>Demo Slide 1.1
                     </a>
                 </li>
+                <!-- Menu Cổng Tuyển Dụng dành cho Company Admin (Hùng Anh) -->
+                <li class="nav-item" th:if="${session.currentUser != null and (session.currentUser.role.name() == 'COMPANY_ADMIN' or session.currentUser.role.name() == 'SUPER_ADMIN')}">
+                    <a class="nav-link text-warning fw-bold" th:href="@{/employer/jobs}">
+                        <i class="bi bi-building-gear me-1"></i>Quản Lý Tuyển Dụng
+                    </a>
+                </li>
             </ul>
             <div class="d-flex align-items-center gap-2">
                 <a th:href="@{/jobs}" class="btn btn-outline-light btn-sm px-3 rounded-pill">
                     <i class="bi bi-compass me-1"></i>Khám phá
                 </a>
-                <a href="#" class="btn btn-warning btn-sm px-3 rounded-pill fw-semibold text-dark shadow-sm">
+                <a th:href="@{/employer/jobs}" class="btn btn-warning btn-sm px-3 rounded-pill fw-semibold text-dark shadow-sm">
                     <i class="bi bi-building-add me-1"></i>Nhà Tuyển Dụng
                 </a>
+                <div th:if="${session.currentUser != null}" class="d-flex align-items-center gap-2 ms-2">
+                    <a th:href="@{/profile}" class="btn btn-sm btn-outline-light rounded-pill px-2.5 py-1 text-truncate" style="max-width: 140px;">
+                        <i class="bi bi-person-circle me-1"></i><span th:text="${session.currentUser.fullName != null ? session.currentUser.fullName : session.currentUser.username}">User</span>
+                    </a>
+                    <a th:href="@{/logout}" class="btn btn-sm btn-outline-danger text-white border-0 py-1" title="Đăng xuất">
+                        <i class="bi bi-box-arrow-right"></i>
+                    </a>
+                </div>
             </div>
         </div>
     </div>

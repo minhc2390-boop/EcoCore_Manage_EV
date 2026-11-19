@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<!-- 
+  UniWork Cần Thơ - Giao Diện Đăng Bài Tuyển Dụng Theo Ca & Chọn Quận/Huyện Cần Thơ
+  Dành riêng cho Company Admin
+  @author Hùng Anh - Company Admin Portal (Phần Tin Tuyển Dụng)
+-->
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng Bài Tuyển Dụng Mới - Company Admin Portal | UniWork Cần Thơ</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Bootstrap 5 & Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #f8fafc;
+            color: #1e293b;
+        }
+        .portal-header {
+            background: linear-gradient(135deg, #142B4A 0%, #1e3a5f 100%);
+            box-shadow: 0 4px 15px rgba(20, 43, 74, 0.15);
+        }
+        .form-card {
+            background: #ffffff;
+            border-radius: 16px;
+            padding: 36px;
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+            border: 1px solid #edf2f7;
+        }
+        .form-section-title {
+            font-size: 17px;
+            font-weight: 700;
+            color: #142B4A;
+            border-bottom: 2px solid #f1f5f9;
+            padding-bottom: 12px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .form-label {
+            font-weight: 600;
+            font-size: 14px;
+            color: #334155;
+            margin-bottom: 6px;
+        }
+        .preset-chip {
+            display: inline-block;
+            background: #f1f5f9;
+            color: #334155;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 12.5px;
+            font-weight: 500;
+            cursor: pointer;
+            border: 1px solid #e2e8f0;
+            transition: all 0.15s ease-in-out;
+            user-select: none;
+        }
+        .preset-chip:hover {
+            background: #e0f2fe;
+            color: #0369a1;
+            border-color: #bae6fd;
+            transform: scale(1.02);
+        }
+        .preset-chip.active {
+            background: #142B4A;
+            color: #ffffff;
+            border-color: #142B4A;
+        }
+        .location-preview-box {
+            background: #f8fafc;
+            border: 1px dashed #cbd5e1;
+            border-radius: 8px;
+            padding: 10px 14px;
+            font-size: 13.5px;
+            color: #475569;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- TOP NAVBAR CHO COMPANY ADMIN -->
+    <header class="portal-header text-white sticky-top py-2">
+        <div class="container d-flex justify-content-between align-items-center">
+            <a th:href="@{/}" class="text-white text-decoration-none fw-bold fs-5 d-flex align-items-center gap-2">
+                <span class="badge bg-warning text-dark py-1.5 px-2 rounded-3"><i class="bi bi-briefcase-fill"></i></span>
+                <span>Uni<span class="text-warning">Work</span> Cần Thơ</span>
+                <span class="badge bg-white bg-opacity-10 text-warning ms-2 px-2 py-1 small fw-normal">Cổng Tuyển Dụng</span>
+            </a>
+            <div class="d-flex align-items-center gap-3">
+                <a th:href="@{/employer/jobs}" class="btn btn-outline-light btn-sm rounded-pill px-3">
+                    <i class="bi bi-arrow-left me-1"></i>Quay lại danh sách tin
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <div class="container py-4" style="max-width: 960px;">
+
+        <!-- BREADCRUMB -->
+        <nav aria-label="breadcrumb" class="mb-3">
+            <ol class="breadcrumb small">
+                <li class="breadcrumb-item"><a th:href="@{/}" class="text-decoration-none">Trang chủ</a></li>
+                <li class="breadcrumb-item"><a th:href="@{/employer/jobs}" class="text-decoration-none">Cổng Tuyển Dụng</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Đăng tin mới</li>
+            </ol>
+        </nav>
+
+        <!-- THÔNG BÁO LỖI -->
+        <div th:if="${error}" class="alert alert-danger alert-dismissible fade show rounded-4 shadow-sm mb-4" role="alert">
+            <i class="bi bi-exclamation-triangle-fill me-2 fs-5"></i>
+            <span th:text="${error}">Vui lòng kiểm tra lại thông tin!</span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+
+        <div class="form-card">
+            
+            <div class="d-flex justify-content-between align-items-start mb-4">
+                <div>
+                    <span class="badge bg-warning text-dark fw-bold px-3 py-1.5 rounded-pill mb-2">
+                        <i class="bi bi-building me-1"></i><span th:text="${employer.companyName}">Doanh Nghiệp Tuyển Dụng</span>
+                    </span>
+                    <h3 class="fw-bold mb-1" style="color: #142B4A;">Đăng Bài Tuyển Dụng Mới</h3>
+                    <p class="text-muted small mb-0">Hỗ trợ tuyển dụng việc làm theo ca và chọn quận/huyện TP. Cần Thơ cho sinh viên.</p>
+                </div>
+                <div class="text-end text-muted small">
+                    <span class="badge bg-light text-secondary border px-2 py-1">
+                        Tác giả: Hùng Anh
+                    </span>
+                </div>
+            </div>
+
+            <form th:action="@{/employer/jobs/create}" th:object="${jobDTO}" method="POST" id="createJobForm">
+
+                <!-- 1. THÔNG TIN CƠ BẢN -->
+                <div class="form-section-title">
+                    <i class="bi bi-info-circle-fill text-primary"></i> 1. Thông Tin Chung Về Vị Trí Việc Làm
+                </div>
+
+                <div class="mb-3">
+                    <label for="title" class="form-label">Tiêu đề tin tuyển dụng <span class="text-danger">*</span></label>
+                    <input type="text" id="title" th:field="*{title}" class="form-control form-control-lg rounded-3" 
+                           placeholder="VD: Nhân Viên Pha Chế / Phục Vụ Ca Xoay Sinh Viên (Bến Ninh Kiều)" required>
+                    <small class="text-muted">Đặt tiêu đề rõ ràng, chứa chức danh công việc và địa điểm để thu hút sinh viên ứng tuyển.</small>
+                </div>
+
+                <div class="row g-3 mb-4">
+                    <div class="col-md-6">
+                        <label for="categoryId" class="form-label">Ngành nghề / Danh mục</label>
+                        <select id="categoryId" th:field="*{categoryId}" class="form-select rounded-3">
+                            <option value="">-- Chọn ngành nghề phù hợp --</option>
+                            <option th:each="cat : ${categories}" th:value="${cat.id}" th:text="${cat.name}"></option>
+                            <option th:if="${#lists.isEmpty(categories)}" value="" disabled>-- Chưa có danh mục (Chờ Khanh cập nhật) --</option>
+                        </select>
+                        <small class="text-muted">Phân loại giúp sinh viên dễ dàng lọc tìm kiếm.</small>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label for="jobType" class="form-label">Hình thức làm việc <span class="text-danger">*</span></label>
+                        <select id="jobType" th:field="*{jobType}" class="form-select rounded-3" required>
+                            <option th:each="type : ${jobTypes}" th:value="${type}" th:text="${type}"></option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- 2. TUYỂN DỤNG THEO CA (HÙNG ANH - SHIFT SCHEDULE) -->
+                <div class="form-section-title">
+                    <i class="bi bi-clock-history text-warning"></i> 2. Tuyển Dụng Theo Ca Cho Sinh Viên Cần Thơ <span class="text-danger">*</span>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Chọn nhanh ca làm việc phù hợp thời khóa biểu sinh viên:</label>
+                    <div class="d-flex flex-wrap gap-2 mb-2">
+                        <span th:each="shift : ${popularShifts}" class="preset-chip" 
+                              th:text="${shift}" onclick="selectShiftPreset(this.innerText)"></span>
+                    </div>
+                    <label for="shiftSchedule" class="form-label mt-2">Chi tiết lịch ca làm việc:</label>
+                    <div class="input-group">
+                        <span class="input-group-text bg-light"><i class="bi bi-calendar3 text-primary"></i></span>
+                        <input type="text" id="shiftSchedule" th:field="*{shiftSchedule}" class="form-control rounded-end-3" 
+                               placeholder="VD: Ca sáng (07:00 - 11:30), Ca tối (17:30 - 22:30), xoay ca linh hoạt theo tuần" required>
+                    </div>
+                    <small class="text-muted">Bạn có thể bấm vào các gợi ý ca bên trên hoặc tự nhập khung giờ làm việc linh hoạt theo ca của công ty.</small>
+                </div>
+
+                <div class="row g-3 mb-4">
+                    <div class="col-md-6">
+                        <label for="salaryRange" class="form-label">Mức lương / Thù lao</label>
+                        <input type="text" id="salaryRange" th:field="*{salaryRange}" class="form-control rounded-3" 
+                               placeholder="VD: 23.000đ - 28.000đ / giờ hoặc 5-8 triệu/tháng">
+                        <div class="d-flex gap-2 mt-2">
+                            <span class="badge bg-light text-dark border cursor-pointer" onclick="document.getElementById('salaryRange').value='23.000đ - 28.000đ / giờ'">23k-28k/giờ</span>
+                            <span class="badge bg-light text-dark border cursor-pointer" onclick="document.getElementById('salaryRange').value='25.000đ - 30.000đ / giờ'">25k-30k/giờ</span>
+                            <span class="badge bg-light text-dark border cursor-pointer" onclick="document.getElementById('salaryRange').value='5.000.000đ - 8.000.000đ / tháng'">5-8 triệu/tháng</span>
+                            <span class="badge bg-light text-dark border cursor-pointer" onclick="document.getElementById('salaryRange').value='Thỏa thuận theo ca'">Thỏa thuận</span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="deadline" class="form-label">Hạn nộp hồ sơ ứng tuyển <span class="text-danger">*</span></label>
+                        <input type="date" id="deadline" th:field="*{deadline}" class="form-control rounded-3" required>
+                        <small class="text-muted">Mặc định là 30 ngày kể từ hôm nay (có thể gia hạn sau).</small>
+                    </div>
+                </div>
+
+                <!-- 3. CHỌN QUẬN/HUYỆN Ở CẦN THƠ (HÙNG ANH - LOCATION) -->
+                <div class="form-section-title">
+                    <i class="bi bi-geo-alt-fill text-danger"></i> 3. Địa Điểm Làm Việc Tại TP. Cần Thơ <span class="text-danger">*</span>
+                </div>
+
+                <div class="row g-3 mb-3">
+                    <div class="col-md-5">
+                        <label for="districtSelect" class="form-label">Quận / Huyện ở Cần Thơ <span class="text-danger">*</span></label>
+                        <select id="districtSelect" th:field="*{district}" class="form-select rounded-3" onchange="updateLocationPreview()" required>
+                            <option th:each="dist : ${canThoDistricts}" th:value="${dist}" th:text="${dist}"></option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-7">
+                        <label for="detailAddress" class="form-label">Địa chỉ chi tiết (Số nhà, tên đường, phường/xã)</label>
+                        <input type="text" id="detailAddress" th:field="*{detailAddress}" class="form-control rounded-3" 
+                               placeholder="VD: Số 25 Hai Bà Trưng, Phường Tân An" oninput="updateLocationPreview()">
+                    </div>
+                </div>
+
+                <!-- Ô XEM TRƯỚC ĐỊA CHỈ HOÀN CHỈNH -->
+                <div class="mb-4">
+                    <label class="form-label small text-muted">Địa chỉ hoàn chỉnh sẽ hiển thị trên bài đăng:</label>
+                    <div class="location-preview-box d-flex align-items-center gap-2">
+                        <i class="bi bi-pin-map-fill text-danger"></i>
+                        <span id="locationPreviewText" class="fw-semibold text-dark">Quận Ninh Kiều, TP. Cần Thơ</span>
+                    </div>
+                </div>
+
+                <!-- 4. NỘI DUNG CHI TIẾT BÀI ĐĂNG -->
+                <div class="form-section-title">
+                    <i class="bi bi-file-text-fill text-info"></i> 4. Nội Dung Chi Tiết Bài Tuyển Dụng
+                </div>
+
+                <div class="mb-3">
+                    <label for="description" class="form-label">Mô tả công việc <span class="text-danger">*</span></label>
+                    <textarea id="description" th:field="*{description}" rows="4" class="form-control rounded-3" 
+                              placeholder="Mô tả các nhiệm vụ chính trong ca làm việc của sinh viên..." required></textarea>
+                </div>
+
+                <div class="mb-3">
+                    <label for="requirements" class="form-label">Yêu cầu đối với ứng viên (Kỹ năng, thái độ, đối tượng sinh viên)</label>
+                    <textarea id="requirements" th:field="*{requirements}" rows="3" class="form-control rounded-3" 
+                              placeholder="VD: Sinh viên các trường ĐH Cần Thơ, FPT Polytechnic, Nam Cần Thơ... Nhanh nhẹn, chăm chỉ, không yêu cầu kinh nghiệm."></textarea>
+                </div>
+
+                <div class="mb-4">
+                    <label for="benefits" class="form-label">Quyền lợi & Đãi ngộ cho sinh viên</label>
+                    <textarea id="benefits" th:field="*{benefits}" rows="3" class="form-control rounded-3" 
+                              placeholder="VD: Hỗ trợ dấu mộc thực tập tốt nghiệp, thưởng chuyên cần, miễn phí đồ uống trong ca, linh hoạt đổi ca học."></textarea>
+                </div>
+
+                <!-- 5. TRẠNG THÁI HIỂN THỊ BAN ĐẦU -->
+                <div class="p-3 bg-light rounded-3 mb-4 d-flex justify-content-between align-items-center">
+                    <div>
+                        <div class="fw-semibold">Trạng thái bài đăng sau khi tạo:</div>
+                        <small class="text-muted">Chọn "Đang tuyển" để sinh viên có thể tìm thấy ngay, hoặc "Lưu nháp / Ẩn" để hoàn thiện sau.</small>
+                    </div>
+                    <div class="d-flex gap-3">
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" th:field="*{status}" id="statusActive" value="ACTIVE" checked>
+                            <label class="form-check-label fw-semibold text-success" for="statusActive">
+                                <i class="bi bi-check-circle me-1"></i>Đang tuyển (Công khai)
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" th:field="*{status}" id="statusHidden" value="HIDDEN">
+                            <label class="form-check-label fw-semibold text-warning" for="statusHidden">
+                                <i class="bi bi-eye-slash me-1"></i>Lưu nháp (Ẩn tin)
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- NÚT THAO TÁC SUBMIT -->
+                <div class="d-flex justify-content-end gap-3 pt-3 border-top">
+                    <a th:href="@{/employer/jobs}" class="btn btn-outline-secondary px-4 py-2.5 rounded-pill fw-medium">
+                        Hủy bỏ
+                    </a>
+                    <button type="submit" class="btn btn-warning fw-bold text-dark px-5 py-2.5 rounded-pill shadow-sm">
+                        <i class="bi bi-cloud-arrow-up-fill me-1"></i>Đăng Bài Tuyển Dụng
+                    </button>
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+    <!-- BOOTSTRAP 5 JS & SCRIPT TƯƠNG TÁC FORM -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function selectShiftPreset(shiftText) {
+            const shiftInput = document.getElementById('shiftSchedule');
+            if (!shiftInput.value.trim()) {
+                shiftInput.value = shiftText;
+            } else if (!shiftInput.value.includes(shiftText)) {
+                shiftInput.value += ', ' + shiftText;
+            }
+        }
+
+        function updateLocationPreview() {
+            const district = document.getElementById('districtSelect').value;
+            const detail = document.getElementById('detailAddress').value.trim();
+            const preview = document.getElementById('locationPreviewText');
+
+            if (detail) {
+                if (detail.toLowerCase().includes('cần thơ')) {
+                    preview.innerText = detail;
+                } else {
+                    preview.innerText = detail + ', ' + district + ', TP. Cần Thơ';
+                }
+            } else {
+                preview.innerText = district + ', TP. Cần Thơ';
+            }
+        }
+
+        // Cập nhật preview ban đầu
+        document.addEventListener('DOMContentLoaded', updateLocationPreview);
+    </script>
+</body>
+</html>
