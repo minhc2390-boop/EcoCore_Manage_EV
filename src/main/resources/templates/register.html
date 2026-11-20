@@ -71,8 +71,8 @@
             <div class="form-group">
               <label class="form-label" for="regRole">Vai trò tài khoản</label>
               <select id="regRole" name="role" class="form-control" required>
-                <option value="STUDENT" selected>Tôi là Sinh viên tìm việc</option>
-                <option value="COMPANY_ADMIN">Tôi là Doanh nghiệp / Quán cafe tuyển dụng</option>
+                <option value="STUDENT" th:selected="${role == null or role == 'STUDENT'}">Tôi là Sinh viên tìm việc</option>
+                <option value="COMPANY_ADMIN" th:selected="${role == 'COMPANY_ADMIN'}">Tôi là Doanh nghiệp / Quán cafe tuyển dụng</option>
               </select>
             </div>
 

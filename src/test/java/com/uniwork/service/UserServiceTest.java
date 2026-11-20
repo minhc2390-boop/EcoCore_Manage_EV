@@ -18,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 /**
- * Unit Test cho UserService
+ * Unit Test cho UserService (Phân hệ Quản lý người dùng)
  * @author Cao Trần Duy Minh - PC11166 (Trưởng nhóm / Lead Backend)
  */
 @ExtendWith(MockitoExtension.class)
@@ -39,7 +39,7 @@ class UserServiceTest {
                 .id(1L)
                 .username("minh_lead")
                 .password("123456")
-                .fullName("Nguyễn Duy Minh")
+                .fullName("Cao Trần Duy Minh")
                 .email("minh@uniwork.edu.vn")
                 .phone("0939123456")
                 .role(Role.SUPER_ADMIN)
@@ -59,6 +59,18 @@ class UserServiceTest {
     }
 
     @Test
+    @DisplayName("Kiểm tra đăng nhập thành công với email và password chính xác")
+    void should_AuthenticateSuccess_When_ValidEmailCredentials() {
+        when(userRepository.findByUsername("minh@uniwork.edu.vn")).thenReturn(Optional.empty());
+        when(userRepository.findByEmail("minh@uniwork.edu.vn")).thenReturn(Optional.of(sampleUser));
+
+        boolean result = userService.authenticate("minh@uniwork.edu.vn", "123456");
+
+        assertTrue(result);
+        verify(userRepository, times(1)).findByEmail("minh@uniwork.edu.vn");
+    }
+
+    @Test
     @DisplayName("Kiểm tra đăng nhập thất bại khi nhập sai mật khẩu")
     void should_FailAuthentication_When_InvalidPassword() {
         when(userRepository.findByUsername("minh_lead")).thenReturn(Optional.of(sampleUser));
@@ -67,6 +79,33 @@ class UserServiceTest {
 
         assertFalse(result);
         verify(userRepository, times(1)).findByUsername("minh_lead");
+    }
+
+    @Test
+    @DisplayName("Kiểm tra đăng nhập thất bại khi tài khoản không tồn tại")
+    void should_FailAuthentication_When_UserNotFound() {
+        when(userRepository.findByUsername("unknown_user")).thenReturn(Optional.empty());
+        when(userRepository.findByEmail("unknown_user")).thenReturn(Optional.empty());
+
+        boolean result = userService.authenticate("unknown_user", "123456");
+
+        assertFalse(result);
+    }
+
+    @Test
+    @DisplayName("Kiểm tra tìm kiếm tài khoản theo username hoặc email")
+    void should_FindByUsernameOrEmail_Success() {
+        when(userRepository.findByUsername("minh_lead")).thenReturn(Optional.of(sampleUser));
+        when(userRepository.findByUsername("minh@uniwork.edu.vn")).thenReturn(Optional.empty());
+        when(userRepository.findByEmail("minh@uniwork.edu.vn")).thenReturn(Optional.of(sampleUser));
+
+        Optional<User> byUser = userService.findByUsernameOrEmail("minh_lead");
+        Optional<User> byEmail = userService.findByUsernameOrEmail("minh@uniwork.edu.vn");
+
+        assertTrue(byUser.isPresent());
+        assertEquals("minh_lead", byUser.get().getUsername());
+        assertTrue(byEmail.isPresent());
+        assertEquals("minh@uniwork.edu.vn", byEmail.get().getEmail());
     }
 
     @Test
@@ -93,6 +132,20 @@ class UserServiceTest {
         });
 
         assertEquals("Tên đăng nhập đã tồn tại trong hệ thống!", exception.getMessage());
+        verify(userRepository, never()).save(any());
+    }
+
+    @Test
+    @DisplayName("Kiểm tra ném ngoại lệ khi địa chỉ email đã tồn tại")
+    void should_ThrowException_When_EmailAlreadyExists() {
+        when(userRepository.existsByUsername("minh_lead")).thenReturn(false);
+        when(userRepository.existsByEmail("minh@uniwork.edu.vn")).thenReturn(true);
+
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            userService.registerUser(sampleUser);
+        });
+
+        assertEquals("Địa chỉ email đã được đăng ký!", exception.getMessage());
         verify(userRepository, never()).save(any());
     }
 }

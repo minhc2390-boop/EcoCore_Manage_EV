@@ -4,9 +4,15 @@ import com.uniwork.entity.User;
 
 import java.util.Optional;
 
+/**
+ * Service quản lý người dùng và xác thực tài khoản
+ * @author Cao Trần Duy Minh - PC11166 (Trưởng nhóm / Lead Backend)
+ */
 public interface UserService {
     Optional<User> findByUsername(String username);
+    Optional<User> findByEmail(String email);
+    Optional<User> findByUsernameOrEmail(String identifier);
     Optional<User> findById(Long id);
     User registerUser(User user);
-    boolean authenticate(String username, String password);
+    boolean authenticate(String identifier, String password);
 }
