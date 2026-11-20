@@ -180,8 +180,12 @@
                     <span th:text="${employer.contactPhone}"></span>
                 </p>
             </div>
-            <div>
-                <a th:href="@{/employer/jobs/create}" class="btn btn-warning fw-bold text-dark px-4 py-2.5 rounded-3 shadow-sm d-flex align-items-center gap-2">
+            <div class="d-flex flex-wrap gap-2">
+                <a th:href="@{/employer/applications}" class="btn btn-outline-primary fw-bold px-3 py-2 rounded-3 d-flex align-items-center gap-2">
+                    <i class="bi bi-people-fill fs-5"></i>
+                    <span>Quản Lý Ứng Viên</span>
+                </a>
+                <a th:href="@{/employer/jobs/create}" class="btn btn-warning fw-bold text-dark px-4 py-2 rounded-3 shadow-sm d-flex align-items-center gap-2">
                     <i class="bi bi-plus-circle-fill fs-5"></i>
                     <span>Đăng Tin Tuyển Dụng Mới</span>
                 </a>
