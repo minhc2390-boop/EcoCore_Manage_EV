@@ -30,6 +30,16 @@
         <a th:href="@{/#categories}" href="#categories" class="nav-link">Ngành nghề</a>
         <a th:href="@{/#companies}" href="#companies" class="nav-link">Doanh nghiệp</a>
         <a th:href="@{/employer/jobs}" class="nav-link">Nhà tuyển dụng</a>
+        <!-- Auth links for mobile nav drawer -->
+        <th:block th:if="${session.currentUser == null}">
+          <a th:href="@{/login}" class="nav-link mobile-only-auth"><i data-lucide="log-in" style="width:16px;height:16px;vertical-align:-2px;margin-right:6px;"></i>Đăng nhập</a>
+          <a th:href="@{/register}" class="nav-link mobile-only-auth"><i data-lucide="user-plus" style="width:16px;height:16px;vertical-align:-2px;margin-right:6px;"></i>Đăng ký</a>
+        </th:block>
+        <th:block th:if="${session.currentUser != null}">
+          <a th:href="@{/profile}" class="nav-link mobile-only-auth"><i data-lucide="user" style="width:16px;height:16px;vertical-align:-2px;margin-right:6px;"></i>Hồ sơ: <span th:text="${session.currentUser.fullName != null ? session.currentUser.fullName : session.currentUser.username}">Tài khoản</span></a>
+          <a th:if="${session.currentUser.role.name() == 'COMPANY_ADMIN' or session.currentUser.role.name() == 'SUPER_ADMIN'}" th:href="@{/employer/jobs}" class="nav-link mobile-only-auth"><i data-lucide="layout-dashboard" style="width:16px;height:16px;vertical-align:-2px;margin-right:6px;"></i>Cổng tuyển dụng</a>
+          <a th:href="@{/logout}" class="nav-link mobile-only-auth" style="color:#ef4444;"><i data-lucide="log-out" style="width:16px;height:16px;vertical-align:-2px;margin-right:6px;"></i>Đăng xuất</a>
+        </th:block>
       </nav>
 
       <div class="header-actions">
@@ -37,8 +47,24 @@
           <i data-lucide="moon" class="dark-icon"></i>
           <i data-lucide="sun" class="light-icon"></i>
         </button>
-        <a th:href="@{/login}" href="login.html" class="btn btn-outline">Đăng nhập</a>
-        <a th:href="@{/register}" href="register.html" class="btn btn-primary">Đăng ký</a>
+        <th:block th:if="${session.currentUser == null}">
+          <a th:href="@{/login}" href="login.html" class="btn btn-outline btn-login-header">Đăng nhập</a>
+          <a th:href="@{/register}" href="register.html" class="btn btn-primary">Đăng ký</a>
+        </th:block>
+        <th:block th:if="${session.currentUser != null}">
+          <a th:if="${session.currentUser.role.name() == 'COMPANY_ADMIN' or session.currentUser.role.name() == 'SUPER_ADMIN'}" 
+             th:href="@{/employer/jobs}" class="btn btn-outline" style="border-color: #0284c7; color: #0284c7; font-size: 13px; padding: 6px 12px;">
+            <i data-lucide="layout-dashboard" style="width:14px;height:14px;vertical-align:-2px;margin-right:4px;"></i>Quản lý tin
+          </a>
+          <a th:href="@{/profile}" class="btn btn-outline" style="display:inline-flex;align-items:center;gap:6px;font-weight:600;padding:6px 14px;font-size:13.5px;" title="Xem hồ sơ cá nhân">
+            <i data-lucide="user" style="width:15px;height:15px;"></i>
+            <span th:text="${session.currentUser.fullName != null ? session.currentUser.fullName : session.currentUser.username}">Tài khoản</span>
+          </a>
+          <a th:href="@{/logout}" class="btn btn-outline" style="color:#ef4444;border-color:rgba(239,68,68,0.3);padding:6px 12px;font-size:13px;" title="Đăng xuất khỏi hệ thống">
+            <i data-lucide="log-out" style="width:15px;height:15px;vertical-align:-2px;"></i>
+            <span class="d-none d-sm-inline ms-1">Đăng xuất</span>
+          </a>
+        </th:block>
         <button type="button" class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Mở menu điều hướng" aria-expanded="false" aria-controls="mainNav">
           <i data-lucide="menu" class="menu-open-icon"></i>
           <i data-lucide="x" class="menu-close-icon"></i>

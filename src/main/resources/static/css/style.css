@@ -2407,8 +2407,15 @@ a.footer-link:hover {
   }
 }
 
+/* Ẩn liên kết xác thực bổ trợ trên màn hình máy tính desktop (>= 769px) */
+@media (min-width: 769px) {
+  .mobile-only-auth {
+    display: none !important;
+  }
+}
+
 @media (max-width: 420px) {
-  .header-actions .btn-outline {
+  .header-actions .btn-login-header {
     display: none; /* Hide 'Đăng nhập' in navbar on tiny screens to avoid overflow; accessible via mobile menu */
   }
 }
