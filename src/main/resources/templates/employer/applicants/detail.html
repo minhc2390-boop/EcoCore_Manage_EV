@@ -1,0 +1,296 @@
+﻿<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{employer/common/layout :: head('Chi tiết hồ sơ ứng viên')}"></head>
+<body class="employer-portal">
+
+<div class="employer-layout">
+    <div th:replace="~{employer/common/layout :: sidebar('applicants')}"></div>
+
+    <div class="employer-main">
+        <div th:replace="~{employer/common/layout :: topbar('Chi Tiết Ứng Viên & Hồ Sơ CV')}"></div>
+
+        <div class="employer-content">
+            <div id="statusAlertBox" class="alert alert-success alert-dismissible fade show rounded-3 shadow-sm mb-4" role="alert" style="display: none;">
+                <i class="bi bi-check-circle-fill me-2"></i>
+                <span id="statusAlertText">Đã cập nhật trạng thái hồ sơ ứng viên trên hệ thống Job Portal.</span>
+                <button type="button" class="btn-close" onclick="document.getElementById('statusAlertBox').style.display='none'"></button>
+            </div>
+
+            <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-4">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb mb-0 small">
+                        <li class="breadcrumb-item"><a th:href="@{/employer/applicants}" class="text-decoration-none fw-bold" style="color: var(--navy-primary);">Danh sách ứng viên</a></li>
+                        <li class="breadcrumb-item active text-secondary" aria-current="page">Hồ sơ ứng viên #<span th:text="${applicantId != null ? applicantId : 1}">1</span></li>
+                    </ol>
+                </nav>
+                <div class="d-flex gap-2">
+                    <a th:href="@{/employer/applicants}" class="btn btn-outline-custom btn-sm">
+                        <i class="bi bi-arrow-left me-1"></i>Quay lại danh sách
+                    </a>
+                </div>
+            </div>
+
+            <div class="row g-4">
+                <div class="col-12 col-lg-4">
+                    <div class="portal-card mb-4">
+                        <div class="portal-card-body text-center">
+                            <div class="mx-auto rounded-circle fw-bold d-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px; font-size: 28px; background: rgba(20, 43, 74, 0.08); color: var(--navy-primary);">
+                                HN
+                            </div>
+                            <h5 class="fw-bold mb-1" style="color: var(--navy-primary);">Nguyễn Hoàng Nam</h5>
+                            <div class="text-secondary small mb-2">Sinh viên CNTT &bull; FPT Polytechnic Cần Thơ</div>
+                            <div class="mb-3">
+                                <span class="badge-tag-custom badge-pending-custom" id="currentStatusBadge">
+                                    <i class="bi bi-circle-fill" style="font-size: 6px;"></i>Chờ xem xét
+                                </span>
+                            </div>
+
+                            <div class="p-3 bg-light rounded-3 text-start border mb-3 small">
+                                <div class="text-secondary mb-1">Vị trí ứng tuyển:</div>
+                                <div class="fw-bold text-dark mb-2">Nhân viên pha chế ca tối</div>
+                                <div class="text-secondary mb-1">Thời gian nộp:</div>
+                                <div class="fw-semibold text-dark mb-2">20/11/2026 - 14:20 (Hôm nay)</div>
+                                <div class="text-secondary mb-1">Nguyện vọng ca làm:</div>
+                                <div class="fw-bold" style="color: var(--navy-primary);">Ca tối (17:30 - 22:30) & Cuối tuần</div>
+                            </div>
+
+                            <div class="text-start mb-3">
+                                <h6 class="fw-bold small mb-2">Thông tin liên lạc</h6>
+                                <div class="d-flex flex-column gap-2 small">
+                                    <div class="text-secondary">Email: <span class="text-dark fw-semibold">namnh.pc01234@fpt.edu.vn</span></div>
+                                    <div class="text-secondary">Điện thoại: <span class="text-dark fw-semibold">0939.112.233</span></div>
+                                    <div class="text-secondary">Địa chỉ: <span class="text-dark fw-semibold">Đường 3/2, P. Xuân Khánh, Q. Ninh Kiều, Cần Thơ</span></div>
+                                </div>
+                            </div>
+
+                            <div class="d-grid gap-2 border-top pt-3">
+                                <button type="button" class="btn btn-primary-custom btn-sm" id="btnAcceptApp">Chấp nhận hồ sơ</button>
+                                <button type="button" class="btn btn-outline-custom btn-sm" id="btnReviewingApp">Đang xem xét</button>
+                                <button type="button" class="btn btn-accent-custom btn-sm" data-bs-toggle="modal" data-bs-target="#interviewInviteModal">Hẹn lịch phỏng vấn</button>
+                                <button type="button" class="btn btn-outline-danger btn-sm" id="btnRejectApp">Từ chối hồ sơ</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="portal-card">
+                        <div class="portal-card-header">
+                            <h6 class="fw-bold mb-0">Ghi chú tuyển dụng nội bộ</h6>
+                        </div>
+                        <div class="portal-card-body">
+                            <textarea class="form-control form-control-sm mb-2" rows="3" id="recruiterNotes" placeholder="Thêm nhận xét nhanh về ứng viên..."></textarea>
+                            <button type="button" class="btn btn-outline-custom btn-sm w-100" id="btnSaveNotes">Lưu ghi chú</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-12 col-lg-8">
+                    <div class="portal-card mb-4">
+                        <div class="portal-card-header">
+                            <h6 class="fw-bold mb-0">Thư giới thiệu & Nguyện vọng ứng tuyển</h6>
+                        </div>
+                        <div class="portal-card-body">
+                            <div class="p-3 bg-light rounded-3 border text-secondary small" style="line-height: 1.7;">
+                                Kính gửi Quý Doanh nghiệp,<br><br>
+                                Em là Nguyễn Hoàng Nam, sinh viên năm 2 chuyên ngành Lập trình Máy tính tại FPT Polytechnic Cần Thơ. Em có lịch học cố định vào các buổi sáng trong tuần, vì vậy em rất mong muốn ứng tuyển vào vị trí Nhân viên pha chế ca tối (17:30 - 22:30) của quý công ty trên nền tảng Job Portal.<br><br>
+                                Bản thân em là người nhanh nhẹn, ham học hỏi, trung thực và có trách nhiệm cao với công việc. Em đã từng có kinh nghiệm làm phục vụ bàn part-time 6 tháng, có kỹ năng giao tiếp tốt và làm việc nhóm hiệu quả.<br><br>
+                                Em rất mong có cơ hội được tham gia phỏng vấn trực tiếp để trao đổi chi tiết hơn về vị trí này.<br>
+                                Em xin chân thành cảm ơn!
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="portal-card">
+                        <div class="portal-card-header">
+                            <div>
+                                <h6 class="fw-bold mb-0">Bản xem trước CV Ứng viên</h6>
+                                <div class="text-secondary small">Định dạng hồ sơ chuẩn Job Portal Curriculum Vitae</div>
+                            </div>
+                            <button type="button" class="btn btn-outline-custom btn-sm" onclick="window.print()">In / Tải hồ sơ</button>
+                        </div>
+                        <div class="portal-card-body bg-light p-4">
+                            <div class="cv-preview-paper">
+                                <div class="d-flex align-items-center justify-content-between pb-3 mb-4 border-bottom">
+                                    <div>
+                                        <h3 class="fw-bold mb-1" style="color: var(--navy-primary);">NGUYỄN HOÀNG NAM</h3>
+                                        <div class="fw-bold small mb-1" style="color: var(--navy-secondary);">Ứng tuyển: Nhân viên pha chế & phục vụ ca tối</div>
+                                        <div class="text-secondary small">TP. Cần Thơ &bull; 0939.112.233 &bull; namnh.pc01234@fpt.edu.vn</div>
+                                    </div>
+                                    <div class="rounded-3 bg-light border p-2 text-center" style="width: 80px; height: 95px;">
+                                        <i class="bi bi-person-bounding-box text-secondary fs-1"></i>
+                                        <div class="text-muted" style="font-size: 10px;">Ảnh 3x4</div>
+                                    </div>
+                                </div>
+
+                                <div class="mb-4">
+                                    <div class="fw-bold border-bottom pb-1 mb-2 small text-uppercase" style="letter-spacing: 0.05em; color: var(--navy-primary);">
+                                        Mục tiêu làm việc
+                                    </div>
+                                    <p class="text-secondary small mb-0" style="line-height: 1.6;">
+                                        Tìm kiếm cơ hội việc làm part-time trên Job Portal phù hợp với lịch học đại học nhằm rèn luyện kỹ năng giao tiếp, tính kỷ luật trong môi trường dịch vụ chuyên nghiệp và tự chủ tài chính cho bản thân.
+                                    </p>
+                                </div>
+
+                                <div class="mb-4">
+                                    <div class="fw-bold border-bottom pb-1 mb-2 small text-uppercase" style="letter-spacing: 0.05em; color: var(--navy-primary);">
+                                        Học vấn & Đào tạo
+                                    </div>
+                                    <div class="d-flex justify-content-between align-items-start mb-1">
+                                        <div class="fw-bold text-dark small">Cao đẳng FPT Polytechnic Cần Thơ</div>
+                                        <div class="text-secondary small">2024 - Hiện tại</div>
+                                    </div>
+                                    <div class="text-secondary small">Chuyên ngành: Công nghệ thông tin &bull; Điểm tích lũy: 8.2 / 10</div>
+                                </div>
+
+                                <div class="mb-4">
+                                    <div class="fw-bold border-bottom pb-1 mb-2 small text-uppercase" style="letter-spacing: 0.05em; color: var(--navy-primary);">
+                                        Kinh nghiệm làm thêm
+                                    </div>
+                                    <div class="mb-3">
+                                        <div class="d-flex justify-content-between align-items-start">
+                                            <div class="fw-bold text-dark small">Nhân viên phục vụ bàn ca tối &bull; Quán Cà Phê Mộc Cần Thơ</div>
+                                            <div class="text-secondary small">06/2025 - 12/2025</div>
+                                        </div>
+                                        <ul class="text-secondary small mt-1 mb-0 ps-3">
+                                            <li>Order đồ uống, phục vụ khách hàng chu đáo và nhiệt tình.</li>
+                                            <li>Vận hành máy tính tiền POS, kiểm kê quỹ tiền mặt cuối ca chuẩn xác.</li>
+                                        </ul>
+                                    </div>
+                                </div>
+
+                                <div class="row g-3">
+                                    <div class="col-6">
+                                        <div class="fw-bold border-bottom pb-1 mb-2 small text-uppercase" style="letter-spacing: 0.05em; color: var(--navy-primary);">
+                                            Kỹ năng cá nhân
+                                        </div>
+                                        <div class="d-flex flex-wrap gap-1">
+                                            <span class="badge bg-light text-dark border small">Giao tiếp tốt</span>
+                                            <span class="badge bg-light text-dark border small">Làm việc nhóm</span>
+                                            <span class="badge bg-light text-dark border small">Chăm chỉ</span>
+                                            <span class="badge bg-light text-dark border small">Sử dụng máy POS</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="fw-bold border-bottom pb-1 mb-2 small text-uppercase" style="letter-spacing: 0.05em; color: var(--navy-primary);">
+                                            Lịch rảnh đăng ký
+                                        </div>
+                                        <div class="text-secondary small">
+                                            <div>T2 - T6: Rảnh từ 17:30 đến 23:00</div>
+                                            <div>Thứ 7 & CN: Rảnh cả ngày</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="interviewInviteModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content rounded-4 border-0 shadow">
+            <div class="modal-header border-bottom py-3">
+                <h5 class="modal-title fw-bold" style="color: var(--navy-primary);">Đặt Lịch & Gửi Thư Mời Phỏng Vấn</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body p-4">
+                <div class="mb-3">
+                    <label class="form-label small">Ứng viên nhận thư</label>
+                    <input type="text" class="form-control form-control-sm bg-light" value="Nguyễn Hoàng Nam (namnh.pc01234@fpt.edu.vn)" readonly>
+                </div>
+                <div class="row g-2 mb-3">
+                    <div class="col-7">
+                        <label class="form-label small">Ngày hẹn phỏng vấn</label>
+                        <input type="date" class="form-control form-control-sm" id="interviewDate" value="2026-11-22">
+                    </div>
+                    <div class="col-5">
+                        <label class="form-label small">Giờ hẹn</label>
+                        <input type="time" class="form-control form-control-sm" id="interviewTime" value="09:30">
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label small">Địa điểm phỏng vấn</label>
+                    <input type="text" class="form-control form-control-sm" value="Chi nhánh văn phòng Bến Ninh Kiều, Cần Thơ">
+                </div>
+                <div>
+                    <label class="form-label small">Lời nhắn gửi ứng viên</label>
+                    <textarea class="form-control form-control-sm" rows="3">Chào bạn Nam, nhà tuyển dụng đã xem qua hồ sơ của bạn trên Job Portal và rất ấn tượng. Mời bạn đến phỏng vấn trao đổi trực tiếp theo thời gian trên nhé.</textarea>
+                </div>
+            </div>
+            <div class="modal-footer border-top py-2">
+                <button type="button" class="btn btn-light btn-sm" data-bs-dismiss="modal">Hủy bỏ</button>
+                <button type="button" class="btn btn-primary-custom btn-sm" id="btnConfirmInviteModal">
+                    <i class="bi bi-send-fill me-1"></i>Xác nhận & Gửi lời mời
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:replace="~{employer/common/layout :: scripts}"></div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var statusBadge = document.getElementById('currentStatusBadge');
+        var alertBox = document.getElementById('statusAlertBox');
+        var alertText = document.getElementById('statusAlertText');
+
+        function setStatus(badgeClass, text, alertMsg) {
+            if (statusBadge) {
+                statusBadge.className = 'badge-tag-custom ' + badgeClass;
+                statusBadge.innerHTML = '<i class="bi bi-circle-fill" style="font-size: 6px;"></i>' + text;
+            }
+            if (alertBox && alertText) {
+                alertText.textContent = alertMsg;
+                alertBox.style.display = 'block';
+            }
+        }
+
+        var btnAccept = document.getElementById('btnAcceptApp');
+        if (btnAccept) {
+            btnAccept.addEventListener('click', function () {
+                setStatus('badge-active-custom', 'Được chấp nhận', 'Hồ sơ của Nguyễn Hoàng Nam đã được chấp nhận!');
+            });
+        }
+
+        var btnReviewing = document.getElementById('btnReviewingApp');
+        if (btnReviewing) {
+            btnReviewing.addEventListener('click', function () {
+                setStatus('badge-reviewing-custom', 'Đang xem xét', 'Đã chuyển hồ sơ sang trạng thái Đang xem xét.');
+            });
+        }
+
+        var btnReject = document.getElementById('btnRejectApp');
+        if (btnReject) {
+            btnReject.addEventListener('click', function () {
+                setStatus('badge-rejected-custom', 'Từ chối', 'Đã đánh dấu từ chối hồ sơ này.');
+            });
+        }
+
+        var btnConfirmInvite = document.getElementById('btnConfirmInviteModal');
+        if (btnConfirmInvite) {
+            btnConfirmInvite.addEventListener('click', function () {
+                var modalEl = document.getElementById('interviewInviteModal');
+                var modal = bootstrap.Modal.getInstance(modalEl);
+                if (modal) modal.hide();
+                setStatus('badge-active-custom', 'Đã mời phỏng vấn', 'Đã gửi lịch hẹn phỏng vấn thành công đến ứng viên!');
+            });
+        }
+
+        var btnSaveNotes = document.getElementById('btnSaveNotes');
+        if (btnSaveNotes) {
+            btnSaveNotes.addEventListener('click', function () {
+                if (alertBox && alertText) {
+                    alertText.textContent = 'Đã lưu ghi chú nội bộ thành công!';
+                    alertBox.style.display = 'block';
+                }
+            });
+        }
+    });
+</script>
+
+</body>
+</html>

@@ -73,12 +73,102 @@ public class CompanyJobController {
             "Full-time"
     );
 
-    /**
-     * Chuyển hướng /employer về /employer/jobs
-     */
     @GetMapping({"", "/"})
-    public String redirectToJobs() {
-        return "redirect:/employer/jobs";
+    public String redirectToDashboard() {
+        return "redirect:/employer/dashboard";
+    }
+
+    @GetMapping("/dashboard")
+    public String showEmployerDashboard(HttpSession session,
+                                       Model model,
+                                       RedirectAttributes redirectAttributes) {
+        User currentUser = getAuthenticatedCompanyAdmin(session);
+        if (currentUser == null) {
+            redirectAttributes.addFlashAttribute("error", "Vui lòng đăng nhập với tài khoản Nhà tuyển dụng (Company Admin) để truy cập!");
+            return "redirect:/login";
+        }
+
+        Employer employer = employerService.getOrCreateEmployerForUser(currentUser);
+        List<JobPosting> allJobs = jobPostingService.getJobsByEmployerId(employer.getId());
+        List<JobPosting> recentJobs = allJobs.stream().limit(5).toList();
+
+        long totalJobs = jobPostingService.countJobsByEmployer(employer.getId());
+        long activeJobs = jobPostingService.countJobsByEmployerAndStatus(employer.getId(), "ACTIVE");
+        long hiddenJobs = jobPostingService.countJobsByEmployerAndStatus(employer.getId(), "HIDDEN");
+        long totalViews = jobPostingService.getTotalViewsByEmployer(employer.getId());
+
+        model.addAttribute("jobs", allJobs);
+        model.addAttribute("recentJobs", recentJobs);
+        model.addAttribute("employer", employer);
+        model.addAttribute("currentUser", currentUser);
+        model.addAttribute("totalJobs", totalJobs);
+        model.addAttribute("activeJobs", activeJobs);
+        model.addAttribute("hiddenJobs", hiddenJobs);
+        model.addAttribute("totalViews", totalViews);
+
+        return "employer/dashboard";
+    }
+
+    @GetMapping("/profile")
+    public String showCompanyProfile(HttpSession session,
+                                     Model model,
+                                     RedirectAttributes redirectAttributes) {
+        User currentUser = getAuthenticatedCompanyAdmin(session);
+        if (currentUser == null) {
+            redirectAttributes.addFlashAttribute("error", "Vui lòng đăng nhập với tài khoản Nhà tuyển dụng để truy cập!");
+            return "redirect:/login";
+        }
+
+        Employer employer = employerService.getOrCreateEmployerForUser(currentUser);
+        long totalJobs = jobPostingService.countJobsByEmployer(employer.getId());
+
+        model.addAttribute("currentUser", currentUser);
+        model.addAttribute("employer", employer);
+        model.addAttribute("totalJobs", totalJobs);
+
+        return "employer/profile";
+    }
+
+    @PostMapping("/profile")
+    public String updateCompanyProfile(@ModelAttribute("employer") Employer formEmployer,
+                                       HttpSession session,
+                                       RedirectAttributes redirectAttributes) {
+        User currentUser = getAuthenticatedCompanyAdmin(session);
+        if (currentUser == null) {
+            return "redirect:/login";
+        }
+
+        Employer existingEmployer = employerService.getOrCreateEmployerForUser(currentUser);
+        if (formEmployer.getCompanyName() != null && !formEmployer.getCompanyName().trim().isEmpty()) {
+            existingEmployer.setCompanyName(formEmployer.getCompanyName().trim());
+        }
+        if (formEmployer.getCompanyLogo() != null) {
+            existingEmployer.setCompanyLogo(formEmployer.getCompanyLogo().trim());
+        }
+        if (formEmployer.getWebsite() != null) {
+            existingEmployer.setWebsite(formEmployer.getWebsite().trim());
+        }
+        if (formEmployer.getAddress() != null) {
+            existingEmployer.setAddress(formEmployer.getAddress().trim());
+        }
+        if (formEmployer.getDescription() != null) {
+            existingEmployer.setDescription(formEmployer.getDescription().trim());
+        }
+        if (formEmployer.getContactEmail() != null) {
+            existingEmployer.setContactEmail(formEmployer.getContactEmail().trim());
+        }
+        if (formEmployer.getContactPhone() != null) {
+            existingEmployer.setContactPhone(formEmployer.getContactPhone().trim());
+        }
+
+        try {
+            employerService.saveEmployer(existingEmployer);
+            redirectAttributes.addFlashAttribute("success", "Cập nhật thông tin hồ sơ doanh nghiệp thành công!");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Lỗi cập nhật hồ sơ doanh nghiệp: " + e.getMessage());
+        }
+
+        return "redirect:/employer/profile";
     }
 
     /**
@@ -447,6 +537,64 @@ public class CompanyJobController {
         }
 
         return "redirect:/employer/jobs";
+    }
+
+    @GetMapping("/applicants")
+    public String listApplicants(HttpSession session,
+                                 Model model,
+                                 RedirectAttributes redirectAttributes) {
+        User currentUser = getAuthenticatedCompanyAdmin(session);
+        if (currentUser == null) {
+            redirectAttributes.addFlashAttribute("error", "Vui lòng đăng nhập với tài khoản Nhà tuyển dụng để truy cập!");
+            return "redirect:/login";
+        }
+
+        Employer employer = employerService.getOrCreateEmployerForUser(currentUser);
+        List<JobPosting> jobs = jobPostingService.getJobsByEmployerId(employer.getId());
+
+        model.addAttribute("currentUser", currentUser);
+        model.addAttribute("employer", employer);
+        model.addAttribute("jobs", jobs);
+
+        return "employer/applicants/list";
+    }
+
+    @GetMapping("/applicants/{id}")
+    public String showApplicantDetail(@PathVariable("id") Long id,
+                                      HttpSession session,
+                                      Model model,
+                                      RedirectAttributes redirectAttributes) {
+        User currentUser = getAuthenticatedCompanyAdmin(session);
+        if (currentUser == null) {
+            redirectAttributes.addFlashAttribute("error", "Vui lòng đăng nhập với tài khoản Nhà tuyển dụng để truy cập!");
+            return "redirect:/login";
+        }
+
+        Employer employer = employerService.getOrCreateEmployerForUser(currentUser);
+
+        model.addAttribute("currentUser", currentUser);
+        model.addAttribute("employer", employer);
+        model.addAttribute("applicantId", id);
+
+        return "employer/applicants/detail";
+    }
+
+    @GetMapping("/reviews")
+    public String showCompanyReviews(HttpSession session,
+                                     Model model,
+                                     RedirectAttributes redirectAttributes) {
+        User currentUser = getAuthenticatedCompanyAdmin(session);
+        if (currentUser == null) {
+            redirectAttributes.addFlashAttribute("error", "Vui lòng đăng nhập với tài khoản Nhà tuyển dụng để truy cập!");
+            return "redirect:/login";
+        }
+
+        Employer employer = employerService.getOrCreateEmployerForUser(currentUser);
+
+        model.addAttribute("currentUser", currentUser);
+        model.addAttribute("employer", employer);
+
+        return "employer/reviews";
     }
 
     // =========================================================================

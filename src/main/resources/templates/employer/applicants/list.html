@@ -1,0 +1,489 @@
+﻿<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{employer/common/layout :: head('Quản lý hồ sơ ứng viên')}"></head>
+<body class="employer-portal">
+
+<div class="employer-layout">
+    <div th:replace="~{employer/common/layout :: sidebar('applicants')}"></div>
+
+    <div class="employer-main">
+        <div th:replace="~{employer/common/layout :: topbar('Quản Lý Hồ Sơ Ứng Viên')}"></div>
+
+        <div class="employer-content">
+            <div id="statusAlertBox" class="alert alert-success alert-dismissible fade show rounded-3 shadow-sm mb-4" role="alert" style="display: none;">
+                <i class="bi bi-check-circle-fill me-2"></i>
+                <span id="statusAlertText">Đã cập nhật trạng thái hồ sơ ứng viên trên hệ thống Job Portal.</span>
+                <button type="button" class="btn-close" onclick="document.getElementById('statusAlertBox').style.display='none'"></button>
+            </div>
+
+            <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-4">
+                <div>
+                    <h4 class="fw-bold mb-1">Danh Sách Ứng Viên</h4>
+                    <p class="text-secondary small mb-0">Theo dõi, sàng lọc và phản hồi đơn ứng tuyển của sinh viên Cần Thơ trên nền tảng Job Portal</p>
+                </div>
+                <div class="d-flex gap-2">
+                    <span class="badge bg-white border text-secondary px-3 py-2 rounded-3 d-flex align-items-center gap-2 shadow-sm">
+                        <i class="bi bi-people-fill" style="color: var(--navy-primary);"></i>
+                        <span>Tổng số: <strong style="color: var(--navy-primary);" id="totalApplicantsCount">6</strong> ứng viên</span>
+                    </span>
+                </div>
+            </div>
+
+            <div class="portal-card">
+                <div class="portal-card-header flex-wrap gap-3">
+                    <div class="d-flex flex-wrap align-items-center gap-2">
+                        <button type="button" class="btn btn-sm btn-outline-secondary filter-app-status-btn active" data-status="ALL">
+                            Tất cả (<span id="countAll">6</span>)
+                        </button>
+                        <button type="button" class="btn btn-sm btn-outline-secondary filter-app-status-btn" data-status="PENDING">
+                            Chờ xem xét (<span id="countPending">2</span>)
+                        </button>
+                        <button type="button" class="btn btn-sm btn-outline-secondary filter-app-status-btn" data-status="REVIEWING">
+                            Đang xem xét (<span id="countReviewing">2</span>)
+                        </button>
+                        <button type="button" class="btn btn-sm btn-outline-secondary filter-app-status-btn" data-status="ACCEPTED">
+                            Được chấp nhận (<span id="countAccepted">1</span>)
+                        </button>
+                        <button type="button" class="btn btn-sm btn-outline-secondary filter-app-status-btn" data-status="REJECTED">
+                            Từ chối (<span id="countRejected">1</span>)
+                        </button>
+                    </div>
+
+                    <div class="d-flex flex-wrap align-items-center gap-2">
+                        <select class="form-select form-select-sm" id="jobFilterSelect" style="width: 200px;">
+                            <option value="">Tất cả vị trí tuyển</option>
+                            <option value="Pha chế">Nhân viên pha chế</option>
+                            <option value="Bán hàng">Nhân viên bán hàng</option>
+                            <option value="Thực tập">Thực tập sinh CNTT</option>
+                            <option value="Phục vụ">Nhân viên phục vụ</option>
+                        </select>
+
+                        <div class="input-group input-group-sm" style="width: 220px;">
+                            <span class="input-group-text bg-white border-end-0"><i class="bi bi-search text-secondary"></i></span>
+                            <input type="text" class="form-control border-start-0" id="searchApplicantInput" placeholder="Tìm ứng viên, email...">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0" id="applicantsTable">
+                        <thead class="table-light">
+                            <tr>
+                                <th class="ps-4">Ứng viên & Liên hệ</th>
+                                <th class="nowrap-cell">Vị trí ứng tuyển</th>
+                                <th class="nowrap-cell">Trường & Lịch rảnh</th>
+                                <th class="nowrap-cell">Ngày nộp</th>
+                                <th class="nowrap-cell">Trạng thái</th>
+                                <th class="actions-cell pe-4">Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="applicant-row" data-id="1" data-name="nguyễn hoàng nam" data-email="namnh.pc01234@fpt.edu.vn" data-job="Pha chế" data-status="PENDING">
+                                <td class="ps-4">
+                                    <div class="d-flex align-items-center gap-3">
+                                        <div class="rounded-circle fw-bold d-flex align-items-center justify-content-center" style="width: 38px; height: 38px; min-width: 38px; background: rgba(20, 43, 74, 0.08); color: var(--navy-primary);">
+                                            HN
+                                        </div>
+                                        <div>
+                                            <div class="fw-bold app-name" style="color: var(--navy-primary);">Nguyễn Hoàng Nam</div>
+                                            <div class="text-secondary small">namnh.pc01234@fpt.edu.vn &bull; 0939.112.233</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="nowrap-cell">
+                                    <div class="fw-bold text-dark">Nhân viên pha chế ca tối</div>
+                                    <span class="badge bg-light text-secondary border small">Part-time</span>
+                                </td>
+                                <td class="nowrap-cell">
+                                    <div class="small fw-bold text-dark">FPT Polytechnic Cần Thơ</div>
+                                    <div class="text-secondary small">Rảnh: Thứ 2, 4, 6 (17:30 - 22:30)</div>
+                                </td>
+                                <td class="nowrap-cell">
+                                    <div class="small fw-semibold text-dark">20/11/2026</div>
+                                    <div class="text-muted" style="font-size: 11px;">10 phút trước</div>
+                                </td>
+                                <td class="nowrap-cell">
+                                    <span class="badge-tag-custom badge-pending-custom app-status-badge">Chờ xem xét</span>
+                                </td>
+                                <td class="actions-cell pe-4">
+                                    <div class="d-inline-flex align-items-center gap-1">
+                                        <a th:href="@{/employer/applicants/1}" class="btn btn-sm btn-outline-custom">Xem CV</a>
+                                        <button type="button" class="btn btn-sm btn-light border text-success btn-update-status" data-id="1" data-status="ACCEPTED">Duyệt</button>
+                                        <button type="button" class="btn btn-sm btn-light border btn-open-invite" data-id="1" data-name="Nguyễn Hoàng Nam">Mời PV</button>
+                                        <button type="button" class="btn btn-sm btn-light border text-danger btn-update-status" data-id="1" data-status="REJECTED">Từ chối</button>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <tr class="applicant-row" data-id="2" data-name="lê thị mai" data-email="mailt.b2001@ctu.edu.vn" data-job="Bán hàng" data-status="REVIEWING">
+                                <td class="ps-4">
+                                    <div class="d-flex align-items-center gap-3">
+                                        <div class="rounded-circle fw-bold d-flex align-items-center justify-content-center text-success" style="width: 38px; height: 38px; min-width: 38px; background: var(--success-light);">
+                                            TM
+                                        </div>
+                                        <div>
+                                            <div class="fw-bold app-name" style="color: var(--navy-primary);">Lê Thị Mai</div>
+                                            <div class="text-secondary small">mailt.b2001@ctu.edu.vn &bull; 0918.445.566</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="nowrap-cell">
+                                    <div class="fw-bold text-dark">Nhân viên bán hàng ca linh hoạt</div>
+                                    <span class="badge bg-light text-secondary border small">Part-time</span>
+                                </td>
+                                <td class="nowrap-cell">
+                                    <div class="small fw-bold text-dark">Đại học Cần Thơ (K. Kinh tế)</div>
+                                    <div class="text-secondary small">Rảnh: Ca sáng thứ 3, 5 & Cuối tuần</div>
+                                </td>
+                                <td class="nowrap-cell">
+                                    <div class="small fw-semibold text-dark">19/11/2026</div>
+                                    <div class="text-muted" style="font-size: 11px;">Hôm qua</div>
+                                </td>
+                                <td class="nowrap-cell">
+                                    <span class="badge-tag-custom badge-reviewing-custom app-status-badge">Đang xem xét</span>
+                                </td>
+                                <td class="actions-cell pe-4">
+                                    <div class="d-inline-flex align-items-center gap-1">
+                                        <a th:href="@{/employer/applicants/2}" class="btn btn-sm btn-outline-custom">Xem CV</a>
+                                        <button type="button" class="btn btn-sm btn-light border text-success btn-update-status" data-id="2" data-status="ACCEPTED">Duyệt</button>
+                                        <button type="button" class="btn btn-sm btn-light border btn-open-invite" data-id="2" data-name="Lê Thị Mai">Mời PV</button>
+                                        <button type="button" class="btn btn-sm btn-light border text-danger btn-update-status" data-id="2" data-status="REJECTED">Từ chối</button>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <tr class="applicant-row" data-id="3" data-name="trần minh quân" data-email="quantm@namcantho.edu.vn" data-job="Thực tập" data-status="ACCEPTED">
+                                <td class="ps-4">
+                                    <div class="d-flex align-items-center gap-3">
+                                        <div class="rounded-circle fw-bold d-flex align-items-center justify-content-center" style="width: 38px; height: 38px; min-width: 38px; background: var(--info-light); color: var(--navy-secondary);">
+                                            TQ
+                                        </div>
+                                        <div>
+                                            <div class="fw-bold app-name" style="color: var(--navy-primary);">Trần Minh Quân</div>
+                                            <div class="text-secondary small">quantm@namcantho.edu.vn &bull; 0949.778.899</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="nowrap-cell">
+                                    <div class="fw-bold text-dark">Thực tập sinh CNTT & Phần mềm</div>
+                                    <span class="badge bg-light text-secondary border small">Internship</span>
+                                </td>
+                                <td class="nowrap-cell">
+                                    <div class="small fw-bold text-dark">Đại học Nam Cần Thơ</div>
+                                    <div class="text-secondary small">Rảnh: Full-time từ T2 - T6</div>
+                                </td>
+                                <td class="nowrap-cell">
+                                    <div class="small fw-semibold text-dark">18/11/2026</div>
+                                    <div class="text-muted" style="font-size: 11px;">2 ngày trước</div>
+                                </td>
+                                <td class="nowrap-cell">
+                                    <span class="badge-tag-custom badge-active-custom app-status-badge">Được chấp nhận</span>
+                                </td>
+                                <td class="actions-cell pe-4">
+                                    <div class="d-inline-flex align-items-center gap-1">
+                                        <a th:href="@{/employer/applicants/3}" class="btn btn-sm btn-outline-custom">Xem CV</a>
+                                        <button type="button" class="btn btn-sm btn-light border btn-open-invite" data-id="3" data-name="Trần Minh Quân">Mời PV</button>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <tr class="applicant-row" data-id="4" data-name="phạm vũ anh" data-email="anhpv@fpt.edu.vn" data-job="Phục vụ" data-status="PENDING">
+                                <td class="ps-4">
+                                    <div class="d-flex align-items-center gap-3">
+                                        <div class="rounded-circle fw-bold d-flex align-items-center justify-content-center text-warning" style="width: 38px; height: 38px; min-width: 38px; background: var(--warning-light);">
+                                            VA
+                                        </div>
+                                        <div>
+                                            <div class="fw-bold app-name" style="color: var(--navy-primary);">Phạm Vũ Anh</div>
+                                            <div class="text-secondary small">anhpv@fpt.edu.vn &bull; 0903.667.889</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="nowrap-cell">
+                                    <div class="fw-bold text-dark">Nhân viên phục vụ ca sáng</div>
+                                    <span class="badge bg-light text-secondary border small">Part-time</span>
+                                </td>
+                                <td class="nowrap-cell">
+                                    <div class="small fw-bold text-dark">FPT Polytechnic Cần Thơ</div>
+                                    <div class="text-secondary small">Rảnh: Ca sáng 07:00 - 11:30 hàng ngày</div>
+                                </td>
+                                <td class="nowrap-cell">
+                                    <div class="small fw-semibold text-dark">17/11/2026</div>
+                                    <div class="text-muted" style="font-size: 11px;">3 ngày trước</div>
+                                </td>
+                                <td class="nowrap-cell">
+                                    <span class="badge-tag-custom badge-pending-custom app-status-badge">Chờ xem xét</span>
+                                </td>
+                                <td class="actions-cell pe-4">
+                                    <div class="d-inline-flex align-items-center gap-1">
+                                        <a th:href="@{/employer/applicants/4}" class="btn btn-sm btn-outline-custom">Xem CV</a>
+                                        <button type="button" class="btn btn-sm btn-light border text-success btn-update-status" data-id="4" data-status="ACCEPTED">Duyệt</button>
+                                        <button type="button" class="btn btn-sm btn-light border btn-open-invite" data-id="4" data-name="Phạm Vũ Anh">Mời PV</button>
+                                        <button type="button" class="btn btn-sm btn-light border text-danger btn-update-status" data-id="4" data-status="REJECTED">Từ chối</button>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <tr class="applicant-row" data-id="5" data-name="đặng thùy trang" data-email="trangdt@ctu.edu.vn" data-job="Pha chế" data-status="REVIEWING">
+                                <td class="ps-4">
+                                    <div class="d-flex align-items-center gap-3">
+                                        <div class="rounded-circle fw-bold d-flex align-items-center justify-content-center" style="width: 38px; height: 38px; min-width: 38px; background: rgba(182, 154, 112, 0.15); color: var(--accent-champagne);">
+                                            TT
+                                        </div>
+                                        <div>
+                                            <div class="fw-bold app-name" style="color: var(--navy-primary);">Đặng Thùy Trang</div>
+                                            <div class="text-secondary small">trangdt@ctu.edu.vn &bull; 0987.332.112</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="nowrap-cell">
+                                    <div class="fw-bold text-dark">Nhân viên pha chế ca tối</div>
+                                    <span class="badge bg-light text-secondary border small">Part-time</span>
+                                </td>
+                                <td class="nowrap-cell">
+                                    <div class="small fw-bold text-dark">Đại học Cần Thơ</div>
+                                    <div class="text-secondary small">Rảnh: Tối Thứ 3, 5, 7 & Chủ Nhật</div>
+                                </td>
+                                <td class="nowrap-cell">
+                                    <div class="small fw-semibold text-dark">16/11/2026</div>
+                                    <div class="text-muted" style="font-size: 11px;">4 ngày trước</div>
+                                </td>
+                                <td class="nowrap-cell">
+                                    <span class="badge-tag-custom badge-reviewing-custom app-status-badge">Đang xem xét</span>
+                                </td>
+                                <td class="actions-cell pe-4">
+                                    <div class="d-inline-flex align-items-center gap-1">
+                                        <a th:href="@{/employer/applicants/5}" class="btn btn-sm btn-outline-custom">Xem CV</a>
+                                        <button type="button" class="btn btn-sm btn-light border text-success btn-update-status" data-id="5" data-status="ACCEPTED">Duyệt</button>
+                                        <button type="button" class="btn btn-sm btn-light border btn-open-invite" data-id="5" data-name="Đặng Thùy Trang">Mời PV</button>
+                                        <button type="button" class="btn btn-sm btn-light border text-danger btn-update-status" data-id="5" data-status="REJECTED">Từ chối</button>
+                                    </div>
+                                </td>
+                            </tr>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <tr class="applicant-row" data-id="6" data-name="hoàng văn dũng" data-email="dunghv@ctuet.edu.vn" data-job="Phục vụ" data-status="REJECTED">
+                                <td class="ps-4">
+                                    <div class="d-flex align-items-center gap-3">
+                                        <div class="rounded-circle fw-bold d-flex align-items-center justify-content-center text-danger" style="width: 42px; height: 42px; background: var(--danger-light);">
+                                            HD
+                                        </div>
+                                        <div>
+                                            <div class="fw-bold app-name" style="color: var(--navy-primary);">Hoàng Văn Dũng</div>
+                                            <div class="text-secondary small d-flex align-items-center gap-1">
+                                                <i class="bi bi-envelope"></i>dunghv@ctuet.edu.vn
+                                            </div>
+                                            <div class="text-secondary small d-flex align-items-center gap-1">
+                                                <i class="bi bi-telephone"></i>0977.889.900
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="fw-bold text-dark">Nhân viên phục vụ ca sáng</div>
+                                    <span class="badge bg-light text-secondary border small">Part-time</span>
+                                </td>
+                                <td>
+                                    <div class="small fw-bold text-dark">ĐH Kỹ Thuật - Công Nghệ Cần Thơ</div>
+                                    <div class="text-secondary small">Trùng lịch học buổi sáng</div>
+                                </td>
+                                <td>
+                                    <div class="small fw-semibold text-dark">15/11/2026</div>
+                                    <div class="text-muted" style="font-size: 11px;">5 ngày trước</div>
+                                </td>
+                                <td>
+                                    <span class="badge-tag-custom badge-rejected-custom app-status-badge">
+                                        <i class="bi bi-circle-fill" style="font-size: 6px;"></i>Từ chối
+                                    </span>
+                                </td>
+                                <td class="text-end pe-4">
+                                    <div class="d-inline-flex align-items-center gap-1">
+                                        <a th:href="@{/employer/applicants/6}" class="btn btn-sm btn-light border text-primary" title="Xem chi tiết & CV">
+                                            <i class="bi bi-eye"></i>
+                                        </a>
+                                        <button type="button" class="btn btn-sm btn-light border text-secondary btn-update-status" data-id="6" data-status="REVIEWING" title="Xem xét lại">
+                                            <i class="bi bi-arrow-counterclockwise"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <tr id="noApplicantsRow" style="display: none;">
+                                <td colspan="6" class="text-center py-5 text-secondary">
+                                    <i class="bi bi-person-x fs-3 d-block mb-2 text-muted"></i>
+                                    Không tìm thấy hồ sơ ứng viên nào phù hợp trên Job Portal.
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="interviewInviteModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content rounded-4 border-0 shadow">
+            <div class="modal-header border-bottom py-3">
+                <h5 class="modal-title fw-bold" style="color: var(--navy-primary);">Gửi Thư Mời Phỏng Vấn Job Portal</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body p-4">
+                <div class="mb-3">
+                    <label class="form-label small">Gửi đến ứng viên</label>
+                    <input type="text" class="form-control form-control-sm bg-light" id="inviteCandidateName" readonly>
+                </div>
+
+                <div class="row g-2 mb-3">
+                    <div class="col-7">
+                        <label class="form-label small">Ngày phỏng vấn</label>
+                        <input type="date" class="form-control form-control-sm" id="interviewDateInput">
+                    </div>
+                    <div class="col-5">
+                        <label class="form-label small">Thời gian</label>
+                        <input type="time" class="form-control form-control-sm" id="interviewTimeInput" value="09:00">
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label small">Hình thức & Địa điểm</label>
+                    <input type="text" class="form-control form-control-sm" id="interviewLocationInput" value="Trực tiếp tại văn phòng chi nhánh Cần Thơ">
+                </div>
+
+                <div>
+                    <label class="form-label small">Nội dung ghi chú / Lời dặn</label>
+                    <textarea class="form-control form-control-sm" rows="3" id="interviewNotesInput" placeholder="Vui lòng mang theo CMND/CCCD và thẻ sinh viên khi đến phỏng vấn..."></textarea>
+                </div>
+            </div>
+            <div class="modal-footer border-top py-2">
+                <button type="button" class="btn btn-light btn-sm" data-bs-dismiss="modal">Đóng</button>
+                <button type="button" class="btn btn-primary-custom btn-sm" id="btnSendInviteConfirm">
+                    <i class="bi bi-send-fill me-1"></i>Gửi thư mời
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:replace="~{employer/common/layout :: scripts}"></div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var rows = document.querySelectorAll('.applicant-row');
+        var searchInput = document.getElementById('searchApplicantInput');
+        var jobFilter = document.getElementById('jobFilterSelect');
+        var statusButtons = document.querySelectorAll('.filter-app-status-btn');
+        var noAppsRow = document.getElementById('noApplicantsRow');
+        var currentStatus = 'ALL';
+
+        function filterApplicants() {
+            var keyword = (searchInput ? searchInput.value : '').toLowerCase().trim();
+            var selectedJob = (jobFilter ? jobFilter.value : '').trim();
+            var visibleCount = 0;
+
+            rows.forEach(function (row) {
+                var name = row.getAttribute('data-name') || '';
+                var email = row.getAttribute('data-email') || '';
+                var job = row.getAttribute('data-job') || '';
+                var status = row.getAttribute('data-status') || '';
+
+                var matchKeyword = !keyword || name.includes(keyword) || email.includes(keyword);
+                var matchJob = !selectedJob || job.includes(selectedJob);
+                var matchStatus = (currentStatus === 'ALL') || (status === currentStatus);
+
+                if (matchKeyword && matchJob && matchStatus) {
+                    row.style.display = '';
+                    visibleCount++;
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+
+            if (noAppsRow) {
+                noAppsRow.style.display = (visibleCount === 0 && rows.length > 0) ? '' : 'none';
+            }
+        }
+
+        if (searchInput) searchInput.addEventListener('input', filterApplicants);
+        if (jobFilter) jobFilter.addEventListener('change', filterApplicants);
+
+        statusButtons.forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                statusButtons.forEach(function (b) { b.classList.remove('active'); });
+                btn.classList.add('active');
+                currentStatus = btn.getAttribute('data-status') || 'ALL';
+                filterApplicants();
+            });
+        });
+
+        document.querySelectorAll('.btn-update-status').forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                var id = btn.getAttribute('data-id');
+                var newStatus = btn.getAttribute('data-status');
+                var targetRow = document.querySelector('.applicant-row[data-id="' + id + '"]');
+
+                if (targetRow) {
+                    targetRow.setAttribute('data-status', newStatus);
+                    var badge = targetRow.querySelector('.app-status-badge');
+                    if (badge) {
+                        badge.className = 'badge-tag-custom app-status-badge';
+                        if (newStatus === 'ACCEPTED') {
+                            badge.classList.add('badge-active-custom');
+                            badge.innerHTML = '<i class="bi bi-circle-fill" style="font-size: 6px;"></i>Được chấp nhận';
+                        } else if (newStatus === 'REJECTED') {
+                            badge.classList.add('badge-rejected-custom');
+                            badge.innerHTML = '<i class="bi bi-circle-fill" style="font-size: 6px;"></i>Từ chối';
+                        } else if (newStatus === 'REVIEWING') {
+                            badge.classList.add('badge-reviewing-custom');
+                            badge.innerHTML = '<i class="bi bi-circle-fill" style="font-size: 6px;"></i>Đang xem xét';
+                        }
+                    }
+
+                    var alertBox = document.getElementById('statusAlertBox');
+                    var alertText = document.getElementById('statusAlertText');
+                    if (alertBox && alertText) {
+                        alertText.textContent = 'Đã cập nhật trạng thái hồ sơ mã #' + id + ' thành công.';
+                        alertBox.style.display = 'block';
+                    }
+                }
+            });
+        });
+
+        var inviteModalEl = document.getElementById('interviewInviteModal');
+        var inviteModal = inviteModalEl ? new bootstrap.Modal(inviteModalEl) : null;
+        var inviteCandidateName = document.getElementById('inviteCandidateName');
+
+        document.querySelectorAll('.btn-open-invite').forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                var name = btn.getAttribute('data-name');
+                if (inviteCandidateName) inviteCandidateName.value = name;
+                var today = new Date();
+                today.setDate(today.getDate() + 2);
+                var dateStr = today.toISOString().split('T')[0];
+                var dateInput = document.getElementById('interviewDateInput');
+                if (dateInput) dateInput.value = dateStr;
+                if (inviteModal) inviteModal.show();
+            });
+        });
+
+        var btnConfirm = document.getElementById('btnSendInviteConfirm');
+        if (btnConfirm) {
+            btnConfirm.addEventListener('click', function () {
+                if (inviteModal) inviteModal.hide();
+                var alertBox = document.getElementById('statusAlertBox');
+                var alertText = document.getElementById('statusAlertText');
+                if (alertBox && alertText) {
+                    alertText.textContent = 'Đã gửi thư mời phỏng vấn đến sinh viên ' + (inviteCandidateName ? inviteCandidateName.value : '') + '.';
+                    alertBox.style.display = 'block';
+                }
+            });
+        }
+    });
+</script>
+
+</body>
+</html>

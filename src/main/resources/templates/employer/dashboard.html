@@ -1,0 +1,372 @@
+﻿<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{employer/common/layout :: head('Tổng quan tuyển dụng')}"></head>
+<body class="employer-portal">
+
+<div class="employer-layout">
+    <div th:replace="~{employer/common/layout :: sidebar('dashboard')}"></div>
+
+    <div class="employer-main">
+        <div th:replace="~{employer/common/layout :: topbar('Tổng quan bảng điều khiển')}"></div>
+
+        <div class="employer-content">
+            <div class="employer-content-inner">
+                <div th:if="${success}" class="alert alert-success alert-dismissible fade show rounded-3 shadow-sm mb-4" role="alert">
+                    <i class="bi bi-check-circle-fill me-2"></i>
+                    <span th:text="${success}"></span>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+                <div th:if="${error}" class="alert alert-danger alert-dismissible fade show rounded-3 shadow-sm mb-4" role="alert">
+                    <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                    <span th:text="${error}"></span>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+
+                <div class="hero-dashboard-banner">
+                    <img th:src="@{/images/employer-banner.jpg}" src="/images/employer-banner.jpg" alt="Employer Recruitment Banner" class="hero-banner-bg-img">
+                    <div class="hero-banner-overlay"></div>
+                    <div class="hero-banner-content-full">
+                        <div>
+                            <span class="badge mb-2 px-3 py-1.5 rounded-pill" style="background: rgba(20, 43, 74, 0.08); color: var(--navy-primary); font-family: 'Manrope', sans-serif; font-size: 11px; font-weight: 700; letter-spacing: 0.5px;">
+                                CỔNG DOANH NGHIỆP TUYỂN DỤNG
+                            </span>
+                            <h2 class="fw-bold mb-2" style="color: var(--navy-primary);" th:text="${employer != null ? employer.companyName : 'Doanh Nghiệp Tuyển Dụng'}">Công Ty Tuyển Dụng</h2>
+                            <p class="text-secondary mb-3" style="max-width: 720px;">
+                                Chào mừng bạn trở lại với hệ thống quản trị tuyển dụng Job Portal. Quản lý các vị trí việc làm, tiếp nhận hồ sơ và kết nối ứng viên sinh viên Cần Thơ hiệu quả.
+                            </p>
+                        </div>
+                        <div class="d-flex flex-wrap gap-2 mb-3">
+                            <a th:href="@{/employer/jobs/create}" class="btn btn-primary-custom">Đăng tin tuyển dụng</a>
+                            <a th:href="@{/employer/applicants}" class="btn btn-outline-custom">Danh sách ứng viên</a>
+                        </div>
+                        <div class="d-flex flex-wrap align-items-center gap-3 pt-2 border-top text-secondary small">
+                            <div>Trụ sở: <strong class="text-dark" th:text="${employer != null and employer.address != null ? employer.address : 'TP. Cần Thơ'}">TP. Cần Thơ</strong></div>
+                            <div>&bull;</div>
+                            <div>Email: <strong class="text-dark" th:text="${employer != null and employer.contactEmail != null ? employer.contactEmail : (currentUser != null ? currentUser.email : 'hr@company.com')}">hr@company.com</strong></div>
+                            <div>&bull;</div>
+                            <span class="badge bg-success-subtle text-success">Đã kích hoạt</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="stat-grid">
+                    <div class="stat-box">
+                        <div>
+                            <div class="text-secondary small fw-bold" style="font-family: 'Manrope', sans-serif;">Tổng bài đăng</div>
+                            <div class="stat-value" style="color: var(--navy-primary);" th:text="${totalJobs != null ? totalJobs : 0}">0</div>
+                            <div class="small text-success fw-semibold">Đang quản lý</div>
+                        </div>
+                    </div>
+
+                    <div class="stat-box">
+                        <div>
+                            <div class="text-secondary small fw-bold" style="font-family: 'Manrope', sans-serif;">Tin đang hoạt động</div>
+                            <div class="stat-value" style="color: var(--success);" th:text="${activeJobs != null ? activeJobs : 0}">0</div>
+                            <div class="small text-secondary">Hiển thị trên sàn</div>
+                        </div>
+                    </div>
+
+                    <div class="stat-box">
+                        <div>
+                            <div class="text-secondary small fw-bold" style="font-family: 'Manrope', sans-serif;">Hồ sơ ứng tuyển</div>
+                            <div class="stat-value" style="color: var(--navy-primary);">48</div>
+                            <div class="small text-success fw-semibold">+14 tuần này</div>
+                        </div>
+                    </div>
+
+                    <div class="stat-box">
+                        <div>
+                            <div class="text-secondary small fw-bold" style="font-family: 'Manrope', sans-serif;">Hồ sơ chờ xử lý</div>
+                            <div class="stat-value" style="color: var(--warning);">12</div>
+                            <div class="small text-warning fw-semibold">Cần phản hồi sớm</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row g-3 mb-4">
+                    <div class="col-12 col-lg-8">
+                        <div class="portal-card h-100 mb-0">
+                            <div class="portal-card-header">
+                                <div>
+                                    <h6 class="fw-bold mb-0">Thống kê ứng tuyển & Lượt xem tin</h6>
+                                    <div class="text-secondary small">Mức độ tương tác của sinh viên Cần Thơ trên nền tảng Job Portal</div>
+                                </div>
+                                <div class="btn-group btn-group-sm" role="group">
+                                    <button type="button" class="btn btn-outline-secondary active" id="chartBtn7Days">7 ngày qua</button>
+                                    <button type="button" class="btn btn-outline-secondary" id="chartBtn30Days">30 ngày qua</button>
+                                </div>
+                            </div>
+                            <div class="portal-card-body">
+                                <div style="height: 280px; position: relative;">
+                                    <canvas id="recruitmentChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-lg-4">
+                    <div class="portal-card h-100 mb-0">
+                        <div class="portal-card-header">
+                            <h6 class="fw-bold mb-0">Hoạt động gần đây</h6>
+                            <span class="badge bg-light text-secondary">Thời gian thực</span>
+                        </div>
+                        <div class="portal-card-body">
+                            <div class="activity-timeline-item">
+                                <div class="activity-timeline-dot"></div>
+                                <div class="small fw-bold text-dark">Ứng viên mới nộp hồ sơ</div>
+                                <div class="text-secondary small">Nguyễn Hoàng Nam ứng tuyển vị trí Nhân viên pha chế ca tối.</div>
+                                <div class="text-muted" style="font-size: 11px;">10 phút trước</div>
+                            </div>
+
+                            <div class="activity-timeline-item">
+                                <div class="activity-timeline-dot" style="background: var(--success);"></div>
+                                <div class="small fw-bold text-dark">Đã duyệt lịch phỏng vấn</div>
+                                <div class="text-secondary small">Lê Thị Mai được duyệt vào vòng phỏng vấn trực tiếp.</div>
+                                <div class="text-muted" style="font-size: 11px;">2 giờ trước</div>
+                            </div>
+
+                            <div class="activity-timeline-item">
+                                <div class="activity-timeline-dot" style="background: var(--warning);"></div>
+                                <div class="small fw-bold text-dark">Gia hạn bài đăng thành công</div>
+                                <div class="text-secondary small">Tin Tuyển dụng ca linh hoạt được gia hạn thêm 30 ngày.</div>
+                                <div class="text-muted" style="font-size: 11px;">Hôm qua lúc 16:30</div>
+                            </div>
+
+                            <div class="activity-timeline-item">
+                                <div class="activity-timeline-dot" style="background: var(--accent-champagne);"></div>
+                                <div class="small fw-bold text-dark">Đánh giá 5 sao từ sinh viên</div>
+                                <div class="text-secondary small">Trần Văn An để lại nhận xét tích cực về môi trường làm việc.</div>
+                                <div class="text-muted" style="font-size: 11px;">2 ngày trước</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row g-4 mb-4">
+                <div class="col-12 col-lg-7">
+                    <div class="portal-card mb-0 h-100">
+                        <div class="portal-card-header">
+                            <div>
+                                <h6 class="fw-bold mb-0">Tin tuyển dụng gần đây</h6>
+                                <div class="text-secondary small">Các tin đăng được cập nhật mới nhất</div>
+                            </div>
+                            <a th:href="@{/employer/jobs}" class="btn btn-sm btn-outline-custom">Xem tất cả</a>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle mb-0">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th class="ps-4">Vị trí tuyển dụng</th>
+                                        <th>Ca làm</th>
+                                        <th>Hạn nộp</th>
+                                        <th>Trạng thái</th>
+                                        <th class="text-end pe-4">Thao tác</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr th:each="job : ${recentJobs}">
+                                        <td class="ps-4">
+                                            <div class="fw-bold" style="color: var(--navy-primary);" th:text="${job.title}">Tên công việc</div>
+                                            <div class="text-secondary small" th:text="${job.location}">Cần Thơ</div>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-light text-dark border small" th:text="${job.shiftSchedule}">Ca sáng</span>
+                                        </td>
+                                        <td class="small" th:text="${#temporals.format(job.deadline, 'dd/MM/yyyy')}">30/12/2026</td>
+                                        <td>
+                                            <span th:if="${job.status == 'ACTIVE'}" class="badge-tag-custom badge-active-custom">Đang tuyển</span>
+                                            <span th:if="${job.status == 'PENDING'}" class="badge-tag-custom badge-pending-custom">Chờ duyệt</span>
+                                            <span th:if="${job.status == 'HIDDEN' or job.status == 'CLOSED'}" class="badge-tag-custom badge-hidden-custom">Đã đóng</span>
+                                        </td>
+                                        <td class="text-end pe-4">
+                                            <a th:href="@{/employer/jobs/edit/{id}(id=${job.id})}" class="btn btn-sm btn-light border text-primary">Sửa</a>
+                                        </td>
+                                    </tr>
+                                    <tr th:if="${recentJobs == null or #lists.isEmpty(recentJobs)}">
+                                        <td colspan="5" class="text-center py-4 text-secondary">
+                                            Chưa có bài đăng nào. <a th:href="@{/employer/jobs/create}" class="fw-bold" style="color: var(--navy-primary);">Đăng tin ngay</a>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-12 col-lg-5">
+                    <div class="portal-card mb-0 h-100">
+                        <div class="portal-card-header">
+                            <div>
+                                <h6 class="fw-bold mb-0">Ứng viên mới nộp</h6>
+                                <div class="text-secondary small">Hồ sơ sinh viên ứng tuyển gần đây</div>
+                            </div>
+                            <a th:href="@{/employer/applicants}" class="btn btn-sm btn-outline-custom">Tất cả</a>
+                        </div>
+                        <div class="portal-card-body p-0">
+                            <div class="list-group list-group-flush">
+                                <div class="list-group-item p-3 d-flex align-items-center justify-content-between">
+                                    <div class="d-flex align-items-center gap-3">
+                                        <div class="rounded-circle fw-bold d-flex align-items-center justify-content-center" style="width: 40px; height: 40px; background: rgba(20, 43, 74, 0.08); color: var(--navy-primary);">
+                                            HN
+                                        </div>
+                                        <div>
+                                            <div class="fw-bold text-dark">Nguyễn Hoàng Nam</div>
+                                            <div class="text-secondary small">Vị trí: Nhân viên pha chế &bull; FPT Poly Cần Thơ</div>
+                                            <div class="text-muted" style="font-size: 11px;">Nộp lúc: Hôm nay 14:20</div>
+                                        </div>
+                                    </div>
+                                    <span class="badge-tag-custom badge-pending-custom">Chờ xem</span>
+                                </div>
+
+                                <div class="list-group-item p-3 d-flex align-items-center justify-content-between">
+                                    <div class="d-flex align-items-center gap-3">
+                                        <div class="rounded-circle fw-bold d-flex align-items-center justify-content-center text-success" style="width: 40px; height: 40px; background: var(--success-light);">
+                                            TM
+                                        </div>
+                                        <div>
+                                            <div class="fw-bold text-dark">Lê Thị Mai</div>
+                                            <div class="text-secondary small">Vị trí: Bán hàng ca linh hoạt &bull; ĐH Cần Thơ</div>
+                                            <div class="text-muted" style="font-size: 11px;">Nộp lúc: Hôm qua 09:15</div>
+                                        </div>
+                                    </div>
+                                    <span class="badge-tag-custom badge-reviewing-custom">Đang xem</span>
+                                </div>
+
+                                <div class="list-group-item p-3 d-flex align-items-center justify-content-between">
+                                    <div class="d-flex align-items-center gap-3">
+                                        <div class="rounded-circle fw-bold d-flex align-items-center justify-content-center" style="width: 40px; height: 40px; background: var(--info-light); color: var(--navy-secondary);">
+                                            TQ
+                                        </div>
+                                        <div>
+                                            <div class="fw-bold text-dark">Trần Minh Quân</div>
+                                            <div class="text-secondary small">Vị trí: Thực tập sinh CNTT &bull; ĐH Nam Cần Thơ</div>
+                                            <div class="text-muted" style="font-size: 11px;">Nộp lúc: 2 ngày trước</div>
+                                        </div>
+                                    </div>
+                                    <span class="badge-tag-custom badge-active-custom">Chấp nhận</span>
+                                </div>
+
+                                <div class="list-group-item p-3 d-flex align-items-center justify-content-between">
+                                    <div class="d-flex align-items-center gap-3">
+                                        <div class="rounded-circle fw-bold d-flex align-items-center justify-content-center text-warning" style="width: 40px; height: 40px; background: var(--warning-light);">
+                                            VA
+                                        </div>
+                                        <div>
+                                            <div class="fw-bold text-dark">Phạm Vũ Anh</div>
+                                            <div class="text-secondary small">Vị trí: Phục vụ bàn ca sáng &bull; FPT Poly Cần Thơ</div>
+                                            <div class="text-muted" style="font-size: 11px;">Nộp lúc: 3 ngày trước</div>
+                                        </div>
+                                    </div>
+                                    <span class="badge-tag-custom badge-pending-custom">Chờ xem</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div th:replace="~{employer/common/layout :: scripts}"></div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var ctx = document.getElementById('recruitmentChart');
+        if (!ctx) return;
+
+        var labels7Days = ['T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'CN'];
+        var views7Days = [35, 48, 62, 54, 78, 95, 80];
+        var apps7Days = [4, 7, 9, 6, 12, 16, 11];
+
+        var labels30Days = ['Tuần 1', 'Tuần 2', 'Tuần 3', 'Tuần 4'];
+        var views30Days = [240, 310, 280, 390];
+        var apps30Days = [28, 42, 35, 52];
+
+        var chart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: labels7Days,
+                datasets: [
+                    {
+                        label: 'Lượt xem tin tuyển dụng',
+                        data: views7Days,
+                        borderColor: '#142B4A',
+                        backgroundColor: 'rgba(20, 43, 74, 0.08)',
+                        tension: 0.35,
+                        fill: true,
+                        pointBackgroundColor: '#142B4A',
+                        pointRadius: 4,
+                        borderWidth: 2
+                    },
+                    {
+                        label: 'Hồ sơ sinh viên ứng tuyển',
+                        data: apps7Days,
+                        borderColor: '#16A34A',
+                        backgroundColor: 'rgba(22, 163, 74, 0.08)',
+                        tension: 0.35,
+                        fill: true,
+                        pointBackgroundColor: '#16A34A',
+                        pointRadius: 4,
+                        borderWidth: 2
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                        labels: {
+                            font: { family: 'Manrope', size: 12, weight: 600 },
+                            usePointStyle: true
+                        }
+                    },
+                    tooltip: {
+                        backgroundColor: '#0D1B2A',
+                        padding: 10,
+                        cornerRadius: 8
+                    }
+                },
+                scales: {
+                    x: {
+                        grid: { display: false }
+                    },
+                    y: {
+                        beginAtZero: true,
+                        grid: { color: '#E5E7EB' }
+                    }
+                }
+            }
+        });
+
+        var btn7 = document.getElementById('chartBtn7Days');
+        var btn30 = document.getElementById('chartBtn30Days');
+
+        if (btn7 && btn30) {
+            btn7.addEventListener('click', function () {
+                btn7.classList.add('active');
+                btn30.classList.remove('active');
+                chart.data.labels = labels7Days;
+                chart.data.datasets[0].data = views7Days;
+                chart.data.datasets[1].data = apps7Days;
+                chart.update();
+            });
+
+            btn30.addEventListener('click', function () {
+                btn30.classList.add('active');
+                btn7.classList.remove('active');
+                chart.data.labels = labels30Days;
+                chart.data.datasets[0].data = views30Days;
+                chart.data.datasets[1].data = apps30Days;
+                chart.update();
+            });
+        }
+    });
+</script>
+
+</body>
+</html>
