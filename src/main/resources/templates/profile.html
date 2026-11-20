@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<!-- 
+  Hồ sơ cá nhân & Đổi mật khẩu - UniWork Cần Thơ
+  @author Cao Trần Duy Minh - PC11166
+-->
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hồ Sơ Cá Nhân - UniWork Cần Thơ</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" href="css/style.css">
+    <style>
+        .profile-container {
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .profile-card {
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+
+        .profile-header {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            border-bottom: 1px solid #f0f0f0;
+            padding-bottom: 20px;
+            margin-bottom: 25px;
+        }
+
+        .profile-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: #142B4A;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            font-weight: bold;
+        }
+
+        .profile-role-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            background: #e0f2fe;
+            color: #0369a1;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            margin-top: 5px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .btn-save {
+            background: #142B4A;
+            color: white;
+            padding: 10px 24px;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 15px;
+        }
+
+        .btn-save:hover {
+            background: #1e3a5f;
+        }
+
+        .alert-box {
+            padding: 12px 16px;
+            border-radius: 8px;
+            font-size: 14px;
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+
+        .alert-success {
+            background: #dcfce7;
+            color: #15803d;
+            border: 1px solid #86efac;
+        }
+
+        .alert-error {
+            background: #fee2e2;
+            color: #b91c1c;
+            border: 1px solid #f87171;
+        }
+    </style>
+</head>
+
+<body style="background-color: #f8fafc;">
+
+    <!-- Header thanh điều hướng -->
+    <header class="main-header" style="background:#142B4A; padding: 15px 0;">
+        <div class="container" style="display:flex; justify-content:space-between; align-items:center;">
+            <a th:href="@{/}" style="color:white; font-size:20px; font-weight:800; text-decoration:none;">UNIWORK CẦN
+                THƠ</a>
+            <div>
+                <a th:href="@{/}" style="color:#e2e8f0; text-decoration:none; margin-right:20px;">Trang chủ</a>
+                <a th:href="@{/logout}" style="color:#f87171; text-decoration:none; font-weight:600;">Đăng xuất</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="profile-container">
+
+        <!-- 1. THẺ THÔNG TIN TÀI KHOẢN & SỬA HỒ SƠ -->
+        <div class="profile-card">
+            <div class="profile-header">
+                <div class="profile-avatar"
+                    th:text="${user.fullName != null and !user.fullName.isEmpty() ? user.fullName.substring(0,1).toUpperCase() : 'U'}">
+                    U</div>
+                <div>
+                    <h2 style="margin:0; font-size:24px; color:#1e293b;" th:text="${user.fullName}">Nguyễn Văn A</h2>
+                    <span class="profile-role-badge" th:text="${user.role}">STUDENT</span>
+                </div>
+            </div>
+
+            <!-- Thông báo cập nhật thông tin -->
+            <div th:if="${success}" class="alert-box alert-success" th:text="${success}"></div>
+            <div th:if="${error}" class="alert-box alert-error" th:text="${error}"></div>
+
+            <h3 style="margin-bottom:20px; font-size:18px; color:#334155;">Thông tin cá nhân</h3>
+
+            <!-- Form cập nhật thông tin gọi vào POST /profile/update -->
+            <form th:action="@{/profile/update}" method="POST">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label style="display:block; margin-bottom:6px; font-weight:600;">Tên tài khoản</label>
+                        <input type="text" th:value="${user.username}" class="form-control"
+                            style="width:100%; padding:10px; border:1px solid #cbd5e1; border-radius:6px; background:#f1f5f9;"
+                            readonly>
+                    </div>
+
+                    <div class="form-group">
+                        <label style="display:block; margin-bottom:6px; font-weight:600;">Email đăng ký</label>
+                        <input type="email" th:value="${user.email}" class="form-control"
+                            style="width:100%; padding:10px; border:1px solid #cbd5e1; border-radius:6px; background:#f1f5f9;"
+                            readonly>
+                    </div>
+
+                    <div class="form-group">
+                        <label style="display:block; margin-bottom:6px; font-weight:600;">Họ và tên</label>
+                        <input type="text" name="fullName" th:value="${user.fullName}" class="form-control"
+                            style="width:100%; padding:10px; border:1px solid #cbd5e1; border-radius:6px;" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label style="display:block; margin-bottom:6px; font-weight:600;">Số điện thoại</label>
+                        <input type="text" name="phone" th:value="${user.phone}" placeholder="Nhập số điện thoại"
+                            class="form-control"
+                            style="width:100%; padding:10px; border:1px solid #cbd5e1; border-radius:6px;">
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-save">Lưu thay đổi</button>
+            </form>
+        </div>
+
+        <!-- 2. THẺ ĐỔI MẬT KHẨU -->
+        <div class="profile-card">
+            <h3 style="margin-bottom:20px; font-size:18px; color:#334155;">Bảo mật & Đổi mật khẩu</h3>
+
+            <!-- Thông báo đổi mật khẩu -->
+            <div th:if="${pwdSuccess}" class="alert-box alert-success" th:text="${pwdSuccess}"></div>
+            <div th:if="${pwdError}" class="alert-box alert-error" th:text="${pwdError}"></div>
+
+            <!-- Form đổi mật khẩu gọi vào POST /profile/change-password -->
+            <form th:action="@{/profile/change-password}" method="POST">
+                <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px;">
+                    <div class="form-group">
+                        <label style="display:block; margin-bottom:6px; font-weight:600;">Mật khẩu hiện tại</label>
+                        <input type="password" name="currentPassword" placeholder="Nhập mật khẩu cũ"
+                            class="form-control"
+                            style="width:100%; padding:10px; border:1px solid #cbd5e1; border-radius:6px;" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label style="display:block; margin-bottom:6px; font-weight:600;">Mật khẩu mới</label>
+                        <input type="password" name="newPassword" placeholder="Tối thiểu 6 ký tự" class="form-control"
+                            style="width:100%; padding:10px; border:1px solid #cbd5e1; border-radius:6px;" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label style="display:block; margin-bottom:6px; font-weight:600;">Xác nhận mật khẩu</label>
+                        <input type="password" name="confirmPassword" placeholder="Nhập lại mật khẩu mới"
+                            class="form-control"
+                            style="width:100%; padding:10px; border:1px solid #cbd5e1; border-radius:6px;" required>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-save" style="background:#475569;">Cập nhật mật khẩu</button>
+            </form>
+        </div>
+
+    </main>
+
+</body>
+
+</html>

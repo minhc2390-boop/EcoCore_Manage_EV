@@ -1,0 +1,3 @@
+[submodule "astryx"]
+	path = astryx
+	url = https://github.com/meta/astryx.git
