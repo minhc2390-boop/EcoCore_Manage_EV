@@ -221,4 +221,113 @@ document.addEventListener('DOMContentLoaded', function () {
       statsObserver.observe(statsSection);
     }
   }
+
+  // 12. Dynamic ScrollSpy Navigation Indicator
+  const navbarElement = document.getElementById('mainNav');
+  if (navbarElement) {
+    const navLinks = navbarElement.querySelectorAll('.nav-link');
+    const sections = [];
+
+    // Collect all valid target sections linked from navbar
+    navLinks.forEach(link => {
+      const href = link.getAttribute('href');
+      if (href) {
+        let targetId = '';
+        if (href.includes('#')) {
+          targetId = href.split('#')[1];
+        } else if (href === '/' || href === 'index.html' || href === '#home') {
+          targetId = 'home';
+        }
+        if (targetId) {
+          const sectionEl = document.getElementById(targetId);
+          if (sectionEl) {
+            sections.push({ id: targetId, link: link, el: sectionEl });
+          }
+        }
+      }
+    });
+
+    function setActiveNavLink(targetLink) {
+      if (!targetLink) return;
+      navLinks.forEach(link => {
+        if (link === targetLink) {
+          link.classList.add('active');
+        } else {
+          link.classList.remove('active');
+        }
+      });
+    }
+
+    let isTicking = false;
+    function updateScrollSpy() {
+      if (sections.length === 0) return;
+
+      const scrollY = window.scrollY || document.documentElement.scrollTop;
+      const headerOffset = 110;
+
+      // 1. Near the top of the page -> activate first item (Trang chủ)
+      if (scrollY < 180) {
+        setActiveNavLink(sections[0].link);
+        return;
+      }
+
+      // 2. Near bottom of page -> activate last visible section
+      const windowHeight = window.innerHeight;
+      const docHeight = document.documentElement.scrollHeight;
+      if (scrollY + windowHeight >= docHeight - 50) {
+        setActiveNavLink(sections[sections.length - 1].link);
+        return;
+      }
+
+      // 3. Find current section based on scroll position
+      let activeSection = sections[0];
+      for (let i = 0; i < sections.length; i++) {
+        const item = sections[i];
+        const sectionTop = item.el.offsetTop - headerOffset;
+        if (scrollY >= sectionTop) {
+          activeSection = item;
+        } else {
+          break;
+        }
+      }
+
+      if (activeSection) {
+        setActiveNavLink(activeSection.link);
+      }
+    }
+
+    window.addEventListener('scroll', function () {
+      if (!isTicking) {
+        window.requestAnimationFrame(() => {
+          updateScrollSpy();
+          isTicking = false;
+        });
+        isTicking = true;
+      }
+    }, { passive: true });
+
+    // Initial check on load
+    updateScrollSpy();
+
+    // Smooth scroll and immediate active update on click
+    navLinks.forEach(link => {
+      link.addEventListener('click', function (e) {
+        const href = this.getAttribute('href');
+        if (href && href.includes('#')) {
+          const targetId = href.split('#')[1];
+          const targetEl = document.getElementById(targetId);
+          if (targetEl) {
+            e.preventDefault();
+            const headerHeight = document.querySelector('.main-header')?.offsetHeight || 75;
+            const targetTop = targetEl.getBoundingClientRect().top + window.scrollY - headerHeight + 5;
+            window.scrollTo({
+              top: targetTop,
+              behavior: 'smooth'
+            });
+            setActiveNavLink(this);
+          }
+        }
+      });
+    });
+  }
 });
