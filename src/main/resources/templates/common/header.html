@@ -57,14 +57,22 @@
                     </a>
                 </li>
             </ul>
-            <div class="d-flex align-items-center gap-2">
+            <div class="d-flex flex-wrap align-items-center gap-2 mt-3 mt-lg-0 pt-2 pt-lg-0 border-top border-lg-0 border-white border-opacity-10">
                 <a th:href="@{/jobs}" class="btn btn-outline-light btn-sm px-3 rounded-pill">
                     <i class="bi bi-compass me-1"></i>Khám phá
                 </a>
                 <a th:href="@{/employer/jobs}" class="btn btn-warning btn-sm px-3 rounded-pill fw-semibold text-dark shadow-sm">
                     <i class="bi bi-building-add me-1"></i>Nhà Tuyển Dụng
                 </a>
-                <div th:if="${session.currentUser != null}" class="d-flex align-items-center gap-2 ms-2">
+                <div th:if="${session.currentUser == null}" class="d-flex align-items-center gap-2 ms-lg-2">
+                    <a th:href="@{/login}" class="btn btn-sm btn-outline-light rounded-pill px-3 py-1">
+                        <i class="bi bi-box-arrow-in-right me-1"></i>Đăng nhập
+                    </a>
+                    <a th:href="@{/register}" class="btn btn-sm btn-light rounded-pill px-3 py-1 fw-semibold text-dark">
+                        <i class="bi bi-person-plus me-1"></i>Đăng ký
+                    </a>
+                </div>
+                <div th:if="${session.currentUser != null}" class="d-flex align-items-center gap-2 ms-lg-2">
                     <a th:href="@{/profile}" class="btn btn-sm btn-outline-light rounded-pill px-2.5 py-1 text-truncate" style="max-width: 140px;">
                         <i class="bi bi-person-circle me-1"></i><span th:text="${session.currentUser.fullName != null ? session.currentUser.fullName : session.currentUser.username}">User</span>
                     </a>
