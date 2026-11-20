@@ -22,7 +22,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 /**
- * Unit Test cho AuthController
+ * Unit Test cho AuthController (Phân hệ Xác thực & Phân quyền)
  * @author Cao Trần Duy Minh - PC11166 (Trưởng nhóm / Lead Backend)
  */
 @ExtendWith(MockitoExtension.class)
@@ -209,7 +209,7 @@ class AuthControllerTest {
 
     @Test
     @DisplayName("Kiểm tra đăng xuất -> hủy phiên làm việc và chuyển về trang login")
-    void should_InvalidateSession_AndRedirectToLogin_When_Logout() {
+    void should_InvalidateSessionAndRedirectToLogin_When_Logout() {
         MockHttpSession session = new MockHttpSession();
         session.setAttribute("currentUser", studentUser);
 

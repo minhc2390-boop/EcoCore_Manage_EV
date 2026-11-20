@@ -18,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 /**
- * Unit Test cho UserService
+ * Unit Test cho UserService (Phân hệ Quản lý người dùng)
  * @author Cao Trần Duy Minh - PC11166 (Trưởng nhóm / Lead Backend)
  */
 @ExtendWith(MockitoExtension.class)
@@ -39,7 +39,7 @@ class UserServiceTest {
                 .id(1L)
                 .username("minh_lead")
                 .password("123456")
-                .fullName("Nguyễn Duy Minh")
+                .fullName("Cao Trần Duy Minh")
                 .email("minh@uniwork.edu.vn")
                 .phone("0939123456")
                 .role(Role.SUPER_ADMIN)

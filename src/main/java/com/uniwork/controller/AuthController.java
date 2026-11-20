@@ -17,7 +17,7 @@ import java.util.Optional;
 
 /**
  * Controller xử lý xác thực, đăng nhập, đăng ký và phân quyền hệ thống UniWork
- * @author Cao Trần Duy Minh - PC11166 (Trưởng nhóm / Lead Backend)
+ * @author Cao Trần Duy Minh - PC11166 (Nghiệp vụ Đăng ký & Đăng nhập Hệ thống UniWork)
  */
 @Controller
 @RequiredArgsConstructor
@@ -69,7 +69,7 @@ public class AuthController {
         log.info("Người dùng '{}' đăng nhập thành công với vai trò {}", currentUser.getUsername(),
                 currentUser.getRole());
 
-        // Ưu tiên chuyển hướng đến trang người dùng đã cố truy cập trước đó nếu có
+        // Chuyển hướng đến URL đã lưu trước đó nếu có
         String redirectAfterLogin = (String) session.getAttribute("redirectAfterLogin");
         if (redirectAfterLogin != null && !redirectAfterLogin.isBlank()) {
             session.removeAttribute("redirectAfterLogin");

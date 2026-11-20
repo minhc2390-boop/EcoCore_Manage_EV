@@ -78,6 +78,8 @@
              th:href="@{/employer/jobs}" class="btn btn-outline" style="border-color: #0284c7; color: #0284c7; font-size: 13px; padding: 6px 12px;">
             <i data-lucide="layout-dashboard" style="width:14px;height:14px;vertical-align:-2px;margin-right:4px;"></i>Quản lý tin
           </a>
+        </th:block>
+        <th:block th:if="${session.currentUser != null}">
           <a th:href="@{/profile}" class="btn btn-outline" style="display:inline-flex;align-items:center;gap:6px;font-weight:600;padding:6px 14px;font-size:13.5px;" title="Xem hồ sơ cá nhân">
             <i data-lucide="user" style="width:15px;height:15px;"></i>
             <span th:text="${session.currentUser.fullName != null ? session.currentUser.fullName : session.currentUser.username}">Tài khoản</span>
