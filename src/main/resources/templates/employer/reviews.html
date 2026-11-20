@@ -1,0 +1,353 @@
+﻿<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{employer/common/layout :: head('Đánh giá & Nhận xét')}"></head>
+<body class="employer-portal">
+
+<div class="employer-layout">
+    <div th:replace="~{employer/common/layout :: sidebar('reviews')}"></div>
+
+    <div class="employer-main">
+        <div th:replace="~{employer/common/layout :: topbar('Đánh Giá & Nhận Xét Doanh Nghiệp')}"></div>
+
+        <div class="employer-content">
+            <div id="replyAlertBox" class="alert alert-success alert-dismissible fade show rounded-3 shadow-sm mb-4" role="alert" style="display: none;">
+                <i class="bi bi-check-circle-fill me-2"></i>
+                <span id="replyAlertText">Đã gửi phản hồi thành công đến sinh viên trên hệ thống Job Portal.</span>
+                <button type="button" class="btn-close" onclick="document.getElementById('replyAlertBox').style.display='none'"></button>
+            </div>
+
+            <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-4">
+                <div>
+                    <h4 class="fw-bold mb-1">Đánh Giá & Nhận Xét</h4>
+                    <p class="text-secondary small mb-0">Lắng nghe phản hồi từ sinh viên Cần Thơ đã từng làm việc để nâng cao uy tín thương hiệu tuyển dụng trên Job Portal</p>
+                </div>
+            </div>
+
+            <div class="row g-4 mb-4">
+                <div class="col-12 col-lg-5">
+                    <div class="portal-card h-100 mb-0">
+                        <div class="portal-card-header">
+                            <h6 class="fw-bold mb-0">Tổng quan mức độ hài lòng</h6>
+                        </div>
+                        <div class="portal-card-body">
+                            <div class="text-center pb-4 mb-4 border-bottom">
+                                <div class="display-4 fw-bold mb-1" style="color: var(--navy-primary);">4.8</div>
+                                <div class="fs-5 mb-2" style="color: var(--accent-champagne);">
+                                    <i class="bi bi-star-fill"></i>
+                                    <i class="bi bi-star-fill"></i>
+                                    <i class="bi bi-star-fill"></i>
+                                    <i class="bi bi-star-fill"></i>
+                                    <i class="bi bi-star-half"></i>
+                                </div>
+                                <div class="text-secondary small">Dựa trên <strong class="text-dark">38 lượt đánh giá</strong> từ sinh viên</div>
+                                <div class="badge bg-success-subtle text-success mt-2 px-3 py-1.5 rounded-pill">
+                                    96% sinh viên khuyến nghị làm việc
+                                </div>
+                            </div>
+
+                            <div class="d-flex flex-column gap-2.5">
+                                <div class="d-flex align-items-center gap-2 small">
+                                    <div class="text-secondary" style="width: 50px;">5 sao</div>
+                                    <div class="progress flex-grow-1" style="height: 8px;">
+                                        <div class="progress-bar" role="progressbar" style="width: 82%; background: var(--accent-champagne);"></div>
+                                    </div>
+                                    <div class="text-secondary text-end" style="width: 35px;">82%</div>
+                                </div>
+
+                                <div class="d-flex align-items-center gap-2 small">
+                                    <div class="text-secondary" style="width: 50px;">4 sao</div>
+                                    <div class="progress flex-grow-1" style="height: 8px;">
+                                        <div class="progress-bar" role="progressbar" style="width: 12%; background: var(--accent-champagne);"></div>
+                                    </div>
+                                    <div class="text-secondary text-end" style="width: 35px;">12%</div>
+                                </div>
+
+                                <div class="d-flex align-items-center gap-2 small">
+                                    <div class="text-secondary" style="width: 50px;">3 sao</div>
+                                    <div class="progress flex-grow-1" style="height: 8px;">
+                                        <div class="progress-bar" role="progressbar" style="width: 4%; background: var(--accent-champagne);"></div>
+                                    </div>
+                                    <div class="text-secondary text-end" style="width: 35px;">4%</div>
+                                </div>
+
+                                <div class="d-flex align-items-center gap-2 small">
+                                    <div class="text-secondary" style="width: 50px;">2 sao</div>
+                                    <div class="progress flex-grow-1" style="height: 8px;">
+                                        <div class="progress-bar" role="progressbar" style="width: 2%; background: var(--accent-champagne);"></div>
+                                    </div>
+                                    <div class="text-secondary text-end" style="width: 35px;">2%</div>
+                                </div>
+
+                                <div class="d-flex align-items-center gap-2 small">
+                                    <div class="text-secondary" style="width: 50px;">1 sao</div>
+                                    <div class="progress flex-grow-1" style="height: 8px;">
+                                        <div class="progress-bar" role="progressbar" style="width: 0%; background: var(--accent-champagne);"></div>
+                                    </div>
+                                    <div class="text-secondary text-end" style="width: 35px;">0%</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-12 col-lg-7">
+                    <div class="portal-card h-100 mb-0">
+                        <div class="portal-card-header">
+                            <h6 class="fw-bold mb-0">Tiêu chí đánh giá trung bình</h6>
+                        </div>
+                        <div class="portal-card-body">
+                            <div class="row g-3">
+                                <div class="col-6">
+                                    <div class="p-3 bg-light rounded-3 border">
+                                        <div class="text-secondary small mb-1">Môi trường làm việc</div>
+                                        <div class="fs-4 fw-bold" style="color: var(--navy-primary);">4.9 <span class="fs-6" style="color: var(--accent-champagne);"><i class="bi bi-star-fill"></i></span></div>
+                                        <div class="text-success small mt-1">Thân thiện, trẻ trung</div>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="p-3 bg-light rounded-3 border">
+                                        <div class="text-secondary small mb-1">Linh hoạt ca làm việc</div>
+                                        <div class="fs-4 fw-bold" style="color: var(--navy-primary);">4.9 <span class="fs-6" style="color: var(--accent-champagne);"><i class="bi bi-star-fill"></i></span></div>
+                                        <div class="text-success small mt-1">Tạo điều kiện lịch học</div>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="p-3 bg-light rounded-3 border">
+                                        <div class="text-secondary small mb-1">Lương thưởng đúng hạn</div>
+                                        <div class="fs-4 fw-bold" style="color: var(--navy-primary);">4.8 <span class="fs-6" style="color: var(--accent-champagne);"><i class="bi bi-star-fill"></i></span></div>
+                                        <div class="text-success small mt-1">Minh bạch theo giờ</div>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="p-3 bg-light rounded-3 border">
+                                        <div class="text-secondary small mb-1">Sự hỗ trợ của Quản lý</div>
+                                        <div class="fs-4 fw-bold" style="color: var(--navy-primary);">4.7 <span class="fs-6" style="color: var(--accent-champagne);"><i class="bi bi-star-fill"></i></span></div>
+                                        <div class="text-success small mt-1">Hướng dẫn tận tình</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="portal-card">
+                <div class="portal-card-header flex-wrap gap-3">
+                    <h6 class="fw-bold mb-0">Nhận xét chi tiết từ sinh viên</h6>
+
+                    <div class="d-flex flex-wrap align-items-center gap-2">
+                        <select class="form-select form-select-sm" id="starFilter" style="width: 150px;">
+                            <option value="ALL">Tất cả số sao</option>
+                            <option value="5">5 Sao</option>
+                            <option value="4">4 Sao</option>
+                            <option value="3">3 Sao</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="portal-card-body p-0">
+                    <div class="list-group list-group-flush" id="reviewsList">
+                        <div class="list-group-item p-4 review-item" data-stars="5">
+                            <div class="d-flex align-items-start justify-content-between gap-3 mb-2">
+                                <div class="d-flex align-items-center gap-3">
+                                    <div class="rounded-circle fw-bold d-flex align-items-center justify-content-center" style="width: 44px; height: 44px; background: rgba(20, 43, 74, 0.08); color: var(--navy-primary);">
+                                        VA
+                                    </div>
+                                    <div>
+                                        <div class="fw-bold" style="color: var(--navy-primary);">Trần Văn An</div>
+                                        <div class="text-secondary small">Vị trí: Nhân viên pha chế &bull; Cựu sinh viên FPT Poly Cần Thơ</div>
+                                    </div>
+                                </div>
+                                <div class="text-end">
+                                    <div class="small mb-1" style="color: var(--accent-champagne);">
+                                        <i class="bi bi-star-fill"></i>
+                                        <i class="bi bi-star-fill"></i>
+                                        <i class="bi bi-star-fill"></i>
+                                        <i class="bi bi-star-fill"></i>
+                                        <i class="bi bi-star-fill"></i>
+                                    </div>
+                                    <div class="text-muted" style="font-size: 11px;">18/11/2026</div>
+                                </div>
+                            </div>
+                            <p class="text-secondary small mb-3" style="line-height: 1.6;">
+                                Quán rất tạo điều kiện cho sinh viên đăng ký ca xoay theo lịch thi cử và đồ án. Các anh chị quản lý thân thiện, lương trả rất đúng ngày vào mùng 5 hàng tháng. Em học hỏi được rất nhiều kỹ năng giao tiếp và pha chế trong suốt 8 tháng làm việc tại đây.
+                            </p>
+
+                            <div class="p-3 bg-light rounded-3 border small" id="replyBox1">
+                                <div class="d-flex align-items-center gap-2 mb-1">
+                                    <span class="badge text-white" style="background: var(--navy-primary);">Doanh nghiệp phản hồi</span>
+                                    <span class="text-muted" style="font-size: 11px;">19/11/2026</span>
+                                </div>
+                                <div class="text-dark">
+                                    Cảm ơn bạn An rất nhiều vì những đóng góp tích cực cho chi nhánh! Chúc bạn gặt hái nhiều thành công trong đồ án tốt nghiệp sắp tới nhé!
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="list-group-item p-4 review-item" data-stars="5">
+                            <div class="d-flex align-items-start justify-content-between gap-3 mb-2">
+                                <div class="d-flex align-items-center gap-3">
+                                    <div class="rounded-circle fw-bold d-flex align-items-center justify-content-center text-success" style="width: 44px; height: 44px; background: var(--success-light);">
+                                        MT
+                                    </div>
+                                    <div>
+                                        <div class="fw-bold" style="color: var(--navy-primary);">Nguyễn Minh Thu</div>
+                                        <div class="text-secondary small">Vị trí: Nhân viên thu ngân ca sáng &bull; Sinh viên ĐH Cần Thơ</div>
+                                    </div>
+                                </div>
+                                <div class="text-end">
+                                    <div class="small mb-1" style="color: var(--accent-champagne);">
+                                        <i class="bi bi-star-fill"></i>
+                                        <i class="bi bi-star-fill"></i>
+                                        <i class="bi bi-star-fill"></i>
+                                        <i class="bi bi-star-fill"></i>
+                                        <i class="bi bi-star-fill"></i>
+                                    </div>
+                                    <div class="text-muted" style="font-size: 11px;">12/11/2026</div>
+                                </div>
+                            </div>
+                            <p class="text-secondary small mb-3" style="line-height: 1.6;">
+                                Môi trường làm việc sạch sẽ, máy móc hiện đại. Được hỗ trợ tiền ăn ca và phụ cấp gửi xe. Thích nhất là không khí làm việc hòa đồng giữa các bạn sinh viên với nhau.
+                            </p>
+
+                            <div class="text-end" id="replyBtnContainer2">
+                                <button type="button" class="btn btn-outline-custom btn-sm btn-open-reply-modal" data-reviewer="Nguyễn Minh Thu" data-review-id="2">Phản hồi</button>
+                            </div>
+                            <div class="p-3 bg-light rounded-3 border small mt-2" id="replyBox2" style="display: none;"></div>
+                        </div>
+
+                        <div class="list-group-item p-4 review-item" data-stars="4">
+                            <div class="d-flex align-items-start justify-content-between gap-3 mb-2">
+                                <div class="d-flex align-items-center gap-3">
+                                    <div class="rounded-circle fw-bold d-flex align-items-center justify-content-center" style="width: 44px; height: 44px; background: var(--info-light); color: var(--navy-secondary);">
+                                        HL
+                                    </div>
+                                    <div>
+                                        <div class="fw-bold" style="color: var(--navy-primary);">Hoàng Long</div>
+                                        <div class="text-secondary small">Vị trí: Phục vụ bàn ca tối &bull; Sinh viên ĐH Nam Cần Thơ</div>
+                                    </div>
+                                </div>
+                                <div class="text-end">
+                                    <div class="small mb-1" style="color: var(--accent-champagne);">
+                                        <i class="bi bi-star-fill"></i>
+                                        <i class="bi bi-star-fill"></i>
+                                        <i class="bi bi-star-fill"></i>
+                                        <i class="bi bi-star-fill"></i>
+                                        <i class="bi bi-star text-muted"></i>
+                                    </div>
+                                    <div class="text-muted" style="font-size: 11px;">05/11/2026</div>
+                                </div>
+                            </div>
+                            <p class="text-secondary small mb-3" style="line-height: 1.6;">
+                                Ca tối những ngày cuối tuần khách khá đông nên hơi vất vả, nhưng bù lại được thưởng doanh số tuần khá tốt. Quán nên bổ sung thêm 1 bạn phụ việc vào tối thứ 7 thì sẽ tuyệt vời hơn.
+                            </p>
+
+                            <div class="text-end" id="replyBtnContainer3">
+                                <button type="button" class="btn btn-outline-custom btn-sm btn-open-reply-modal" data-reviewer="Hoàng Long" data-review-id="3">Phản hồi</button>
+                            </div>
+                            <div class="p-3 bg-light rounded-3 border small mt-2" id="replyBox3" style="display: none;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="replyReviewModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content rounded-4 border-0 shadow">
+            <div class="modal-header border-bottom py-3">
+                <h5 class="modal-title fw-bold" style="color: var(--navy-primary);">Phản Hồi Nhận Xét Của Sinh Viên</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body p-4">
+                <div class="mb-3">
+                    <label class="form-label small">Phản hồi đến</label>
+                    <input type="text" class="form-control form-control-sm bg-light" id="replyTargetReviewer" readonly>
+                </div>
+
+                <div>
+                    <label class="form-label small">Nội dung phản hồi chính thức</label>
+                    <textarea class="form-control form-control-sm" rows="4" id="replyContentInput" placeholder="Cảm ơn bạn đã đóng góp ý kiến quý báu cho doanh nghiệp trên Job Portal..."></textarea>
+                    <div class="text-secondary mt-1" style="font-size: 11px;">Phản hồi này sẽ hiển thị công khai trên hồ sơ đánh giá của công ty trên Job Portal.</div>
+                </div>
+            </div>
+            <div class="modal-footer border-top py-2">
+                <button type="button" class="btn btn-light btn-sm" data-bs-dismiss="modal">Đóng</button>
+                <button type="button" class="btn btn-primary-custom btn-sm" id="btnSubmitReply">
+                    <i class="bi bi-send-fill me-1"></i>Đăng phản hồi
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:replace="~{employer/common/layout :: scripts}"></div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var starFilter = document.getElementById('starFilter');
+        var reviewItems = document.querySelectorAll('.review-item');
+
+        if (starFilter) {
+            starFilter.addEventListener('change', function () {
+                var selected = starFilter.value;
+                reviewItems.forEach(function (item) {
+                    var stars = item.getAttribute('data-stars');
+                    if (selected === 'ALL' || stars === selected) {
+                        item.style.display = '';
+                    } else {
+                        item.style.display = 'none';
+                    }
+                });
+            });
+        }
+
+        var replyModalEl = document.getElementById('replyReviewModal');
+        var replyModal = replyModalEl ? new bootstrap.Modal(replyModalEl) : null;
+        var currentReviewId = null;
+
+        document.querySelectorAll('.btn-open-reply-modal').forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                var reviewer = btn.getAttribute('data-reviewer');
+                currentReviewId = btn.getAttribute('data-review-id');
+                document.getElementById('replyTargetReviewer').value = reviewer;
+                document.getElementById('replyContentInput').value = 'Cảm ơn bạn ' + reviewer + ' đã dành thời gian gửi phản hồi tích cực. Doanh nghiệp luôn trân trọng mọi đóng góp của các bạn sinh viên!';
+                if (replyModal) replyModal.show();
+            });
+        });
+
+        var btnSubmitReply = document.getElementById('btnSubmitReply');
+        if (btnSubmitReply) {
+            btnSubmitReply.addEventListener('click', function () {
+                var content = document.getElementById('replyContentInput').value.trim();
+                if (content && currentReviewId) {
+                    var replyBox = document.getElementById('replyBox' + currentReviewId);
+                    var replyBtnContainer = document.getElementById('replyBtnContainer' + currentReviewId);
+
+                    if (replyBox) {
+                        replyBox.innerHTML = '<div class="d-flex align-items-center gap-2 mb-1"><span class="badge text-white" style="background: var(--navy-primary);">Doanh nghiệp phản hồi</span><span class="text-muted" style="font-size: 11px;">Vừa xong</span></div><div class="text-dark">' + content + '</div>';
+                        replyBox.style.display = 'block';
+                    }
+                    if (replyBtnContainer) {
+                        replyBtnContainer.style.display = 'none';
+                    }
+
+                    if (replyModal) replyModal.hide();
+
+                    var alertBox = document.getElementById('replyAlertBox');
+                    var alertText = document.getElementById('replyAlertText');
+                    if (alertBox && alertText) {
+                        alertText.textContent = 'Đã đăng phản hồi cho nhận xét của ' + document.getElementById('replyTargetReviewer').value + ' thành công!';
+                        alertBox.style.display = 'block';
+                    }
+                }
+            });
+        }
+    });
+</script>
+
+</body>
+</html>
