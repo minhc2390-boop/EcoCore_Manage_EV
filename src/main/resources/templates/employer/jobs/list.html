@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<!-- 
+  UniWork Cần Thơ - Cổng Quản Trị Tuyển Dụng Dành Riêng Cho Company Admin
+  Quản lý danh sách các bài đăng của riêng công ty mình (Sửa, ẩn tin, gia hạn)
+  @author Hùng Anh - Company Admin Portal (Phần Tin Tuyển Dụng)
+-->
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản Lý Tin Tuyển Dụng - Company Admin Portal | UniWork Cần Thơ</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Bootstrap 5 & Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #f8fafc;
+            color: #1e293b;
+        }
+        .portal-header {
+            background: linear-gradient(135deg, #142B4A 0%, #1e3a5f 100%);
+            box-shadow: 0 4px 15px rgba(20, 43, 74, 0.15);
+        }
+        .hero-banner {
+            background: #ffffff;
+            border-radius: 16px;
+            padding: 28px 32px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            margin-bottom: 24px;
+            border-left: 5px solid #f59e0b;
+        }
+        .stat-card {
+            background: #ffffff;
+            border-radius: 14px;
+            padding: 22px 24px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+            border: 1px solid #edf2f7;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .stat-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+        }
+        .stat-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+        }
+        .bg-icon-primary { background: #e0f2fe; color: #0284c7; }
+        .bg-icon-success { background: #dcfce7; color: #16a34a; }
+        .bg-icon-warning { background: #fef3c7; color: #d97706; }
+        .bg-icon-purple  { background: #f3e8ff; color: #9333ea; }
+        .job-table-card {
+            background: #ffffff;
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            border: 1px solid #edf2f7;
+        }
+        .badge-shift {
+            background: #f1f5f9;
+            color: #334155;
+            font-weight: 600;
+            font-size: 12px;
+            padding: 4px 10px;
+            border-radius: 6px;
+            border: 1px solid #e2e8f0;
+        }
+        .badge-status-active {
+            background: #dcfce7;
+            color: #15803d;
+            border: 1px solid #86efac;
+            font-weight: 600;
+        }
+        .badge-status-hidden {
+            background: #fef3c7;
+            color: #b45309;
+            border: 1px solid #fde68a;
+            font-weight: 600;
+        }
+        .badge-status-expired {
+            background: #fee2e2;
+            color: #b91c1c;
+            border: 1px solid #fca5a5;
+            font-weight: 600;
+        }
+        .action-btn-group .btn {
+            padding: 6px 10px;
+            font-size: 13px;
+            border-radius: 8px;
+            font-weight: 500;
+        }
+        .filter-tab {
+            padding: 8px 18px;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 14px;
+            text-decoration: none;
+            color: #64748b;
+            background: #f1f5f9;
+            transition: all 0.2s;
+        }
+        .filter-tab.active {
+            background: #142B4A;
+            color: #ffffff;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- TOP NAVBAR CHO COMPANY ADMIN -->
+    <header class="portal-header text-white sticky-top py-2">
+        <div class="container d-flex justify-content-between align-items-center">
+            <a th:href="@{/}" class="text-white text-decoration-none fw-bold fs-5 d-flex align-items-center gap-2">
+                <span class="badge bg-warning text-dark py-1.5 px-2 rounded-3"><i class="bi bi-briefcase-fill"></i></span>
+                <span>Uni<span class="text-warning">Work</span> Cần Thơ</span>
+                <span class="badge bg-white bg-opacity-10 text-warning ms-2 px-2 py-1 small fw-normal">Cổng Tuyển Dụng</span>
+            </a>
+            <div class="d-flex align-items-center gap-3">
+                <a th:href="@{/}" class="text-white-50 text-decoration-none small hover-white">
+                    <i class="bi bi-house-door me-1"></i>Trang chủ việc làm
+                </a>
+                <a th:href="@{/profile}" class="text-white-50 text-decoration-none small hover-white">
+                    <i class="bi bi-person-circle me-1"></i>Hồ sơ tài khoản
+                </a>
+                <span class="text-white-50">|</span>
+                <span class="badge bg-warning text-dark fw-bold px-2.5 py-1.5">
+                    <i class="bi bi-building me-1"></i><span th:text="${currentUser.username}">admin</span>
+                </span>
+                <a th:href="@{/logout}" class="btn btn-outline-danger btn-sm text-white border-danger rounded-pill px-3">
+                    <i class="bi bi-box-arrow-right me-1"></i>Đăng xuất
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <div class="container py-4">
+
+        <!-- THÔNG BÁO FLASH MESSAGE -->
+        <div th:if="${success}" class="alert alert-success alert-dismissible fade show rounded-4 shadow-sm mb-4" role="alert">
+            <i class="bi bi-check-circle-fill me-2 fs-5"></i>
+            <span th:text="${success}">Thao tác thành công!</span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        <div th:if="${error}" class="alert alert-danger alert-dismissible fade show rounded-4 shadow-sm mb-4" role="alert">
+            <i class="bi bi-exclamation-triangle-fill me-2 fs-5"></i>
+            <span th:text="${error}">Đã xảy ra lỗi!</span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        <div th:if="${info}" class="alert alert-warning alert-dismissible fade show rounded-4 shadow-sm mb-4" role="alert">
+            <i class="bi bi-info-circle-fill me-2 fs-5"></i>
+            <span th:text="${info}">Thông tin thông báo</span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+
+        <!-- HERO BANNER CÔNG TY & NÚT ĐĂNG TIN MỚI -->
+        <div class="hero-banner d-flex flex-wrap justify-content-between align-items-center gap-3">
+            <div>
+                <span class="badge bg-primary bg-opacity-10 text-primary fw-bold mb-2 px-3 py-1.5 rounded-pill">
+                    <i class="bi bi-shield-check me-1"></i>Company Admin Portal — Phụ trách: Hùng Anh
+                </span>
+                <h3 class="fw-bold mb-1" th:text="${employer.companyName}">Doanh Nghiệp Tuyển Dụng</h3>
+                <p class="text-muted mb-0 small">
+                    <i class="bi bi-geo-alt-fill text-danger me-1"></i><span th:text="${employer.address}">TP. Cần Thơ</span>
+                    <span class="mx-2">•</span>
+                    <i class="bi bi-envelope-fill text-primary me-1"></i><span th:text="${employer.contactEmail != null ? employer.contactEmail : currentUser.email}">contact@company.com</span>
+                    <span class="mx-2" th:if="${employer.contactPhone != null}">•</span>
+                    <i class="bi bi-telephone-fill text-success me-1" th:if="${employer.contactPhone != null}"></i>
+                    <span th:text="${employer.contactPhone}"></span>
+                </p>
+            </div>
+            <div>
+                <a th:href="@{/employer/jobs/create}" class="btn btn-warning fw-bold text-dark px-4 py-2.5 rounded-3 shadow-sm d-flex align-items-center gap-2">
+                    <i class="bi bi-plus-circle-fill fs-5"></i>
+                    <span>Đăng Tin Tuyển Dụng Mới</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- 4 THẺ THỐNG KÊ NHANH (CARDS) CỦA RIÊNG DOANH NGHIỆP -->
+        <div class="row g-3 mb-4">
+            <div class="col-6 col-md-3">
+                <div class="stat-card d-flex align-items-center justify-content-between">
+                    <div>
+                        <div class="text-muted small fw-medium">Tổng bài đăng</div>
+                        <div class="fs-3 fw-bold text-dark mt-1" th:text="${totalJobs}">0</div>
+                    </div>
+                    <div class="stat-icon bg-icon-primary">
+                        <i class="bi bi-briefcase-fill"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="stat-card d-flex align-items-center justify-content-between">
+                    <div>
+                        <div class="text-muted small fw-medium">Đang hiển thị</div>
+                        <div class="fs-3 fw-bold text-success mt-1" th:text="${activeJobs}">0</div>
+                    </div>
+                    <div class="stat-icon bg-icon-success">
+                        <i class="bi bi-check-circle-fill"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="stat-card d-flex align-items-center justify-content-between">
+                    <div>
+                        <div class="text-muted small fw-medium">Đã ẩn / Tạm dừng</div>
+                        <div class="fs-3 fw-bold text-warning mt-1" th:text="${hiddenJobs}">0</div>
+                    </div>
+                    <div class="stat-icon bg-icon-warning">
+                        <i class="bi bi-eye-slash-fill"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="stat-card d-flex align-items-center justify-content-between">
+                    <div>
+                        <div class="text-muted small fw-medium">Tổng lượt xem</div>
+                        <div class="fs-3 fw-bold text-purple mt-1" style="color:#9333ea;" th:text="${totalViews}">0</div>
+                    </div>
+                    <div class="stat-icon bg-icon-purple">
+                        <i class="bi bi-eye-fill"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- BẢNG DANH SÁCH BÀI ĐĂNG TUYỂN DỤNG CỦA CÔNG TY -->
+        <div class="job-table-card">
+            
+            <!-- HEADER BẢNG & BỘ LỌC TÌM KIẾM -->
+            <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+                <div class="d-flex align-items-center gap-2">
+                    <a th:href="@{/employer/jobs(status='ALL')}" 
+                       class="filter-tab" th:classappend="${currentStatus == 'ALL' ? 'active' : ''}">
+                        Tất cả (<span th:text="${totalJobs}">0</span>)
+                    </a>
+                    <a th:href="@{/employer/jobs(status='ACTIVE')}" 
+                       class="filter-tab" th:classappend="${currentStatus == 'ACTIVE' ? 'active' : ''}">
+                        Đang hiển thị (<span th:text="${activeJobs}">0</span>)
+                    </a>
+                    <a th:href="@{/employer/jobs(status='HIDDEN')}" 
+                       class="filter-tab" th:classappend="${currentStatus == 'HIDDEN' ? 'active' : ''}">
+                        Đã ẩn (<span th:text="${hiddenJobs}">0</span>)
+                    </a>
+                </div>
+
+                <!-- TÌM KIẾM NỘI BỘ BÀI ĐĂNG CỦA CÔNG TY -->
+                <form th:action="@{/employer/jobs}" method="GET" class="d-flex gap-2">
+                    <input type="hidden" name="status" th:value="${currentStatus}">
+                    <div class="input-group input-group-sm">
+                        <span class="input-group-text bg-light border-end-0"><i class="bi bi-search text-muted"></i></span>
+                        <input type="text" name="keyword" th:value="${keyword}" class="form-control border-start-0" 
+                               placeholder="Tìm theo tiêu đề, ca, quận..." style="min-width: 220px;">
+                        <button type="submit" class="btn btn-primary px-3 fw-semibold">Tìm</button>
+                    </div>
+                    <a th:if="${keyword != null and !keyword.isEmpty()}" th:href="@{/employer/jobs(status=${currentStatus})}" 
+                       class="btn btn-outline-secondary btn-sm" title="Xóa tìm kiếm">
+                        <i class="bi bi-x-lg"></i>
+                    </a>
+                </form>
+            </div>
+
+            <!-- NỘI DUNG BẢNG TIN TUYỂN DỤNG -->
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                        <tr class="text-secondary small fw-bold text-uppercase">
+                            <th style="width: 60px;">Mã</th>
+                            <th style="min-width: 250px;">Tiêu đề tin tuyển dụng</th>
+                            <th>Quận / Huyện Cần Thơ</th>
+                            <th>Ca làm việc</th>
+                            <th>Lương</th>
+                            <th>Hạn nộp</th>
+                            <th>Trạng thái</th>
+                            <th class="text-center">Lượt xem</th>
+                            <th class="text-end" style="min-width: 210px;">Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- NẾU CHƯA CÓ BÀI ĐĂNG NÀO -->
+                        <tr th:if="${#lists.isEmpty(jobs)}">
+                            <td colspan="9" class="text-center py-5">
+                                <div class="py-4">
+                                    <i class="bi bi-file-earmark-text text-muted" style="font-size: 48px;"></i>
+                                    <h5 class="fw-bold mt-3 text-secondary">Chưa có bài đăng tuyển dụng nào!</h5>
+                                    <p class="text-muted small">Hãy tạo bài tuyển dụng đầu tiên để sinh viên các trường tại Cần Thơ dễ dàng tìm thấy và ứng tuyển.</p>
+                                    <a th:href="@{/employer/jobs/create}" class="btn btn-warning fw-bold text-dark rounded-pill px-4">
+                                        <i class="bi bi-plus-circle me-1"></i>Đăng tin ngay
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <!-- LẶP QUA CÁC BÀI ĐĂNG CỦA CÔNG TY -->
+                        <tr th:each="job : ${jobs}">
+                            <td class="text-muted fw-bold small" th:text="'#' + ${job.id}">#1</td>
+                            <td>
+                                <div class="fw-bold text-dark mb-1" th:text="${job.title}">Tiêu đề bài đăng</div>
+                                <div class="d-flex flex-wrap gap-1">
+                                    <span class="badge bg-primary bg-opacity-10 text-primary small px-2 py-0.5 rounded" 
+                                          th:text="${job.jobType}">Part-time</span>
+                                    <span class="badge bg-secondary bg-opacity-10 text-secondary small px-2 py-0.5 rounded" 
+                                          th:if="${job.category != null}" th:text="${job.category.name}">Ngành nghề</span>
+                                </div>
+                            </td>
+                            <td>
+                                <small class="text-dark fw-medium d-block">
+                                    <i class="bi bi-geo-alt-fill text-danger me-1"></i><span th:text="${job.location}">Quận Ninh Kiều, TP. Cần Thơ</span>
+                                </small>
+                            </td>
+                            <td>
+                                <span class="badge-shift d-inline-block text-truncate" style="max-width: 180px;" 
+                                      th:title="${job.shiftSchedule}">
+                                    <i class="bi bi-clock me-1 text-primary"></i><span th:text="${job.shiftSchedule}">Ca sáng</span>
+                                </span>
+                            </td>
+                            <td>
+                                <span class="text-success fw-bold small" th:text="${job.salaryRange}">25.000đ/giờ</span>
+                            </td>
+                            <td>
+                                <div class="small fw-semibold" th:text="${job.deadline}">2026-12-31</div>
+                                <small class="text-danger fw-medium" th:if="${job.deadline != null and job.deadline.isBefore(T(java.time.LocalDate).now())}">
+                                    (Hết hạn)
+                                </small>
+                            </td>
+                            <td>
+                                <span th:if="${job.status == 'ACTIVE' and (job.deadline == null or !job.deadline.isBefore(T(java.time.LocalDate).now()))}" 
+                                      class="badge badge-status-active px-2.5 py-1 rounded-pill">
+                                    <i class="bi bi-check-circle-fill me-1"></i>Đang tuyển
+                                </span>
+                                <span th:if="${job.status == 'HIDDEN'}" 
+                                      class="badge badge-status-hidden px-2.5 py-1 rounded-pill">
+                                    <i class="bi bi-eye-slash-fill me-1"></i>Đã ẩn
+                                </span>
+                                <span th:if="${job.status == 'CLOSED' or (job.deadline != null and job.deadline.isBefore(T(java.time.LocalDate).now()))}" 
+                                      class="badge badge-status-expired px-2.5 py-1 rounded-pill">
+                                    <i class="bi bi-x-circle-fill me-1"></i>Hết hạn
+                                </span>
+                            </td>
+                            <td class="text-center">
+                                <span class="badge bg-light text-secondary border px-2 py-1 fw-bold">
+                                    <i class="bi bi-eye me-1"></i><span th:text="${job.viewCount}">0</span>
+                                </span>
+                            </td>
+                            <td class="text-end">
+                                <div class="action-btn-group d-inline-flex gap-1">
+                                    <!-- 1. NÚT SỬA BÀI ĐĂNG -->
+                                    <a th:href="@{/employer/jobs/edit/{id}(id=${job.id})}" 
+                                       class="btn btn-outline-primary" title="Sửa bài đăng">
+                                        <i class="bi bi-pencil-square"></i> Sửa
+                                    </a>
+
+                                    <!-- 2. NÚT ẨN TIN / HIỆN TIN -->
+                                    <form th:action="@{/employer/jobs/{id}/toggle-status(id=${job.id})}" method="POST" class="d-inline">
+                                        <button type="submit" class="btn" 
+                                                th:classappend="${job.status == 'ACTIVE' ? 'btn-outline-warning' : 'btn-outline-success'}"
+                                                th:title="${job.status == 'ACTIVE' ? 'Ẩn tin này khỏi sinh viên' : 'Kích hoạt hiển thị tin này'}">
+                                            <i th:class="${job.status == 'ACTIVE' ? 'bi bi-eye-slash' : 'bi bi-eye'}"></i>
+                                            <span th:text="${job.status == 'ACTIVE' ? 'Ẩn' : 'Hiện'}">Ẩn</span>
+                                        </button>
+                                    </form>
+
+                                    <!-- 3. NÚT GIA HẠN TIN (MỞ MODAL) -->
+                                    <button type="button" class="btn btn-outline-secondary" 
+                                            th:data-job-id="${job.id}" 
+                                            th:data-job-title="${job.title}" 
+                                            th:data-job-deadline="${job.deadline}"
+                                            onclick="openExtendModal(this.getAttribute('data-job-id'), this.getAttribute('data-job-title'), this.getAttribute('data-job-deadline'))"
+                                            title="Gia hạn thời gian tuyển dụng">
+                                        <i class="bi bi-clock-history"></i> Gia hạn
+                                    </button>
+
+                                    <!-- 4. NÚT XEM TRƯỚC BÀI ĐĂNG CÔNG KHAI -->
+                                    <a th:href="@{/jobs/{id}(id=${job.id})}" target="_blank" 
+                                       class="btn btn-outline-info" title="Xem trước trang sinh viên nhìn thấy">
+                                        <i class="bi bi-box-arrow-up-right"></i>
+                                    </a>
+
+                                    <!-- 5. NÚT ĐÓNG / XÓA TIN -->
+                                    <form th:action="@{/employer/jobs/{id}/delete(id=${job.id})}" method="POST" class="d-inline"
+                                          onsubmit="return confirm('Bạn có chắc chắn muốn đóng/xóa tin tuyển dụng này?');">
+                                        <button type="submit" class="btn btn-outline-danger" title="Xóa / Đóng bài đăng">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- MODAL GIA HẠN TIN TUYỂN DỤNG -->
+    <div class="modal fade" id="extendModal" tabindex="-1" aria-labelledby="extendModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content rounded-4 border-0 shadow">
+                <form id="extendForm" method="POST">
+                    <div class="modal-header bg-light rounded-top-4 border-0 py-3">
+                        <h5 class="modal-title fw-bold" id="extendModalLabel">
+                            <i class="bi bi-clock-history text-warning me-2"></i>Gia Hạn Tin Tuyển Dụng
+                        </h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body p-4">
+                        <div class="mb-3">
+                            <label class="form-label text-muted small fw-bold">Bài đăng tuyển dụng:</label>
+                            <div class="fw-bold fs-6 text-dark" id="modalJobTitle">Tiêu đề bài đăng</div>
+                            <small class="text-muted">Hạn hiện tại: <span id="modalJobDeadline" class="fw-semibold text-primary">--</span></small>
+                        </div>
+
+                        <!-- LỰA CHỌN GIA HẠN NHANH THEO SỐ NGÀY -->
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Chọn gia hạn thêm số ngày:</label>
+                            <div class="d-flex gap-2">
+                                <button type="button" class="btn btn-outline-primary flex-fill fw-semibold" onclick="setQuickDays(15)">+15 ngày</button>
+                                <button type="button" class="btn btn-outline-primary flex-fill fw-semibold active" onclick="setQuickDays(30)">+30 ngày</button>
+                                <button type="button" class="btn btn-outline-primary flex-fill fw-semibold" onclick="setQuickDays(60)">+60 ngày</button>
+                            </div>
+                            <input type="hidden" name="days" id="inputDays" value="30">
+                        </div>
+
+                        <!-- HOẶC CHỌN NGÀY HẠN CỤ THỂ -->
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Hoặc chọn ngày hạn nộp hồ sơ mới:</label>
+                            <input type="date" name="newDeadline" id="inputNewDeadline" class="form-control" onchange="clearQuickDays()">
+                            <small class="text-muted">Nếu chọn ngày cụ thể, hệ thống sẽ ưu tiên áp dụng ngày này.</small>
+                        </div>
+                    </div>
+                    <div class="modal-footer bg-light rounded-bottom-4 border-0 py-3">
+                        <button type="button" class="btn btn-outline-secondary rounded-pill px-4" data-bs-dismiss="modal">Hủy bỏ</button>
+                        <button type="submit" class="btn btn-warning fw-bold text-dark rounded-pill px-4 shadow-sm">
+                            <i class="bi bi-check2-circle me-1"></i>Xác Nhận Gia Hạn
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- BOOTSTRAP 5 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        let extendModalInstance = null;
+        function openExtendModal(jobId, jobTitle, jobDeadline) {
+            document.getElementById('modalJobTitle').innerText = jobTitle;
+            document.getElementById('modalJobDeadline').innerText = jobDeadline ? jobDeadline : 'Chưa thiết lập';
+            document.getElementById('extendForm').action = '/employer/jobs/' + jobId + '/extend';
+            
+            // Mặc định chọn 30 ngày
+            setQuickDays(30);
+            document.getElementById('inputNewDeadline').value = '';
+
+            if (!extendModalInstance) {
+                extendModalInstance = new bootstrap.Modal(document.getElementById('extendModal'));
+            }
+            extendModalInstance.show();
+        }
+
+        function setQuickDays(days) {
+            document.getElementById('inputDays').value = days;
+            document.getElementById('inputNewDeadline').value = '';
+            const buttons = document.querySelectorAll('#extendModal .btn-outline-primary');
+            buttons.forEach(btn => {
+                if (btn.innerText.includes(days + ' ngày')) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
+        }
+
+        function clearQuickDays() {
+            document.getElementById('inputDays').value = '';
+            const buttons = document.querySelectorAll('#extendModal .btn-outline-primary');
+            buttons.forEach(btn => btn.classList.remove('active'));
+        }
+    </script>
+</body>
+</html>
