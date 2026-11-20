@@ -5,6 +5,8 @@ import com.uniwork.exception.ResourceNotFoundException;
 import com.uniwork.repository.JobCategoryRepository;
 import com.uniwork.service.JobCategoryService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,6 +21,7 @@ public class JobCategoryServiceImpl implements JobCategoryService {
 
     @Override
     @Transactional(readOnly = true)
+    @Cacheable(value = "activeJobCategories")
     public List<JobCategory> getAllActiveCategories() {
         return jobCategoryRepository.findByActiveTrue();
     }
@@ -31,6 +34,7 @@ public class JobCategoryServiceImpl implements JobCategoryService {
     }
 
     @Override
+    @CacheEvict(value = "activeJobCategories", allEntries = true)
     public JobCategory saveCategory(JobCategory category) {
         return jobCategoryRepository.save(category);
     }

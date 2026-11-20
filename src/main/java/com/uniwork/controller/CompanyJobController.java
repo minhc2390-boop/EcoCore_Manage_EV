@@ -1,6 +1,7 @@
 package com.uniwork.controller;
 
 import com.uniwork.dto.JobPostingDTO;
+import com.uniwork.dto.NotificationDTO;
 import com.uniwork.entity.Employer;
 import com.uniwork.entity.JobApplication;
 import com.uniwork.entity.JobCategory;
@@ -11,6 +12,7 @@ import com.uniwork.service.EmployerService;
 import com.uniwork.service.JobApplicationService;
 import com.uniwork.service.JobCategoryService;
 import com.uniwork.service.JobPostingService;
+import com.uniwork.service.NotificationService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,8 +24,10 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Controller Cổng Quản Trị Tuyển Dụng Dành Riêng Cho Company Admin
@@ -42,6 +46,7 @@ public class CompanyJobController {
     private final EmployerService employerService;
     private final JobCategoryService jobCategoryService;
     private final JobApplicationService jobApplicationService; // VY — quản lý ứng viên
+    private final NotificationService notificationService;
 
     // Danh sách 9 quận/huyện trực thuộc TP. Cần Thơ
     public static final List<String> CAN_THO_DISTRICTS = List.of(
@@ -221,6 +226,22 @@ public class CompanyJobController {
         jobPostingService.saveJob(newJob);
         log.info("Company Admin '{}' (Công ty: {}) đã đăng tin tuyển dụng mới ID: {}",
                 currentUser.getUsername(), employer.getCompanyName(), newJob.getId());
+
+        // Phát thông báo thời gian thực về việc làm mới tới toàn hệ thống
+        try {
+            NotificationDTO broadcastNotif = NotificationDTO.builder()
+                    .id(UUID.randomUUID().toString())
+                    .title("Việc làm mới tại Cần Thơ!")
+                    .message("'" + newJob.getTitle() + "' vừa được " + employer.getCompanyName() + " đăng tuyển dụng.")
+                    .type("primary")
+                    .targetUrl("/jobs/" + newJob.getId())
+                    .createdAt(LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm - dd/MM/yyyy")))
+                    .unread(true)
+                    .build();
+            notificationService.broadcast(broadcastNotif);
+        } catch (Exception ex) {
+            log.warn("Lỗi phát sóng thông báo việc làm mới: {}", ex.getMessage());
+        }
 
         redirectAttributes.addFlashAttribute("success",
                 "Đăng bài tuyển dụng '" + newJob.getTitle() + "' thành công! Tin đã hiển thị cho sinh viên Cần Thơ ứng tuyển.");
@@ -615,6 +636,26 @@ public class CompanyJobController {
                 case "REVIEWING" -> "Đang xem xét";
                 default -> updated.getStatus();
             };
+
+            // Gửi thông báo thời gian thực đến sinh viên ứng tuyển
+            if (updated.getStudent() != null) {
+                try {
+                    String studentUsername = updated.getStudent().getUsername();
+                    NotificationDTO notif = NotificationDTO.builder()
+                            .id(UUID.randomUUID().toString())
+                            .title("Cập nhật đơn ứng tuyển!")
+                            .message("Hồ sơ công việc '" + updated.getJobPosting().getTitle() + "' đã được chuyển sang: [" + statusLabel + "]")
+                            .type("info")
+                            .targetUrl("/jobs/" + updated.getJobPosting().getId())
+                            .createdAt(LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm - dd/MM/yyyy")))
+                            .unread(true)
+                            .build();
+                    notificationService.sendToUser(studentUsername, notif);
+                } catch (Exception ex) {
+                    log.warn("Không thể gửi thông báo Realtime cho sinh viên: {}", ex.getMessage());
+                }
+            }
+
             redirectAttributes.addFlashAttribute("success",
                     "Đã cập nhật trạng thái đơn ứng tuyển thành [" + statusLabel + "] thành công!");
             log.info("Company Admin '{}' (Employer ID: {}) cập nhật trạng thái đơn ID: {} → {}",
