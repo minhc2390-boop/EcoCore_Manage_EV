@@ -2412,3 +2412,194 @@ a.footer-link:hover {
     display: none; /* Hide 'Đăng nhập' in navbar on tiny screens to avoid overflow; accessible via mobile menu */
   }
 }
+
+/* =========================================================================
+   Filter Pills Bar (VietnamWorks / TopCV Style Filter Chips)
+   ========================================================================= */
+.filter-pills-wrapper {
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 2px 14px rgba(0, 0, 0, 0.05);
+  padding: 16px 20px;
+  margin-bottom: 24px;
+  border: 1px solid #edf2f7;
+}
+
+.search-input-unified {
+  position: relative;
+  margin-bottom: 14px;
+}
+
+.search-input-unified .form-control {
+  height: 48px;
+  padding-left: 44px;
+  padding-right: 120px;
+  border-radius: 12px;
+  border: 1.5px solid #e2e8f0;
+  font-size: 14.5px;
+  background-color: #f8fafc;
+  transition: all 0.2s ease;
+}
+
+.search-input-unified .form-control:focus {
+  background-color: #ffffff;
+  border-color: #0284c7;
+  box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.12);
+}
+
+.search-input-unified .search-icon-prefix {
+  position: absolute;
+  left: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 17px;
+  color: #94a3b8;
+  pointer-events: none;
+}
+
+.search-input-unified .btn-search-submit {
+  position: absolute;
+  right: 6px;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 36px;
+  padding: 0 18px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 13.5px;
+}
+
+.filter-pills-bar {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.filter-pills-scrollable {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  white-space: nowrap;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: 4px;
+  width: 100%;
+}
+
+.filter-pills-scrollable::-webkit-scrollbar {
+  height: 4px;
+}
+
+.filter-pills-scrollable::-webkit-scrollbar-thumb {
+  background: #e2e8f0;
+  border-radius: 4px;
+}
+
+.filter-pill-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 7px 15px;
+  background-color: #eef2f6;
+  color: #334155;
+  border: 1px solid transparent;
+  border-radius: 9999px;
+  font-size: 13.5px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s ease-in-out;
+  text-decoration: none;
+  white-space: nowrap;
+  user-select: none;
+}
+
+.filter-pill-btn:hover {
+  background-color: #e2e8f0;
+  color: #0f172a;
+}
+
+.filter-pill-btn.active {
+  background-color: #e0f2fe;
+  color: #0284c7;
+  border-color: #7dd3fc;
+  font-weight: 600;
+}
+
+.filter-pill-btn i:first-child {
+  font-size: 14px;
+  color: #475569;
+}
+
+.filter-pill-btn.active i:first-child {
+  color: #0284c7;
+}
+
+.filter-pill-chevron {
+  font-size: 11px;
+  color: #64748b;
+  margin-left: 2px;
+  transition: transform 0.2s ease;
+}
+
+.dropdown.show .filter-pill-chevron {
+  transform: rotate(180deg);
+}
+
+.filter-dropdown-menu {
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+  padding: 6px;
+  min-width: 230px;
+  max-height: 300px;
+  overflow-y: auto;
+  font-size: 13.5px;
+  z-index: 1050;
+}
+
+.filter-dropdown-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  border-radius: 7px;
+  color: #334155;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background 0.15s ease;
+}
+
+.filter-dropdown-item:hover {
+  background-color: #f1f5f9;
+  color: #0284c7;
+}
+
+.filter-dropdown-item.active {
+  background-color: #e0f2fe;
+  color: #0369a1;
+  font-weight: 600;
+}
+
+.filter-pill-clear-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 7px 14px;
+  background-color: #fee2e2;
+  color: #dc2626;
+  border: 1px solid #fecaca;
+  border-radius: 9999px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: all 0.15s ease;
+}
+
+.filter-pill-clear-btn:hover {
+  background-color: #fecaca;
+  color: #b91c1c;
+}

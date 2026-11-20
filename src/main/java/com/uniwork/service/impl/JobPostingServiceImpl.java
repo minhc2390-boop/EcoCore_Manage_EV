@@ -64,13 +64,37 @@ public class JobPostingServiceImpl implements JobPostingService {
     @Override
     @Transactional(readOnly = true)
     public Page<JobPosting> searchJobsPaged(JobSearchDTO searchDTO, Pageable pageable) {
-        String keyword = (searchDTO != null && searchDTO.getKeyword() != null && !searchDTO.getKeyword().trim().isEmpty())
-                ? searchDTO.getKeyword().trim() : null;
-        Long categoryId = (searchDTO != null) ? searchDTO.getCategoryId() : null;
-        String jobType = (searchDTO != null && searchDTO.getJobType() != null && !searchDTO.getJobType().trim().isEmpty())
-                ? searchDTO.getJobType().trim() : null;
+        if (searchDTO == null) {
+            return jobPostingRepository.searchJobsPaged(null, null, null, pageable);
+        }
 
-        return jobPostingRepository.searchJobsPaged(keyword, categoryId, jobType, pageable);
+        String keyword = (searchDTO.getKeyword() != null && !searchDTO.getKeyword().trim().isEmpty())
+                ? searchDTO.getKeyword().trim() : null;
+        Long categoryId = searchDTO.getCategoryId();
+        String jobType = (searchDTO.getJobType() != null && !searchDTO.getJobType().trim().isEmpty())
+                ? searchDTO.getJobType().trim() : null;
+        String level = (searchDTO.getLevel() != null && !searchDTO.getLevel().trim().isEmpty())
+                ? searchDTO.getLevel().trim() : null;
+        String experience = (searchDTO.getExperience() != null && !searchDTO.getExperience().trim().isEmpty())
+                ? searchDTO.getExperience().trim() : null;
+        String salary = (searchDTO.getSalary() != null && !searchDTO.getSalary().trim().isEmpty())
+                ? searchDTO.getSalary().trim() : null;
+        String education = (searchDTO.getEducation() != null && !searchDTO.getEducation().trim().isEmpty())
+                ? searchDTO.getEducation().trim() : null;
+
+        java.time.LocalDateTime postedAfter = null;
+        if (searchDTO.getPostedWithin() != null) {
+            switch (searchDTO.getPostedWithin().trim()) {
+                case "1d" -> postedAfter = java.time.LocalDateTime.now().minusDays(1);
+                case "3d" -> postedAfter = java.time.LocalDateTime.now().minusDays(3);
+                case "7d" -> postedAfter = java.time.LocalDateTime.now().minusDays(7);
+                case "30d" -> postedAfter = java.time.LocalDateTime.now().minusDays(30);
+                default -> postedAfter = null;
+            }
+        }
+
+        return jobPostingRepository.searchJobsPagedAdvance(
+                keyword, categoryId, jobType, level, experience, salary, education, postedAfter, pageable);
     }
 
     @Override

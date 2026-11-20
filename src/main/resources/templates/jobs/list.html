@@ -14,35 +14,350 @@
         </ol>
     </nav>
 
-    <!-- Filter Card Bar -->
-    <div class="card border-0 shadow-sm rounded-4 p-3 mb-4 bg-white">
-        <form th:action="@{/jobs}" method="get" class="row g-2 align-items-center">
-            <div class="col-md-4">
-                <input type="text" name="keyword" class="form-control rounded-3" 
-                       placeholder="Từ khóa (Chức danh, kỹ năng, địa điểm)..." th:value="${searchDTO.keyword}">
-            </div>
-            <div class="col-md-3">
-                <select name="categoryId" class="form-select rounded-3">
-                    <option value="">-- Tất cả ngành nghề --</option>
-                    <option th:each="cat : ${categories}" th:value="${cat.id}" th:text="${cat.name}" 
-                            th:selected="${searchDTO.categoryId == cat.id}"></option>
-                </select>
-            </div>
-            <div class="col-md-3">
-                <select name="jobType" class="form-select rounded-3">
-                    <option value="">-- Hình thức làm việc --</option>
-                    <option value="Part-time" th:selected="${searchDTO.jobType == 'Part-time'}">Bán thời gian (Part-time)</option>
-                    <option value="Internship" th:selected="${searchDTO.jobType == 'Internship'}">Thực tập sinh (Internship)</option>
-                    <option value="Remote" th:selected="${searchDTO.jobType == 'Remote'}">Việc làm từ xa (Remote)</option>
-                </select>
-            </div>
-            <div class="col-md-2">
-                <button type="submit" class="btn btn-primary w-100 rounded-3 fw-semibold">
-                    <i class="bi bi-funnel me-1"></i>Lọc Tin
+    <!-- Filter Pills Wrapper (VietnamWorks / TopCV Style Filter Chips) -->
+    <div class="filter-pills-wrapper">
+        <form th:action="@{/jobs}" method="get" id="jobsFilterForm">
+            <input type="hidden" name="page" value="0">
+            <input type="hidden" name="categoryId" id="inputCategoryId" th:value="${searchDTO.categoryId}">
+            <input type="hidden" name="level" id="inputLevel" th:value="${searchDTO.level}">
+            <input type="hidden" name="experience" id="inputExperience" th:value="${searchDTO.experience}">
+            <input type="hidden" name="salary" id="inputSalary" th:value="${searchDTO.salary}">
+            <input type="hidden" name="education" id="inputEducation" th:value="${searchDTO.education}">
+            <input type="hidden" name="jobType" id="inputJobType" th:value="${searchDTO.jobType}">
+            <input type="hidden" name="postedWithin" id="inputPostedWithin" th:value="${searchDTO.postedWithin}">
+
+            <!-- Thanh tìm kiếm từ khóa hiện đại -->
+            <div class="search-input-unified">
+                <i class="bi bi-search search-icon-prefix"></i>
+                <input type="text" name="keyword" class="form-control" 
+                       placeholder="Tìm kiếm theo chức danh công việc, kỹ năng, địa điểm tại TP. Cần Thơ..." 
+                       th:value="${searchDTO.keyword}">
+                <button type="submit" class="btn btn-primary btn-search-submit">
+                    <i class="bi bi-search me-1"></i>Tìm kiếm
                 </button>
+            </div>
+
+            <!-- Thanh 7 Filter Pills Dropdowns (Khớp 100% giao diện yêu cầu) -->
+            <div class="filter-pills-scrollable">
+                
+                <!-- 1. Ngành nghề -->
+                <div class="dropdown">
+                    <button class="filter-pill-btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false"
+                            th:classappend="${searchDTO.categoryId != null} ? 'active' : ''">
+                        <i class="bi bi-grid-fill"></i>
+                        <span>Ngành nghề</span>
+                        <i class="bi bi-chevron-down filter-pill-chevron"></i>
+                    </button>
+                    <ul class="dropdown-menu filter-dropdown-menu">
+                        <li>
+                            <a class="dropdown-item filter-dropdown-item" href="javascript:void(0)" onclick="applyFilter('categoryId', '')"
+                               th:classappend="${searchDTO.categoryId == null} ? 'active' : ''">
+                                <span>Tất cả ngành nghề</span>
+                                <i class="bi bi-check2" th:if="${searchDTO.categoryId == null}"></i>
+                            </a>
+                        </li>
+                        <li th:each="cat : ${categories}">
+                            <a class="dropdown-item filter-dropdown-item" href="javascript:void(0)" 
+                               th:onclick="'applyFilter(\'categoryId\', \'' + ${cat.id} + '\')'"
+                               th:classappend="${searchDTO.categoryId == cat.id} ? 'active' : ''">
+                                <span th:text="${cat.name}">Tên ngành nghề</span>
+                                <i class="bi bi-check2" th:if="${searchDTO.categoryId == cat.id}"></i>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- 2. Cấp bậc -->
+                <div class="dropdown">
+                    <button class="filter-pill-btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false"
+                            th:classappend="${searchDTO.level != null and !searchDTO.level.isEmpty()} ? 'active' : ''">
+                        <i class="bi bi-stack"></i>
+                        <span>Cấp bậc</span>
+                        <i class="bi bi-chevron-down filter-pill-chevron"></i>
+                    </button>
+                    <ul class="dropdown-menu filter-dropdown-menu">
+                        <li>
+                            <a class="dropdown-item filter-dropdown-item" href="javascript:void(0)" onclick="applyFilter('level', '')"
+                               th:classappend="${searchDTO.level == null or searchDTO.level.isEmpty()} ? 'active' : ''">
+                                <span>Tất cả cấp bậc</span>
+                                <i class="bi bi-check2" th:if="${searchDTO.level == null or searchDTO.level.isEmpty()}"></i>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item filter-dropdown-item" href="javascript:void(0)" onclick="applyFilter('level', 'thực tập')"
+                               th:classappend="${searchDTO.level == 'thực tập'} ? 'active' : ''">
+                                <span>Thực tập sinh (Intern)</span>
+                                <i class="bi bi-check2" th:if="${searchDTO.level == 'thực tập'}"></i>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item filter-dropdown-item" href="javascript:void(0)" onclick="applyFilter('level', 'nhân viên')"
+                               th:classappend="${searchDTO.level == 'nhân viên'} ? 'active' : ''">
+                                <span>Nhân viên (Staff)</span>
+                                <i class="bi bi-check2" th:if="${searchDTO.level == 'nhân viên'}"></i>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item filter-dropdown-item" href="javascript:void(0)" onclick="applyFilter('level', 'trưởng')"
+                               th:classappend="${searchDTO.level == 'trưởng'} ? 'active' : ''">
+                                <span>Trưởng ca / Giám sát</span>
+                                <i class="bi bi-check2" th:if="${searchDTO.level == 'trưởng'}"></i>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- 3. Kinh nghiệm -->
+                <div class="dropdown">
+                    <button class="filter-pill-btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false"
+                            th:classappend="${searchDTO.experience != null and !searchDTO.experience.isEmpty()} ? 'active' : ''">
+                        <i class="bi bi-stopwatch"></i>
+                        <span>Kinh nghiệm</span>
+                        <i class="bi bi-chevron-down filter-pill-chevron"></i>
+                    </button>
+                    <ul class="dropdown-menu filter-dropdown-menu">
+                        <li>
+                            <a class="dropdown-item filter-dropdown-item" href="javascript:void(0)" onclick="applyFilter('experience', '')"
+                               th:classappend="${searchDTO.experience == null or searchDTO.experience.isEmpty()} ? 'active' : ''">
+                                <span>Tất cả kinh nghiệm</span>
+                                <i class="bi bi-check2" th:if="${searchDTO.experience == null or searchDTO.experience.isEmpty()}"></i>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item filter-dropdown-item" href="javascript:void(0)" onclick="applyFilter('experience', 'không yêu cầu')"
+                               th:classappend="${searchDTO.experience == 'không yêu cầu'} ? 'active' : ''">
+                                <span>Không yêu cầu kinh nghiệm</span>
+                                <i class="bi bi-check2" th:if="${searchDTO.experience == 'không yêu cầu'}"></i>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item filter-dropdown-item" href="javascript:void(0)" onclick="applyFilter('experience', 'dưới 1 năm')"
+                               th:classappend="${searchDTO.experience == 'dưới 1 năm'} ? 'active' : ''">
+                                <span>Dưới 1 năm</span>
+                                <i class="bi bi-check2" th:if="${searchDTO.experience == 'dưới 1 năm'}"></i>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item filter-dropdown-item" href="javascript:void(0)" onclick="applyFilter('experience', '1 năm')"
+                               th:classappend="${searchDTO.experience == '1 năm'} ? 'active' : ''">
+                                <span>1 - 2 năm kinh nghiệm</span>
+                                <i class="bi bi-check2" th:if="${searchDTO.experience == '1 năm'}"></i>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- 4. Mức lương -->
+                <div class="dropdown">
+                    <button class="filter-pill-btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false"
+                            th:classappend="${searchDTO.salary != null and !searchDTO.salary.isEmpty()} ? 'active' : ''">
+                        <i class="bi bi-cash-coin"></i>
+                        <span>Mức lương</span>
+                        <i class="bi bi-chevron-down filter-pill-chevron"></i>
+                    </button>
+                    <ul class="dropdown-menu filter-dropdown-menu">
+                        <li>
+                            <a class="dropdown-item filter-dropdown-item" href="javascript:void(0)" onclick="applyFilter('salary', '')"
+                               th:classappend="${searchDTO.salary == null or searchDTO.salary.isEmpty()} ? 'active' : ''">
+                                <span>Tất cả mức lương</span>
+                                <i class="bi bi-check2" th:if="${searchDTO.salary == null or searchDTO.salary.isEmpty()}"></i>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item filter-dropdown-item" href="javascript:void(0)" onclick="applyFilter('salary', 'giờ')"
+                               th:classappend="${searchDTO.salary == 'giờ'} ? 'active' : ''">
+                                <span>Lương theo giờ (20k - 38k/h)</span>
+                                <i class="bi bi-check2" th:if="${searchDTO.salary == 'giờ'}"></i>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item filter-dropdown-item" href="javascript:void(0)" onclick="applyFilter('salary', 'tháng')"
+                               th:classappend="${searchDTO.salary == 'tháng'} ? 'active' : ''">
+                                <span>Lương theo tháng (5 - 8 triệu)</span>
+                                <i class="bi bi-check2" th:if="${searchDTO.salary == 'tháng'}"></i>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item filter-dropdown-item" href="javascript:void(0)" onclick="applyFilter('salary', 'thỏa thuận')"
+                               th:classappend="${searchDTO.salary == 'thỏa thuận'} ? 'active' : ''">
+                                <span>Lương thỏa thuận</span>
+                                <i class="bi bi-check2" th:if="${searchDTO.salary == 'thỏa thuận'}"></i>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- 5. Học vấn -->
+                <div class="dropdown">
+                    <button class="filter-pill-btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false"
+                            th:classappend="${searchDTO.education != null and !searchDTO.education.isEmpty()} ? 'active' : ''">
+                        <i class="bi bi-mortarboard-fill"></i>
+                        <span>Học vấn</span>
+                        <i class="bi bi-chevron-down filter-pill-chevron"></i>
+                    </button>
+                    <ul class="dropdown-menu filter-dropdown-menu">
+                        <li>
+                            <a class="dropdown-item filter-dropdown-item" href="javascript:void(0)" onclick="applyFilter('education', '')"
+                               th:classappend="${searchDTO.education == null or searchDTO.education.isEmpty()} ? 'active' : ''">
+                                <span>Tất cả học vấn</span>
+                                <i class="bi bi-check2" th:if="${searchDTO.education == null or searchDTO.education.isEmpty()}"></i>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item filter-dropdown-item" href="javascript:void(0)" onclick="applyFilter('education', 'sinh viên')"
+                               th:classappend="${searchDTO.education == 'sinh viên'} ? 'active' : ''">
+                                <span>Sinh viên ĐH / Cao đẳng</span>
+                                <i class="bi bi-check2" th:if="${searchDTO.education == 'sinh viên'}"></i>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item filter-dropdown-item" href="javascript:void(0)" onclick="applyFilter('education', 'thpt')"
+                               th:classappend="${searchDTO.education == 'thpt'} ? 'active' : ''">
+                                <span>Tốt nghiệp THPT</span>
+                                <i class="bi bi-check2" th:if="${searchDTO.education == 'thpt'}"></i>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item filter-dropdown-item" href="javascript:void(0)" onclick="applyFilter('education', 'không yêu cầu')"
+                               th:classappend="${searchDTO.education == 'không yêu cầu'} ? 'active' : ''">
+                                <span>Không yêu cầu bằng cấp</span>
+                                <i class="bi bi-check2" th:if="${searchDTO.education == 'không yêu cầu'}"></i>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- 6. Loại công việc -->
+                <div class="dropdown">
+                    <button class="filter-pill-btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false"
+                            th:classappend="${searchDTO.jobType != null and !searchDTO.jobType.isEmpty()} ? 'active' : ''">
+                        <i class="bi bi-briefcase-fill"></i>
+                        <span>Loại công việc</span>
+                        <i class="bi bi-chevron-down filter-pill-chevron"></i>
+                    </button>
+                    <ul class="dropdown-menu filter-dropdown-menu">
+                        <li>
+                            <a class="dropdown-item filter-dropdown-item" href="javascript:void(0)" onclick="applyFilter('jobType', '')"
+                               th:classappend="${searchDTO.jobType == null or searchDTO.jobType.isEmpty()} ? 'active' : ''">
+                                <span>Tất cả loại công việc</span>
+                                <i class="bi bi-check2" th:if="${searchDTO.jobType == null or searchDTO.jobType.isEmpty()}"></i>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item filter-dropdown-item" href="javascript:void(0)" onclick="applyFilter('jobType', 'Part-time')"
+                               th:classappend="${searchDTO.jobType == 'Part-time'} ? 'active' : ''">
+                                <span>Bán thời gian (Part-time)</span>
+                                <i class="bi bi-check2" th:if="${searchDTO.jobType == 'Part-time'}"></i>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item filter-dropdown-item" href="javascript:void(0)" onclick="applyFilter('jobType', 'Internship')"
+                               th:classappend="${searchDTO.jobType == 'Internship'} ? 'active' : ''">
+                                <span>Thực tập sinh (Internship)</span>
+                                <i class="bi bi-check2" th:if="${searchDTO.jobType == 'Internship'}"></i>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item filter-dropdown-item" href="javascript:void(0)" onclick="applyFilter('jobType', 'Ca xoay')"
+                               th:classappend="${searchDTO.jobType == 'Ca xoay'} ? 'active' : ''">
+                                <span>Ca xoay linh hoạt</span>
+                                <i class="bi bi-check2" th:if="${searchDTO.jobType == 'Ca xoay'}"></i>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item filter-dropdown-item" href="javascript:void(0)" onclick="applyFilter('jobType', 'Remote')"
+                               th:classappend="${searchDTO.jobType == 'Remote'} ? 'active' : ''">
+                                <span>Việc làm từ xa (Remote)</span>
+                                <i class="bi bi-check2" th:if="${searchDTO.jobType == 'Remote'}"></i>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item filter-dropdown-item" href="javascript:void(0)" onclick="applyFilter('jobType', 'Full-time')"
+                               th:classappend="${searchDTO.jobType == 'Full-time'} ? 'active' : ''">
+                                <span>Toàn thời gian (Full-time)</span>
+                                <i class="bi bi-check2" th:if="${searchDTO.jobType == 'Full-time'}"></i>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- 7. Đăng trong -->
+                <div class="dropdown">
+                    <button class="filter-pill-btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false"
+                            th:classappend="${searchDTO.postedWithin != null and !searchDTO.postedWithin.isEmpty()} ? 'active' : ''">
+                        <i class="bi bi-calendar-event"></i>
+                        <span>Đăng trong</span>
+                        <i class="bi bi-chevron-down filter-pill-chevron"></i>
+                    </button>
+                    <ul class="dropdown-menu filter-dropdown-menu">
+                        <li>
+                            <a class="dropdown-item filter-dropdown-item" href="javascript:void(0)" onclick="applyFilter('postedWithin', '')"
+                               th:classappend="${searchDTO.postedWithin == null or searchDTO.postedWithin.isEmpty()} ? 'active' : ''">
+                                <span>Tất cả thời gian</span>
+                                <i class="bi bi-check2" th:if="${searchDTO.postedWithin == null or searchDTO.postedWithin.isEmpty()}"></i>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item filter-dropdown-item" href="javascript:void(0)" onclick="applyFilter('postedWithin', '1d')"
+                               th:classappend="${searchDTO.postedWithin == '1d'} ? 'active' : ''">
+                                <span>24 giờ qua</span>
+                                <i class="bi bi-check2" th:if="${searchDTO.postedWithin == '1d'}"></i>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item filter-dropdown-item" href="javascript:void(0)" onclick="applyFilter('postedWithin', '3d')"
+                               th:classappend="${searchDTO.postedWithin == '3d'} ? 'active' : ''">
+                                <span>3 ngày qua</span>
+                                <i class="bi bi-check2" th:if="${searchDTO.postedWithin == '3d'}"></i>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item filter-dropdown-item" href="javascript:void(0)" onclick="applyFilter('postedWithin', '7d')"
+                               th:classappend="${searchDTO.postedWithin == '7d'} ? 'active' : ''">
+                                <span>7 ngày qua</span>
+                                <i class="bi bi-check2" th:if="${searchDTO.postedWithin == '7d'}"></i>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item filter-dropdown-item" href="javascript:void(0)" onclick="applyFilter('postedWithin', '30d')"
+                               th:classappend="${searchDTO.postedWithin == '30d'} ? 'active' : ''">
+                                <span>30 ngày qua</span>
+                                <i class="bi bi-check2" th:if="${searchDTO.postedWithin == '30d'}"></i>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Nút Xóa lọc nếu có filter đang kích hoạt -->
+                <a th:if="${searchDTO.hasActiveFilters()}" th:href="@{/jobs}" class="filter-pill-clear-btn" title="Xóa tất cả bộ lọc">
+                    <i class="bi bi-x-circle-fill"></i>
+                    <span>Xóa lọc</span>
+                </a>
+
             </div>
         </form>
     </div>
+
+    <!-- Script xử lý chọn filter pill và submit -->
+    <script>
+        function applyFilter(fieldName, value) {
+            var form = document.getElementById('jobsFilterForm');
+            if (form) {
+                var targetId = 'input' + fieldName.charAt(0).toUpperCase() + fieldName.slice(1);
+                var input = document.getElementById(targetId);
+                if (input) {
+                    input.value = value;
+                } else {
+                    var newInput = document.createElement('input');
+                    newInput.type = 'hidden';
+                    newInput.name = fieldName;
+                    newInput.value = value;
+                    form.appendChild(newInput);
+                }
+                form.submit();
+            }
+        }
+    </script>
 
     <!-- Job Results Count & Pagination Summary -->
     <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
@@ -111,7 +426,7 @@
             <!-- Nút Về Trang Đầu -->
             <li class="page-item" th:classappend="${currentPage == 0} ? 'disabled'">
                 <a class="page-link rounded-3 px-3 shadow-sm"
-                   th:href="@{/jobs(page=0, keyword=${searchDTO.keyword}, categoryId=${searchDTO.categoryId}, jobType=${searchDTO.jobType})}"
+                   th:href="@{/jobs(page=0, keyword=${searchDTO.keyword}, categoryId=${searchDTO.categoryId}, level=${searchDTO.level}, experience=${searchDTO.experience}, salary=${searchDTO.salary}, education=${searchDTO.education}, jobType=${searchDTO.jobType}, postedWithin=${searchDTO.postedWithin})}"
                    title="Trang đầu">
                     <i class="bi bi-chevron-double-left"></i>
                 </a>
@@ -120,7 +435,7 @@
             <!-- Nút Trang Trước -->
             <li class="page-item" th:classappend="${currentPage == 0} ? 'disabled'">
                 <a class="page-link rounded-3 px-3 shadow-sm"
-                   th:href="@{/jobs(page=${currentPage - 1}, keyword=${searchDTO.keyword}, categoryId=${searchDTO.categoryId}, jobType=${searchDTO.jobType})}">
+                   th:href="@{/jobs(page=${currentPage - 1}, keyword=${searchDTO.keyword}, categoryId=${searchDTO.categoryId}, level=${searchDTO.level}, experience=${searchDTO.experience}, salary=${searchDTO.salary}, education=${searchDTO.education}, jobType=${searchDTO.jobType}, postedWithin=${searchDTO.postedWithin})}">
                     <i class="bi bi-chevron-left me-1"></i>Trước
                 </a>
             </li>
@@ -129,14 +444,14 @@
             <li class="page-item" th:each="i : ${#numbers.sequence(0, totalPages - 1)}"
                 th:classappend="${currentPage == i} ? 'active'">
                 <a class="page-link rounded-3 px-3 shadow-sm fw-semibold"
-                   th:href="@{/jobs(page=${i}, keyword=${searchDTO.keyword}, categoryId=${searchDTO.categoryId}, jobType=${searchDTO.jobType})}"
+                   th:href="@{/jobs(page=${i}, keyword=${searchDTO.keyword}, categoryId=${searchDTO.categoryId}, level=${searchDTO.level}, experience=${searchDTO.experience}, salary=${searchDTO.salary}, education=${searchDTO.education}, jobType=${searchDTO.jobType}, postedWithin=${searchDTO.postedWithin})}"
                    th:text="${i + 1}">1</a>
             </li>
 
             <!-- Nút Trang Kế Tiếp -->
             <li class="page-item" th:classappend="${currentPage >= totalPages - 1} ? 'disabled'">
                 <a class="page-link rounded-3 px-3 shadow-sm"
-                   th:href="@{/jobs(page=${currentPage + 1}, keyword=${searchDTO.keyword}, categoryId=${searchDTO.categoryId}, jobType=${searchDTO.jobType})}">
+                   th:href="@{/jobs(page=${currentPage + 1}, keyword=${searchDTO.keyword}, categoryId=${searchDTO.categoryId}, level=${searchDTO.level}, experience=${searchDTO.experience}, salary=${searchDTO.salary}, education=${searchDTO.education}, jobType=${searchDTO.jobType}, postedWithin=${searchDTO.postedWithin})}">
                     Sau<i class="bi bi-chevron-right ms-1"></i>
                 </a>
             </li>
@@ -144,7 +459,7 @@
             <!-- Nút Đến Trang Cuối -->
             <li class="page-item" th:classappend="${currentPage >= totalPages - 1} ? 'disabled'">
                 <a class="page-link rounded-3 px-3 shadow-sm"
-                   th:href="@{/jobs(page=${totalPages - 1}, keyword=${searchDTO.keyword}, categoryId=${searchDTO.categoryId}, jobType=${searchDTO.jobType})}"
+                   th:href="@{/jobs(page=${totalPages - 1}, keyword=${searchDTO.keyword}, categoryId=${searchDTO.categoryId}, level=${searchDTO.level}, experience=${searchDTO.experience}, salary=${searchDTO.salary}, education=${searchDTO.education}, jobType=${searchDTO.jobType}, postedWithin=${searchDTO.postedWithin})}"
                    title="Trang cuối">
                     <i class="bi bi-chevron-double-right"></i>
                 </a>

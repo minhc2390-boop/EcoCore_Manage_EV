@@ -46,6 +46,35 @@ public interface JobPostingRepository extends JpaRepository<JobPosting, Long> {
                                      @Param("jobType") String jobType,
                                      Pageable pageable);
 
+    @Query(value = "SELECT j FROM JobPosting j WHERE j.status = 'ACTIVE' " +
+           "AND (:keyword IS NULL OR :keyword = '' OR LOWER(j.title) LIKE LOWER(CONCAT('%', :keyword, '%')) OR LOWER(j.location) LIKE LOWER(CONCAT('%', :keyword, '%')) OR LOWER(j.requirements) LIKE LOWER(CONCAT('%', :keyword, '%'))) " +
+           "AND (:categoryId IS NULL OR j.category.id = :categoryId) " +
+           "AND (:jobType IS NULL OR :jobType = '' OR j.jobType LIKE CONCAT('%', :jobType, '%')) " +
+           "AND (:level IS NULL OR :level = '' OR LOWER(j.title) LIKE LOWER(CONCAT('%', :level, '%')) OR LOWER(j.requirements) LIKE LOWER(CONCAT('%', :level, '%'))) " +
+           "AND (:experience IS NULL OR :experience = '' OR LOWER(j.requirements) LIKE LOWER(CONCAT('%', :experience, '%'))) " +
+           "AND (:salary IS NULL OR :salary = '' OR LOWER(j.salaryRange) LIKE LOWER(CONCAT('%', :salary, '%'))) " +
+           "AND (:education IS NULL OR :education = '' OR LOWER(j.requirements) LIKE LOWER(CONCAT('%', :education, '%'))) " +
+           "AND (:postedAfter IS NULL OR j.createdAt >= :postedAfter) " +
+           "ORDER BY j.createdAt DESC",
+           countQuery = "SELECT count(j) FROM JobPosting j WHERE j.status = 'ACTIVE' " +
+           "AND (:keyword IS NULL OR :keyword = '' OR LOWER(j.title) LIKE LOWER(CONCAT('%', :keyword, '%')) OR LOWER(j.location) LIKE LOWER(CONCAT('%', :keyword, '%')) OR LOWER(j.requirements) LIKE LOWER(CONCAT('%', :keyword, '%'))) " +
+           "AND (:categoryId IS NULL OR j.category.id = :categoryId) " +
+           "AND (:jobType IS NULL OR :jobType = '' OR j.jobType LIKE CONCAT('%', :jobType, '%')) " +
+           "AND (:level IS NULL OR :level = '' OR LOWER(j.title) LIKE LOWER(CONCAT('%', :level, '%')) OR LOWER(j.requirements) LIKE LOWER(CONCAT('%', :level, '%'))) " +
+           "AND (:experience IS NULL OR :experience = '' OR LOWER(j.requirements) LIKE LOWER(CONCAT('%', :experience, '%'))) " +
+           "AND (:salary IS NULL OR :salary = '' OR LOWER(j.salaryRange) LIKE LOWER(CONCAT('%', :salary, '%'))) " +
+           "AND (:education IS NULL OR :education = '' OR LOWER(j.requirements) LIKE LOWER(CONCAT('%', :education, '%'))) " +
+           "AND (:postedAfter IS NULL OR j.createdAt >= :postedAfter)")
+    Page<JobPosting> searchJobsPagedAdvance(@Param("keyword") String keyword,
+                                            @Param("categoryId") Long categoryId,
+                                            @Param("jobType") String jobType,
+                                            @Param("level") String level,
+                                            @Param("experience") String experience,
+                                            @Param("salary") String salary,
+                                            @Param("education") String education,
+                                            @Param("postedAfter") java.time.LocalDateTime postedAfter,
+                                            Pageable pageable);
+
     List<JobPosting> findTop6ByStatusOrderByCreatedAtDesc(String status);
 
     List<JobPosting> findByEmployerId(Long employerId);
