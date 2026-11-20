@@ -1,14 +1,18 @@
 package com.uniwork.controller;
 
 import com.uniwork.dto.JobPostingDTO;
+import com.uniwork.dto.NotificationDTO;
 import com.uniwork.entity.Employer;
+import com.uniwork.entity.JobApplication;
 import com.uniwork.entity.JobCategory;
 import com.uniwork.entity.JobPosting;
 import com.uniwork.entity.Role;
 import com.uniwork.entity.User;
 import com.uniwork.service.EmployerService;
+import com.uniwork.service.JobApplicationService;
 import com.uniwork.service.JobCategoryService;
 import com.uniwork.service.JobPostingService;
+import com.uniwork.service.NotificationService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,8 +24,10 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Controller Cổng Quản Trị Tuyển Dụng Dành Riêng Cho Company Admin
@@ -39,6 +45,8 @@ public class CompanyJobController {
     private final JobPostingService jobPostingService;
     private final EmployerService employerService;
     private final JobCategoryService jobCategoryService;
+    private final JobApplicationService jobApplicationService; // VY — quản lý ứng viên
+    private final NotificationService notificationService;
 
     // Danh sách 9 quận/huyện trực thuộc TP. Cần Thơ
     public static final List<String> CAN_THO_DISTRICTS = List.of(
@@ -308,6 +316,22 @@ public class CompanyJobController {
         jobPostingService.saveJob(newJob);
         log.info("Company Admin '{}' (Công ty: {}) đã đăng tin tuyển dụng mới ID: {}",
                 currentUser.getUsername(), employer.getCompanyName(), newJob.getId());
+
+        // Phát thông báo thời gian thực về việc làm mới tới toàn hệ thống
+        try {
+            NotificationDTO broadcastNotif = NotificationDTO.builder()
+                    .id(UUID.randomUUID().toString())
+                    .title("Việc làm mới tại Cần Thơ!")
+                    .message("'" + newJob.getTitle() + "' vừa được " + employer.getCompanyName() + " đăng tuyển dụng.")
+                    .type("primary")
+                    .targetUrl("/jobs/" + newJob.getId())
+                    .createdAt(LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm - dd/MM/yyyy")))
+                    .unread(true)
+                    .build();
+            notificationService.broadcast(broadcastNotif);
+        } catch (Exception ex) {
+            log.warn("Lỗi phát sóng thông báo việc làm mới: {}", ex.getMessage());
+        }
 
         redirectAttributes.addFlashAttribute("success",
                 "Đăng bài tuyển dụng '" + newJob.getTitle() + "' thành công! Tin đã hiển thị cho sinh viên Cần Thơ ứng tuyển.");
@@ -680,5 +704,118 @@ public class CompanyJobController {
             return prefix;
         }
         return location;
+    }
+
+    // =========================================================================
+    // QUẢN LÝ ỨNG VIÊN — VY (Company Admin Portal — Phần Tuyển dụng & Ứng viên)
+    // =========================================================================
+
+    /**
+     * 6. DANH SÁCH ĐƠN ỨNG TUYỂN VÀO CÔNG TY (VY)
+     * GET /employer/applications
+     * Hỗ trợ lọc theo trạng thái: ALL / PENDING / REVIEWING / INTERVIEW / ACCEPTED / REJECTED
+     */
+    @GetMapping("/applications")
+    public String listApplications(@RequestParam(value = "status", required = false) String status,
+                                   HttpSession session,
+                                   Model model,
+                                   RedirectAttributes redirectAttributes) {
+        User currentUser = getAuthenticatedCompanyAdmin(session);
+        if (currentUser == null) {
+            redirectAttributes.addFlashAttribute("error", "Vui lòng đăng nhập với tài khoản Nhà tuyển dụng để truy cập!");
+            return "redirect:/login";
+        }
+
+        Employer employer = employerService.getOrCreateEmployerForUser(currentUser);
+
+        // Lấy danh sách đơn ứng tuyển (lọc theo trạng thái nếu có)
+        List<JobApplication> applications;
+        if (status != null && !status.trim().isEmpty() && !"ALL".equalsIgnoreCase(status)) {
+            applications = jobApplicationService.getApplicationsByEmployerAndStatus(employer.getId(), status.trim().toUpperCase());
+        } else {
+            applications = jobApplicationService.getApplicationsByEmployer(employer.getId());
+        }
+
+        // Thống kê số lượng theo từng trạng thái
+        long totalApplications = jobApplicationService.countApplicationsByEmployer(employer.getId());
+        long pendingCount      = jobApplicationService.countApplicationsByEmployerAndStatus(employer.getId(), "PENDING");
+        long reviewingCount    = jobApplicationService.countApplicationsByEmployerAndStatus(employer.getId(), "REVIEWING");
+        long interviewCount    = jobApplicationService.countApplicationsByEmployerAndStatus(employer.getId(), "INTERVIEW");
+        long acceptedCount     = jobApplicationService.countApplicationsByEmployerAndStatus(employer.getId(), "ACCEPTED");
+        long rejectedCount     = jobApplicationService.countApplicationsByEmployerAndStatus(employer.getId(), "REJECTED");
+
+        model.addAttribute("applications", applications);
+        model.addAttribute("employer", employer);
+        model.addAttribute("currentUser", currentUser);
+        model.addAttribute("totalApplications", totalApplications);
+        model.addAttribute("pendingCount", pendingCount);
+        model.addAttribute("reviewingCount", reviewingCount);
+        model.addAttribute("interviewCount", interviewCount);
+        model.addAttribute("acceptedCount", acceptedCount);
+        model.addAttribute("rejectedCount", rejectedCount);
+        model.addAttribute("currentStatus", status != null ? status.toUpperCase() : "ALL");
+
+        return "employer/applications/list";
+    }
+
+    /**
+     * 7. CẬP NHẬT TRẠNG THÁI ĐƠN ỨNG TUYỂN (VY)
+     * POST /employer/applications/{id}/status?newStatus=INTERVIEW|ACCEPTED|REJECTED
+     * Company Admin bấm nút: [Mời Phỏng Vấn], [Nhận Việc], [Từ Chối]
+     */
+    @PostMapping("/applications/{id}/status")
+    public String updateApplicationStatus(@PathVariable("id") Long id,
+                                          @RequestParam("newStatus") String newStatus,
+                                          HttpSession session,
+                                          RedirectAttributes redirectAttributes) {
+        User currentUser = getAuthenticatedCompanyAdmin(session);
+        if (currentUser == null) {
+            return "redirect:/login";
+        }
+
+        Employer employer = employerService.getOrCreateEmployerForUser(currentUser);
+
+        try {
+            JobApplication updated = jobApplicationService.updateApplicationStatus(id, newStatus, employer.getId());
+            String statusLabel = switch (updated.getStatus()) {
+                case "INTERVIEW" -> "Mời phỏng vấn";
+                case "ACCEPTED"  -> "Nhận việc";
+                case "REJECTED"  -> "Từ chối";
+                case "REVIEWING" -> "Đang xem xét";
+                default -> updated.getStatus();
+            };
+
+            // Gửi thông báo thời gian thực đến sinh viên ứng tuyển
+            if (updated.getStudent() != null) {
+                try {
+                    String studentUsername = updated.getStudent().getUsername();
+                    NotificationDTO notif = NotificationDTO.builder()
+                            .id(UUID.randomUUID().toString())
+                            .title("Cập nhật đơn ứng tuyển!")
+                            .message("Hồ sơ công việc '" + updated.getJobPosting().getTitle() + "' đã được chuyển sang: [" + statusLabel + "]")
+                            .type("info")
+                            .targetUrl("/jobs/" + updated.getJobPosting().getId())
+                            .createdAt(LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm - dd/MM/yyyy")))
+                            .unread(true)
+                            .build();
+                    notificationService.sendToUser(studentUsername, notif);
+                } catch (Exception ex) {
+                    log.warn("Không thể gửi thông báo Realtime cho sinh viên: {}", ex.getMessage());
+                }
+            }
+
+            redirectAttributes.addFlashAttribute("success",
+                    "Đã cập nhật trạng thái đơn ứng tuyển thành [" + statusLabel + "] thành công!");
+            log.info("Company Admin '{}' (Employer ID: {}) cập nhật trạng thái đơn ID: {} → {}",
+                    currentUser.getUsername(), employer.getId(), id, newStatus);
+        } catch (IllegalStateException e) {
+            log.warn("Lỗi bảo mật khi cập nhật đơn ID: {}: {}", id, e.getMessage());
+            redirectAttributes.addFlashAttribute("error", e.getMessage());
+        } catch (Exception e) {
+            log.error("Lỗi cập nhật trạng thái đơn ID: {}: {}", id, e.getMessage());
+            redirectAttributes.addFlashAttribute("error", "Lỗi cập nhật trạng thái: " + e.getMessage());
+        }
+
+        return "redirect:/employer/applications";
     }
 }

@@ -43,7 +43,7 @@
             <span>Đăng tin mới</span>
         </a>
 
-        <a th:href="@{/employer/applicants}" class="employer-nav-link" th:classappend="${activeMenu == 'applicants' ? 'active' : ''}">
+        <a th:href="@{/employer/applications}" class="employer-nav-link" th:classappend="${activeMenu == 'applicants' or activeMenu == 'applications' ? 'active' : ''}">
             <i class="bi bi-people-fill"></i>
             <span>Quản lý ứng viên</span>
         </a>

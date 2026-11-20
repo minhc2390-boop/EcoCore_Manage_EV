@@ -30,7 +30,7 @@
                     <i class="bi bi-building me-1 text-primary"></i>
                     <span th:text="${job.employer != null ? job.employer.companyName : 'Doanh nghiệp'}">Tên doanh nghiệp</span>
                 </h5>
-                <div class="d-flex flex-wrap gap-3 p-3 bg-light rounded-3 mb-4">
+                <div class="d-flex flex-wrap gap-3 p-3 bg-light rounded-3 mb-4 job-quick-info">
                     <div>
                         <small class="text-muted d-block">Mức Lương:</small>
                         <strong class="text-success fs-5" th:text="${job.salaryRange}">25.000đ/giờ</strong>
@@ -70,13 +70,52 @@
 
         <!-- Right Column: Quick Apply & Employer Info -->
         <div class="col-lg-4">
+            <!-- Flash Messages (VY) -->
+            <div th:if="${success}" class="alert alert-success alert-dismissible fade show rounded-4 shadow-sm mb-3" role="alert">
+                <i class="bi bi-check-circle-fill me-2"></i>
+                <span th:text="${success}"></span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+            <div th:if="${error}" class="alert alert-danger alert-dismissible fade show rounded-4 shadow-sm mb-3" role="alert">
+                <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                <span th:text="${error}"></span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+
             <!-- Apply Card -->
             <div class="card border-0 shadow-sm rounded-4 p-4 mb-4 bg-white text-center">
                 <h5 class="fw-bold mb-3">Ứng Tuyển Công Việc Này</h5>
                 <p class="text-muted small mb-4">Hồ sơ sẽ được gửi trực tiếp đến bộ phận tuyển dụng của doanh nghiệp.</p>
-                <button type="button" class="btn btn-warning w-100 py-2.5 rounded-pill fw-bold text-dark shadow-sm mb-2" data-bs-toggle="modal" data-bs-target="#applyModal">
-                    <i class="bi bi-send-fill me-1"></i>Nộp Hồ Sơ Ngay
-                </button>
+
+                <!-- Trường hợp 1: Sinh viên đã nộp rồi -->
+                <div th:if="${hasApplied}" class="alert alert-success rounded-3 py-3 mb-2">
+                    <i class="bi bi-patch-check-fill fs-5 me-2"></i>
+                    <strong>Bạn đã nộp hồ sơ!</strong><br>
+                    <small class="text-muted">Vui lòng chờ phản hồi từ nhà tuyển dụng.</small>
+                </div>
+
+                <!-- Trường hợp 2: Chưa đăng nhập hoặc không phải sinh viên -->
+                <div th:if="${currentUser == null}">
+                    <a th:href="@{/login}" class="btn btn-warning w-100 py-2 rounded-pill fw-bold text-dark shadow-sm mb-2">
+                        <i class="bi bi-box-arrow-in-right me-1"></i>Đăng nhập để ứng tuyển
+                    </a>
+                </div>
+
+                <!-- Trường hợp 3: Đăng nhập là COMPANY_ADMIN hoặc SUPER_ADMIN (không cho nộp) -->
+                <div th:if="${currentUser != null and currentUser.role.name() != 'STUDENT'}">
+                    <div class="alert alert-info rounded-3 py-2 small mb-2">
+                        <i class="bi bi-info-circle me-1"></i>Tài khoản nhà tuyển dụng không thể ứng tuyển.
+                    </div>
+                </div>
+
+                <!-- Trường hợp 4: Sinh viên đã đăng nhập, chưa nộp -->
+                <div th:if="${currentUser != null and currentUser.role.name() == 'STUDENT' and !hasApplied}">
+                    <button type="button" class="btn btn-warning w-100 py-2 rounded-pill fw-bold text-dark shadow-sm mb-2"
+                            data-bs-toggle="modal" data-bs-target="#applyModal">
+                        <i class="bi bi-send-fill me-1"></i>Nộp Hồ Sơ Ngay
+                    </button>
+                </div>
+
                 <a th:href="@{/jobs}" class="btn btn-outline-secondary btn-sm w-100 rounded-pill py-2">
                     <i class="bi bi-arrow-left me-1"></i>Tìm việc khác
                 </a>
@@ -95,40 +134,61 @@
     </div>
 </div>
 
-<!-- Modal Nộp Hồ Sơ -->
+<!-- Modal Nộp Hồ Sơ — VY: form thật POST về backend -->
 <div class="modal fade" id="applyModal" tabindex="-1" aria-labelledby="applyModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content rounded-4 border-0 shadow">
             <div class="modal-header border-0 pb-0">
-                <h5 class="modal-title fw-bold" id="applyModalLabel"><i class="bi bi-send-check text-primary me-2"></i>Nộp Hồ Sơ Ứng Tuyển</h5>
+                <h5 class="modal-title fw-bold" id="applyModalLabel">
+                    <i class="bi bi-send-check text-primary me-2"></i>Nộp Hồ Sơ Ứng Tuyển
+                </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form>
-                    <div class="mb-3">
-                        <label class="form-label fw-semibold small">Họ và tên của bạn:</label>
-                        <input type="text" class="form-control rounded-3" placeholder="Nguyễn Văn A" required>
+                <!-- Form thật submit POST /jobs/{id}/apply -->
+                <form th:action="@{/jobs/{id}/apply(id=${job.id})}" method="post">
+                    <!-- Thông tin tự động từ session (hiển thị để sinh viên xác nhận) -->
+                    <div class="alert alert-info border-0 small py-2 mb-3" th:if="${currentUser != null}">
+                        <i class="bi bi-person-check-fill me-1"></i>
+                        Nộp với tư cách: <strong th:text="${currentUser.fullName != null ? currentUser.fullName : currentUser.username}">Sinh viên</strong>
+                        — <span th:text="${currentUser.email}">email</span>
                     </div>
+
                     <div class="mb-3">
-                        <label class="form-label fw-semibold small">Email liên hệ / Trường đang học:</label>
-                        <input type="email" class="form-control rounded-3" placeholder="student@poly.edu.vn" required>
+                        <label class="form-label fw-semibold small">
+                            <i class="bi bi-chat-left-text me-1 text-primary"></i>Thư giới thiệu / Lý do ứng tuyển:
+                        </label>
+                        <textarea name="coverLetter" class="form-control rounded-3" rows="3"
+                                  placeholder="Viết vài dòng giới thiệu bản thân và lý do bạn muốn ứng tuyển vị trí này..."></textarea>
                     </div>
+
                     <div class="mb-3">
-                        <label class="form-label fw-semibold small">Ghi chú lịch rảnh / Lịch học trong tuần:</label>
-                        <input type="text" class="form-control rounded-3" placeholder="Rảnh ca tối 2, 4, 6 và cả ngày Chủ Nhật...">
+                        <label class="form-label fw-semibold small">
+                            <i class="bi bi-calendar-week me-1 text-success"></i>Lịch rảnh / Thời gian có thể làm việc:
+                        </label>
+                        <input type="text" name="studentScheduleNotes" class="form-control rounded-3"
+                               placeholder="Rảnh ca tối 2, 4, 6 và cả ngày Chủ Nhật...">
                     </div>
+
                     <div class="mb-3">
-                        <label class="form-label fw-semibold small">Link CV online hoặc File đính kèm:</label>
-                        <input type="text" class="form-control rounded-3" placeholder="https://topcv.vn/cv/... hoặc Google Drive link">
+                        <label class="form-label fw-semibold small">
+                            <i class="bi bi-link-45deg me-1 text-warning"></i>Link CV online (TopCV / Google Drive):
+                        </label>
+                        <input type="text" name="cvUrl" class="form-control rounded-3"
+                               placeholder="https://topcv.vn/cv/... hoặc Google Drive link">
                     </div>
+
                     <div class="alert alert-warning border-0 small mb-0 py-2">
-                        <i class="bi bi-info-circle me-1"></i>Hệ thống cam kết bảo mật thông tin sinh viên và không thu bất kỳ khoản phí nào.
+                        <i class="bi bi-shield-check me-1"></i>Hệ thống cam kết bảo mật thông tin sinh viên và không thu bất kỳ khoản phí nào.
+                    </div>
+
+                    <div class="modal-footer border-0 pt-3 px-0 pb-0">
+                        <button type="button" class="btn btn-light rounded-pill px-3" data-bs-dismiss="modal">Đóng</button>
+                        <button type="submit" class="btn btn-primary rounded-pill px-4 fw-bold">
+                            <i class="bi bi-send-fill me-1"></i>Xác Nhận Nộp Hồ Sơ
+                        </button>
                     </div>
                 </form>
-            </div>
-            <div class="modal-footer border-0 pt-0">
-                <button type="button" class="btn btn-light rounded-pill px-3" data-bs-dismiss="modal">Đóng</button>
-                <button type="button" class="btn btn-primary rounded-pill px-4" onclick="alert('Đã gửi hồ sơ ứng tuyển thành công!'); location.reload();">Xác Nhận Nộp</button>
             </div>
         </div>
     </div>

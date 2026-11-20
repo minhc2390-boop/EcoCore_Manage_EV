@@ -64,6 +64,12 @@
             gap: 20px;
         }
 
+        .password-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 15px;
+        }
+
         .btn-save {
             background: #142B4A;
             color: white;
@@ -180,7 +186,7 @@
 
             <!-- Form đổi mật khẩu gọi vào POST /profile/change-password -->
             <form th:action="@{/profile/change-password}" method="POST">
-                <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px;">
+                <div class="password-grid">
                     <div class="form-group">
                         <label style="display:block; margin-bottom:6px; font-weight:600;">Mật khẩu hiện tại</label>
                         <input type="password" name="currentPassword" placeholder="Nhập mật khẩu cũ"
