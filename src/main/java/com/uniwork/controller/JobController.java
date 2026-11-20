@@ -9,6 +9,9 @@ import com.uniwork.service.JobCategoryService;
 import com.uniwork.service.JobPostingService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -25,9 +28,22 @@ public class JobController {
     private final JobApplicationService jobApplicationService;
 
     @GetMapping
-    public String listJobs(@ModelAttribute JobSearchDTO searchDTO, Model model) {
-        List<JobPosting> jobs = jobPostingService.searchJobs(searchDTO);
-        model.addAttribute("jobs", jobs);
+    public String listJobs(@ModelAttribute JobSearchDTO searchDTO,
+                           @RequestParam(value = "page", defaultValue = "0") int page,
+                           Model model) {
+        if (page < 0) {
+            page = 0;
+        }
+        int pageSize = 10;
+        Pageable pageable = PageRequest.of(page, pageSize);
+        Page<JobPosting> jobPage = jobPostingService.searchJobsPaged(searchDTO, pageable);
+
+        model.addAttribute("jobPage", jobPage);
+        model.addAttribute("jobs", jobPage.getContent());
+        model.addAttribute("currentPage", jobPage.getNumber());
+        model.addAttribute("totalPages", jobPage.getTotalPages());
+        model.addAttribute("totalElements", jobPage.getTotalElements());
+        model.addAttribute("pageSize", pageSize);
         model.addAttribute("categories", jobCategoryService.getAllActiveCategories());
         model.addAttribute("searchDTO", searchDTO);
         return "jobs/list";

@@ -44,9 +44,15 @@
         </form>
     </div>
 
-    <!-- Job Results Count -->
-    <div class="d-flex justify-content-between align-items-center mb-3">
-        <h5 class="fw-bold mb-0">Tìm thấy <span class="text-primary" th:text="${jobs.size()}">0</span> việc làm phù hợp cho sinh viên</h5>
+    <!-- Job Results Count & Pagination Summary -->
+    <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+        <h5 class="fw-bold mb-0">
+            Tìm thấy <span class="text-primary fw-bolder" th:text="${totalElements}">0</span> việc làm phù hợp cho sinh viên
+        </h5>
+        <div class="text-muted small" th:if="${totalPages > 0}">
+            Trang <strong class="text-dark" th:text="${currentPage + 1}">1</strong> / <span th:text="${totalPages}">1</span>
+            (10 việc làm/trang)
+        </div>
     </div>
 
     <!-- Job List -->
@@ -82,7 +88,7 @@
                             <i class="bi bi-building me-1 text-primary"></i>
                             <strong th:text="${job.employer != null ? job.employer.companyName : 'Doanh nghiệp'}">Tên công ty</strong>
                             <span class="mx-2">•</span>
-                            <i class="bi bi-geo-alt me-1 text-danger"></i><span th:text="${job.location}">TP. HCM</span>
+                            <i class="bi bi-geo-alt me-1 text-danger"></i><span th:text="${job.location}">TP. Cần Thơ</span>
                         </p>
                         <div class="text-muted small">
                             <i class="bi bi-clock-history me-1 text-warning"></i><span th:text="${job.shiftSchedule}">Ca làm</span>
@@ -98,6 +104,53 @@
             </div>
         </div>
     </div>
+
+    <!-- Phân Trang (Pagination 10 jobs/trang) -->
+    <nav th:if="${totalPages > 1}" aria-label="Job pagination" class="mt-4 pt-2">
+        <ul class="pagination justify-content-center flex-wrap gap-1 mb-0">
+            <!-- Nút Về Trang Đầu -->
+            <li class="page-item" th:classappend="${currentPage == 0} ? 'disabled'">
+                <a class="page-link rounded-3 px-3 shadow-sm"
+                   th:href="@{/jobs(page=0, keyword=${searchDTO.keyword}, categoryId=${searchDTO.categoryId}, jobType=${searchDTO.jobType})}"
+                   title="Trang đầu">
+                    <i class="bi bi-chevron-double-left"></i>
+                </a>
+            </li>
+
+            <!-- Nút Trang Trước -->
+            <li class="page-item" th:classappend="${currentPage == 0} ? 'disabled'">
+                <a class="page-link rounded-3 px-3 shadow-sm"
+                   th:href="@{/jobs(page=${currentPage - 1}, keyword=${searchDTO.keyword}, categoryId=${searchDTO.categoryId}, jobType=${searchDTO.jobType})}">
+                    <i class="bi bi-chevron-left me-1"></i>Trước
+                </a>
+            </li>
+
+            <!-- Danh Sách Các Số Trang -->
+            <li class="page-item" th:each="i : ${#numbers.sequence(0, totalPages - 1)}"
+                th:classappend="${currentPage == i} ? 'active'">
+                <a class="page-link rounded-3 px-3 shadow-sm fw-semibold"
+                   th:href="@{/jobs(page=${i}, keyword=${searchDTO.keyword}, categoryId=${searchDTO.categoryId}, jobType=${searchDTO.jobType})}"
+                   th:text="${i + 1}">1</a>
+            </li>
+
+            <!-- Nút Trang Kế Tiếp -->
+            <li class="page-item" th:classappend="${currentPage >= totalPages - 1} ? 'disabled'">
+                <a class="page-link rounded-3 px-3 shadow-sm"
+                   th:href="@{/jobs(page=${currentPage + 1}, keyword=${searchDTO.keyword}, categoryId=${searchDTO.categoryId}, jobType=${searchDTO.jobType})}">
+                    Sau<i class="bi bi-chevron-right ms-1"></i>
+                </a>
+            </li>
+
+            <!-- Nút Đến Trang Cuối -->
+            <li class="page-item" th:classappend="${currentPage >= totalPages - 1} ? 'disabled'">
+                <a class="page-link rounded-3 px-3 shadow-sm"
+                   th:href="@{/jobs(page=${totalPages - 1}, keyword=${searchDTO.keyword}, categoryId=${searchDTO.categoryId}, jobType=${searchDTO.jobType})}"
+                   title="Trang cuối">
+                    <i class="bi bi-chevron-double-right"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
 </div>
 
 <footer th:replace="~{common/footer :: footer}"></footer>

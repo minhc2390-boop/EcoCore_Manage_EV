@@ -7,6 +7,8 @@ import com.uniwork.repository.JobPostingRepository;
 import com.uniwork.service.JobPostingService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -57,6 +59,18 @@ public class JobPostingServiceImpl implements JobPostingService {
             return jobPostingRepository.findByJobTypeAndStatus(searchDTO.getJobType().trim(), "ACTIVE");
         }
         return getAllActiveJobs();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Page<JobPosting> searchJobsPaged(JobSearchDTO searchDTO, Pageable pageable) {
+        String keyword = (searchDTO != null && searchDTO.getKeyword() != null && !searchDTO.getKeyword().trim().isEmpty())
+                ? searchDTO.getKeyword().trim() : null;
+        Long categoryId = (searchDTO != null) ? searchDTO.getCategoryId() : null;
+        String jobType = (searchDTO != null && searchDTO.getJobType() != null && !searchDTO.getJobType().trim().isEmpty())
+                ? searchDTO.getJobType().trim() : null;
+
+        return jobPostingRepository.searchJobsPaged(keyword, categoryId, jobType, pageable);
     }
 
     @Override
