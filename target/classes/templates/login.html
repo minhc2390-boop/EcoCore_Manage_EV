@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Đăng Nhập - Job Portal</title>
+  <link rel="stylesheet" th:href="@{/css/style.css}" href="css/style.css">
+</head>
+<body class="login-full-page">
+  <div class="login-page-overlay">
+    <div class="login-content-wrapper">
+      <div class="login-intro-col">
+        <a th:href="@{/}" href="index.html" class="login-main-logo">JOB PORTAL</a>
+        <div class="login-intro-body">
+          <h1 class="login-headline">Kết nối cơ hội.<br>Kiến tạo tương lai.</h1>
+          <p class="login-subtext">Nền tảng tuyển dụng chuyên nghiệp giúp bạn khám phá những cơ hội nghề nghiệp phù hợp, kết nối với doanh nghiệp và phát triển sự nghiệp bền vững.</p>
+          <div class="login-points-stack">
+            <div class="login-point-item">
+              <span class="login-point-bar"></span>
+              <span>Khám phá cơ hội nghề nghiệp đa dạng.</span>
+            </div>
+            <div class="login-point-item">
+              <span class="login-point-bar"></span>
+              <span>Kết nối với doanh nghiệp và nhà tuyển dụng.</span>
+            </div>
+            <div class="login-point-item">
+              <span class="login-point-bar"></span>
+              <span>Chủ động phát triển hành trình sự nghiệp.</span>
+            </div>
+          </div>
+        </div>
+        <div class="login-intro-footer">
+          <p>© 2026 JOB PORTAL. ALL RIGHTS RESERVED.</p>
+        </div>
+      </div>
+
+      <div class="login-form-col">
+        <div class="login-card-standalone">
+          <div class="login-card-header">
+            <h2 class="login-form-title">Chào mừng bạn quay trở lại</h2>
+            <p class="login-form-subtitle">Đăng nhập để tiếp tục hành trình nghề nghiệp của bạn.</p>
+          </div>
+
+          <!-- Thông báo lỗi hoặc thành công -->
+          <div th:if="${error}" style="padding: 12px; border-radius: 6px; background-color: #fee2e2; color: #b91c1c; border: 1px solid #f87171; margin-bottom: 15px; font-size: 14px;" th:text="${error}"></div>
+          <div th:if="${success}" style="padding: 12px; border-radius: 6px; background-color: #dcfce7; color: #15803d; border: 1px solid #86efac; margin-bottom: 15px; font-size: 14px;" th:text="${success}"></div>
+          <div th:if="${info}" style="padding: 12px; border-radius: 6px; background-color: #e0f2fe; color: #0369a1; border: 1px solid #7dd3fc; margin-bottom: 15px; font-size: 14px;" th:text="${info}"></div>
+
+          <form class="login-main-form" th:action="@{/login}" method="POST" autocomplete="off">
+            <div class="form-group">
+              <label class="form-label" for="loginUsername">Tên đăng nhập / Email</label>
+              <input type="text" id="loginUsername" name="username" th:value="${username}" class="form-control" placeholder="Nhập tên đăng nhập hoặc email" required autocomplete="off">
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="loginPassword">Mật khẩu</label>
+              <input type="password" id="loginPassword" name="password" class="form-control" placeholder="Nhập mật khẩu của bạn" required autocomplete="current-password">
+            </div>
+
+            <div class="form-forgot-row">
+              <a href="#" class="login-forgot-link">Quên mật khẩu?</a>
+            </div>
+
+            <button type="submit" class="login-btn-submit">ĐĂNG NHẬP</button>
+          </form>
+
+          <p class="login-switch-prompt">
+            Chưa có tài khoản?
+            <a th:href="@{/register}" href="register.html" class="login-switch-link">Đăng ký ngay</a>
+          </p>
+
+          <div class="login-return-box">
+            <a th:href="@{/}" href="index.html" class="login-return-link">Quay về Trang chủ</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{common/header :: header-head}"></head>
+<body class="bg-light">
+
+<nav th:replace="~{common/header :: header-nav}"></nav>
+
+<div class="container py-4">
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a th:href="@{/}" class="text-decoration-none">Trang Chủ</a></li>
+            <li class="breadcrumb-item"><a th:href="@{/jobs}" class="text-decoration-none">Tìm Việc</a></li>
+            <li class="breadcrumb-item active" aria-current="page" th:text="${job.title}">Chi Tiết Công Việc</li>
+        </ol>
+    </nav>
+
+    <div class="row g-4">
+        <!-- Job Details Left Column -->
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-sm rounded-4 p-4 mb-4 bg-white">
+                <div class="d-flex justify-content-between align-items-start mb-3">
+                    <span class="badge bg-primary bg-opacity-10 text-primary px-3 py-1.5 rounded-pill fw-semibold">
+                        <i class="bi bi-clock me-1"></i><span th:text="${job.jobType}">Part-time</span>
+                    </span>
+                    <span class="text-muted small"><i class="bi bi-eye me-1"></i><span th:text="${job.viewCount}">0</span> lượt xem</span>
+                </div>
+                <h3 class="fw-bold text-dark mb-2" th:text="${job.title}">Tên công việc</h3>
+                <h5 class="text-secondary mb-3">
+                    <i class="bi bi-building me-1 text-primary"></i>
+                    <span th:text="${job.employer != null ? job.employer.companyName : 'Doanh nghiệp'}">Tên doanh nghiệp</span>
+                </h5>
+                <div class="d-flex flex-wrap gap-3 p-3 bg-light rounded-3 mb-4">
+                    <div>
+                        <small class="text-muted d-block">Mức Lương:</small>
+                        <strong class="text-success fs-5" th:text="${job.salaryRange}">25.000đ/giờ</strong>
+                    </div>
+                    <div class="border-start ps-3">
+                        <small class="text-muted d-block">Địa điểm:</small>
+                        <strong class="text-dark" th:text="${job.location}">TP. HCM</strong>
+                    </div>
+                    <div class="border-start ps-3">
+                        <small class="text-muted d-block">Hạn nộp hồ sơ:</small>
+                        <strong class="text-danger" th:text="${job.deadline}">2026-12-31</strong>
+                    </div>
+                </div>
+
+                <!-- Job Sections -->
+                <div class="mb-4">
+                    <h5 class="fw-bold text-primary mb-2"><i class="bi bi-card-text me-2"></i>Mô tả công việc:</h5>
+                    <p class="text-secondary leading-relaxed" th:text="${job.description}">Mô tả chi tiết...</p>
+                </div>
+
+                <div class="mb-4">
+                    <h5 class="fw-bold text-primary mb-2"><i class="bi bi-check2-circle me-2"></i>Yêu cầu ứng viên:</h5>
+                    <p class="text-secondary leading-relaxed" th:text="${job.requirements}">Yêu cầu...</p>
+                </div>
+
+                <div class="mb-4">
+                    <h5 class="fw-bold text-primary mb-2"><i class="bi bi-gift me-2"></i>Quyền lợi &amp; Đãi ngộ cho sinh viên:</h5>
+                    <p class="text-secondary leading-relaxed" th:text="${job.benefits}">Quyền lợi...</p>
+                </div>
+
+                <div class="p-3 bg-info bg-opacity-10 border border-info border-opacity-25 rounded-3">
+                    <h6 class="fw-bold text-info mb-1"><i class="bi bi-calendar-event me-2"></i>Lịch ca làm việc:</h6>
+                    <p class="mb-0 text-dark small" th:text="${job.shiftSchedule}">Ca sáng/tối...</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Column: Quick Apply & Employer Info -->
+        <div class="col-lg-4">
+            <!-- Flash Messages (VY) -->
+            <div th:if="${success}" class="alert alert-success alert-dismissible fade show rounded-4 shadow-sm mb-3" role="alert">
+                <i class="bi bi-check-circle-fill me-2"></i>
+                <span th:text="${success}"></span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+            <div th:if="${error}" class="alert alert-danger alert-dismissible fade show rounded-4 shadow-sm mb-3" role="alert">
+                <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                <span th:text="${error}"></span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+
+            <!-- Apply Card -->
+            <div class="card border-0 shadow-sm rounded-4 p-4 mb-4 bg-white text-center">
+                <h5 class="fw-bold mb-3">Ứng Tuyển Công Việc Này</h5>
+                <p class="text-muted small mb-4">Hồ sơ sẽ được gửi trực tiếp đến bộ phận tuyển dụng của doanh nghiệp.</p>
+
+                <!-- Trường hợp 1: Sinh viên đã nộp rồi -->
+                <div th:if="${hasApplied}" class="alert alert-success rounded-3 py-3 mb-2">
+                    <i class="bi bi-patch-check-fill fs-5 me-2"></i>
+                    <strong>Bạn đã nộp hồ sơ!</strong><br>
+                    <small class="text-muted">Vui lòng chờ phản hồi từ nhà tuyển dụng.</small>
+                </div>
+
+                <!-- Trường hợp 2: Chưa đăng nhập hoặc không phải sinh viên -->
+                <div th:if="${currentUser == null}">
+                    <a th:href="@{/login}" class="btn btn-warning w-100 py-2 rounded-pill fw-bold text-dark shadow-sm mb-2">
+                        <i class="bi bi-box-arrow-in-right me-1"></i>Đăng nhập để ứng tuyển
+                    </a>
+                </div>
+
+                <!-- Trường hợp 3: Đăng nhập là COMPANY_ADMIN hoặc SUPER_ADMIN (không cho nộp) -->
+                <div th:if="${currentUser != null and currentUser.role.name() != 'STUDENT'}">
+                    <div class="alert alert-info rounded-3 py-2 small mb-2">
+                        <i class="bi bi-info-circle me-1"></i>Tài khoản nhà tuyển dụng không thể ứng tuyển.
+                    </div>
+                </div>
+
+                <!-- Trường hợp 4: Sinh viên đã đăng nhập, chưa nộp -->
+                <div th:if="${currentUser != null and currentUser.role.name() == 'STUDENT' and !hasApplied}">
+                    <button type="button" class="btn btn-warning w-100 py-2 rounded-pill fw-bold text-dark shadow-sm mb-2"
+                            data-bs-toggle="modal" data-bs-target="#applyModal">
+                        <i class="bi bi-send-fill me-1"></i>Nộp Hồ Sơ Ngay
+                    </button>
+                </div>
+
+                <a th:href="@{/jobs}" class="btn btn-outline-secondary btn-sm w-100 rounded-pill py-2">
+                    <i class="bi bi-arrow-left me-1"></i>Tìm việc khác
+                </a>
+            </div>
+
+            <!-- Employer Card -->
+            <div class="card border-0 shadow-sm rounded-4 p-4 bg-white" th:if="${job.employer != null}">
+                <h6 class="fw-bold text-uppercase small text-muted mb-3">Thông Tin Nhà Tuyển Dụng</h6>
+                <h5 class="fw-bold text-dark mb-2" th:text="${job.employer.companyName}">Tên công ty</h5>
+                <p class="text-secondary small mb-3" th:text="${job.employer.description}">Mô tả</p>
+                <p class="text-muted small mb-1"><i class="bi bi-geo-alt me-2 text-danger"></i><span th:text="${job.employer.address}">Địa chỉ</span></p>
+                <p class="text-muted small mb-1"><i class="bi bi-globe me-2 text-primary"></i><a th:href="${job.employer.website}" target="_blank" class="text-decoration-none" th:text="${job.employer.website}">Website</a></p>
+                <p class="text-muted small mb-0"><i class="bi bi-envelope me-2 text-warning"></i><span th:text="${job.employer.contactEmail}">Email</span></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Nộp Hồ Sơ — VY: form thật POST về backend -->
+<div class="modal fade" id="applyModal" tabindex="-1" aria-labelledby="applyModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content rounded-4 border-0 shadow">
+            <div class="modal-header border-0 pb-0">
+                <h5 class="modal-title fw-bold" id="applyModalLabel">
+                    <i class="bi bi-send-check text-primary me-2"></i>Nộp Hồ Sơ Ứng Tuyển
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <!-- Form thật submit POST /jobs/{id}/apply -->
+                <form th:action="@{/jobs/{id}/apply(id=${job.id})}" method="post">
+                    <!-- Thông tin tự động từ session (hiển thị để sinh viên xác nhận) -->
+                    <div class="alert alert-info border-0 small py-2 mb-3" th:if="${currentUser != null}">
+                        <i class="bi bi-person-check-fill me-1"></i>
+                        Nộp với tư cách: <strong th:text="${currentUser.fullName != null ? currentUser.fullName : currentUser.username}">Sinh viên</strong>
+                        — <span th:text="${currentUser.email}">email</span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold small">
+                            <i class="bi bi-chat-left-text me-1 text-primary"></i>Thư giới thiệu / Lý do ứng tuyển:
+                        </label>
+                        <textarea name="coverLetter" class="form-control rounded-3" rows="3"
+                                  placeholder="Viết vài dòng giới thiệu bản thân và lý do bạn muốn ứng tuyển vị trí này..."></textarea>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold small">
+                            <i class="bi bi-calendar-week me-1 text-success"></i>Lịch rảnh / Thời gian có thể làm việc:
+                        </label>
+                        <input type="text" name="studentScheduleNotes" class="form-control rounded-3"
+                               placeholder="Rảnh ca tối 2, 4, 6 và cả ngày Chủ Nhật...">
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold small">
+                            <i class="bi bi-link-45deg me-1 text-warning"></i>Link CV online (TopCV / Google Drive):
+                        </label>
+                        <input type="text" name="cvUrl" class="form-control rounded-3"
+                               placeholder="https://topcv.vn/cv/... hoặc Google Drive link">
+                    </div>
+
+                    <div class="alert alert-warning border-0 small mb-0 py-2">
+                        <i class="bi bi-shield-check me-1"></i>Hệ thống cam kết bảo mật thông tin sinh viên và không thu bất kỳ khoản phí nào.
+                    </div>
+
+                    <div class="modal-footer border-0 pt-3 px-0 pb-0">
+                        <button type="button" class="btn btn-light rounded-pill px-3" data-bs-dismiss="modal">Đóng</button>
+                        <button type="submit" class="btn btn-primary rounded-pill px-4 fw-bold">
+                            <i class="bi bi-send-fill me-1"></i>Xác Nhận Nộp Hồ Sơ
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer th:replace="~{common/footer :: footer}"></footer>
+</body>
+</html>
