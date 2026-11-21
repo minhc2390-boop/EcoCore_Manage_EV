@@ -55,6 +55,7 @@ public class CompanyJobController {
     private final JobCategoryService jobCategoryService;
     private final JobApplicationService jobApplicationService; // VY — quản lý ứng viên
     private final NotificationService notificationService;
+    private final com.uniwork.repository.CompanyReviewRepository companyReviewRepository;
 
     // Danh sách 9 quận/huyện trực thuộc TP. Cần Thơ
     public static final List<String> CAN_THO_DISTRICTS = List.of(
@@ -151,6 +152,9 @@ public class CompanyJobController {
 
         model.addAttribute("currentUser", currentUser);
         model.addAttribute("employer", employer);
+        List<com.uniwork.entity.CompanyReview> reviews = companyReviewRepository.findByEmployerIdOrderByCreatedAtDesc(employer.getId());
+        model.addAttribute("reviews", reviews);
+        model.addAttribute("totalReviews", reviews.size());
         model.addAttribute("totalJobs", totalJobs);
 
         return "employer/profile";
@@ -680,6 +684,9 @@ public class CompanyJobController {
 
         model.addAttribute("currentUser", currentUser);
         model.addAttribute("employer", employer);
+        List<com.uniwork.entity.CompanyReview> reviews = companyReviewRepository.findByEmployerIdOrderByCreatedAtDesc(employer.getId());
+        model.addAttribute("reviews", reviews);
+        model.addAttribute("totalReviews", reviews.size());
 
         return "employer/reviews";
     }

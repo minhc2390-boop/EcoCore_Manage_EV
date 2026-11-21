@@ -352,6 +352,43 @@
                     </ul>
                 </div>
 
+                <!-- 8. Lọc theo Công ty (Highlands Coffee, FPT...) -->
+                <div class="dropdown">
+                    <button class="filter-pill-btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false"
+                            th:classappend="${searchDTO.keyword != null and (searchDTO.keyword.toLowerCase().contains('highlands') or searchDTO.keyword.toLowerCase().contains('fpt') or searchDTO.keyword.toLowerCase().contains('lotte') or searchDTO.keyword.toLowerCase().contains('vus'))} ? 'active' : ''">
+                        <i class="bi bi-buildings"></i>
+                        <span>Công ty</span>
+                        <i class="bi bi-chevron-down filter-pill-chevron"></i>
+                    </button>
+                    <ul class="dropdown-menu filter-dropdown-menu">
+                        <li>
+                            <a class="dropdown-item filter-dropdown-item" href="javascript:void(0)" onclick="applyFilter('keyword', '')">
+                                <span>Tất cả công ty</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item filter-dropdown-item" href="javascript:void(0)" onclick="applyFilter('keyword', 'Highlands Coffee')">
+                                <span>Highlands Coffee Cần Thơ</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item filter-dropdown-item" href="javascript:void(0)" onclick="applyFilter('keyword', 'FPT')">
+                                <span>FPT Software Cần Thơ</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item filter-dropdown-item" href="javascript:void(0)" onclick="applyFilter('keyword', 'Lotte Mart')">
+                                <span>Lotte Mart Cần Thơ</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item filter-dropdown-item" href="javascript:void(0)" onclick="applyFilter('keyword', 'VUS')">
+                                <span>Anh Văn Hội Việt Mỹ (VUS)</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
                 <!-- Nút Xóa lọc nếu có filter đang kích hoạt -->
                 <a th:if="${searchDTO.hasActiveFilters()}" th:href="@{/jobs}" class="filter-pill-clear-btn" title="Xóa tất cả bộ lọc">
                     <i class="bi bi-x-circle-fill"></i>

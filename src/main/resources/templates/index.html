@@ -41,7 +41,7 @@
         <a th:href="@{/#home}" href="#home" class="nav-link active text-nowrap">Trang chủ</a>
         <a th:href="@{/jobs}" class="nav-link text-nowrap">Việc làm</a>
         <a th:href="@{/#categories}" href="#categories" class="nav-link text-nowrap">Ngành nghề</a>
-        <a th:href="@{/#companies}" href="#companies" class="nav-link text-nowrap">Doanh nghiệp</a>
+        <a th:href="@{/companies}" class="nav-link text-nowrap">Doanh nghiệp</a>
         <a th:href="@{/employer/jobs}" class="nav-link text-nowrap">Nhà tuyển dụng</a>
         <!-- Auth links for mobile nav drawer -->
         <th:block th:if="${session.currentUser == null}">
@@ -94,7 +94,11 @@
             </div>
           </div>
 
-          <a th:if="${session.currentUser.role.name() == 'COMPANY_ADMIN' or session.currentUser.role.name() == 'SUPER_ADMIN'}" 
+          <a th:if="${session.currentUser.role.name() == 'SUPER_ADMIN'}" 
+             th:href="@{/admin/dashboard}" class="btn btn-outline text-nowrap" style="border-color: #dc2626; color: #dc2626; font-size: 13px; padding: 6px 12px; white-space: nowrap;">
+            <i data-lucide="shield" style="width:14px;height:14px;vertical-align:-2px;margin-right:4px;"></i>Quản trị sàn
+          </a>
+          <a th:if="${session.currentUser.role.name() == 'COMPANY_ADMIN'}" 
              th:href="@{/employer/jobs}" class="btn btn-outline text-nowrap" style="border-color: #0284c7; color: #0284c7; font-size: 13px; padding: 6px 12px; white-space: nowrap;">
             <i data-lucide="layout-dashboard" style="width:14px;height:14px;vertical-align:-2px;margin-right:4px;"></i>Quản lý tin
           </a>

@@ -24,6 +24,7 @@ public class DataInitializer implements CommandLineRunner {
     private final EmployerRepository employerRepository;
     private final JobCategoryRepository jobCategoryRepository;
     private final JobPostingRepository jobPostingRepository;
+    private final com.uniwork.repository.CompanyReviewRepository companyReviewRepository;
 
     @Override
     public void run(String... args) {
@@ -725,6 +726,83 @@ public class DataInitializer implements CommandLineRunner {
                     .viewCount(170)
                     .createdAt(LocalDateTime.now().minusHours(24))
                     .build());
+        }
+
+        // 6. Doanh nghiệp Chờ Duyệt (PENDING) cho Super Admin duyệt
+        if (employerRepository.findByCompanyNameIgnoreCase("Hệ Thống Trà Sữa TocoToco Cần Thơ").isEmpty()) {
+            User empUserPending = userRepository.findByUsername("tocotoco_cantho").orElseGet(() -> userRepository.save(User.builder()
+                    .username("tocotoco_cantho")
+                    .password("123456")
+                    .fullName("Quản Lý Tuyển Dụng TocoToco Ninh Kiều")
+                    .email("hr.cantho@tocotocotea.com")
+                    .phone("02923777666")
+                    .role(Role.COMPANY_ADMIN)
+                    .active(true)
+                    .build()));
+            employerRepository.save(Employer.builder()
+                    .companyName("Hệ Thống Trà Sữa TocoToco Cần Thơ")
+                    .address("Số 55 Đường 30 Tháng 4, Phường An Lạc, Quận Ninh Kiều, TP. Cần Thơ")
+                    .website("https://tocotocotea.com")
+                    .description("Thương hiệu trà sữa thuần Việt, cần tuyển 15 bạn sinh viên làm thêm ca xoay linh hoạt.")
+                    .contactEmail("recruitment@tocotocotea.com")
+                    .contactPhone("02923777666")
+                    .status("PENDING")
+                    .user(empUserPending)
+                    .build());
+        }
+
+        // 7. Doanh nghiệp Bị Khóa 1-click (LOCKED)
+        if (employerRepository.findByCompanyNameIgnoreCase("Công Ty Đầu Tư Tài Chính Toàn Cầu SkyInvest").isEmpty()) {
+            User empUserLocked = userRepository.findByUsername("skyinvest_cantho").orElseGet(() -> userRepository.save(User.builder()
+                    .username("skyinvest_cantho")
+                    .password("123456")
+                    .fullName("Đại Diện SkyInvest Chi Nhánh Cần Thơ")
+                    .email("contact@skyinvest.fake")
+                    .phone("0900999888")
+                    .role(Role.COMPANY_ADMIN)
+                    .active(false)
+                    .build()));
+            employerRepository.save(Employer.builder()
+                    .companyName("Công Ty Đầu Tư Tài Chính Toàn Cầu SkyInvest")
+                    .address("Đường Nguyễn Văn Cừ, Phường An Khánh, Quận Ninh Kiều, TP. Cần Thơ")
+                    .website("https://skyinvest-fake.com")
+                    .description("Tài khoản đã bị Super Admin kích hoạt chế tài KHÓA 1-CLICK do có dấu hiệu lừa đảo thu tiền cọc đồng phục và đa cấp đối với sinh viên.")
+                    .contactEmail("contact@skyinvest.fake")
+                    .contactPhone("0900999888")
+                    .status("LOCKED")
+                    .user(empUserLocked)
+                    .build());
+        }
+
+        // 8. Đánh giá & Chấm sao mẫu từ sinh viên Cần Thơ
+        if (companyReviewRepository.count() == 0) {
+            Employer highlands = employerRepository.findByCompanyNameIgnoreCase("Highlands Coffee Bến Ninh Kiều").orElse(null);
+            User student = userRepository.findByUsername("sinhvien_cantho").orElse(null);
+            if (highlands != null && student != null) {
+                companyReviewRepository.save(com.uniwork.entity.CompanyReview.builder()
+                        .employer(highlands)
+                        .student(student)
+                        .studentName("Nguyễn Văn Sinh Viên (FPT Poly Cần Thơ)")
+                        .rating(5)
+                        .title("Quán trả lương cực kỳ đúng hạn, quản lý rất thương sinh viên")
+                        .content("Mình làm ca tối 17:30 - 22:30 tại Bến Ninh Kiều được 6 tháng. Lương ngày 5 hàng tháng ting ting đúng ngày. Anh quản lý luôn sắp ca tránh lịch thi giữa kỳ của mình.")
+                        .salaryRating("Đúng hạn")
+                        .environmentRating("Thân thiện hỗ trợ")
+                        .verifiedStudent(true)
+                        .build());
+
+                companyReviewRepository.save(com.uniwork.entity.CompanyReview.builder()
+                        .employer(highlands)
+                        .student(student)
+                        .studentName("Lê Hoàng Nam (ĐH Cần Thơ - K47)")
+                        .rating(5)
+                        .title("Môi trường pha chế chuyên nghiệp, được giảm 50% menu")
+                        .content("Được học công thức pha Phin Sữa Đá chuẩn chuỗi. Nước uống được giảm giá 50% cho nhân viên. Rất khuyến khích các bạn sinh viên năm 1-2 ứng tuyển thử sức.")
+                        .salaryRating("Đúng hạn")
+                        .environmentRating("Chuyên nghiệp")
+                        .verifiedStudent(true)
+                        .build());
+            }
         }
 
         log.info("Khởi tạo dữ liệu mẫu UniWork Cần Thơ hoàn tất thành công!");

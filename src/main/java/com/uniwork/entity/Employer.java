@@ -41,6 +41,10 @@ public class Employer {
     @Column(length = 20)
     private String contactPhone;
 
+    @Builder.Default
+    @Column(length = 20)
+    private String status = "APPROVED"; // PENDING, APPROVED, LOCKED
+
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", unique = true)
     private User user;

@@ -24,6 +24,17 @@
                 <a th:href="@{/employer/jobs}" class="btn btn-outline-custom btn-sm">Danh sách tin</a>
             </div>
 
+            <!-- Cảnh báo nếu công ty chưa duyệt PENDING -->
+            <div th:if="${employer != null and employer.status == 'PENDING'}" class="alert alert-warning border-warning d-flex align-items-center gap-3 p-3.5 rounded-4 shadow-sm mb-4">
+                <i class="bi bi-hourglass-split fs-2 text-warning"></i>
+                <div>
+                    <h6 class="fw-bold mb-1 text-dark">Lưu ý: Doanh nghiệp đang chờ Super Admin phê duyệt (PENDING)</h6>
+                    <p class="mb-0 small text-secondary">
+                        Bạn vẫn có thể điền mẫu bài đăng trước, bài đăng sẽ chính thức hiển thị công khai trên sàn việc làm ngay sau khi Super Admin duyệt hồ sơ công ty.
+                    </p>
+                </div>
+            </div>
+
             <form th:action="@{/employer/jobs/create}" th:object="${jobDTO}" method="post" id="createJobForm" novalidate>
                 <div class="row g-4">
                     <div class="col-12 col-lg-8">

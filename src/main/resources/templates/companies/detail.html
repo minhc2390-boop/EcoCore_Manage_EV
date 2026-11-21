@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{common/header :: header-head}"></head>
+<body class="bg-light">
+
+<nav th:replace="~{common/header :: header-nav}"></nav>
+
+<div class="container py-4">
+    <!-- Thông báo flash -->
+    <div th:if="${success}" class="alert alert-success alert-dismissible fade show rounded-4 shadow-sm mb-4" role="alert">
+        <i class="bi bi-check-circle-fill me-2"></i><span th:text="${success}">Thành công</span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+    <div th:if="${error}" class="alert alert-danger alert-dismissible fade show rounded-4 shadow-sm mb-4" role="alert">
+        <i class="bi bi-x-circle-fill me-2"></i><span th:text="${error}">Lỗi</span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a th:href="@{/}" class="text-decoration-none">Trang Chủ</a></li>
+            <li class="breadcrumb-item"><a th:href="@{/companies}" class="text-decoration-none">Doanh Nghiệp</a></li>
+            <li class="breadcrumb-item active text-truncate" style="max-width: 300px;" aria-current="page" th:text="${employer.companyName}">Tên Công Ty</li>
+        </ol>
+    </nav>
+
+    <!-- Header Hồ sơ Công ty (Cover & Logo) -->
+    <div class="card border-0 rounded-4 shadow-sm overflow-hidden mb-4">
+        <div style="height: 180px; background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%); position: relative;">
+            <div class="position-absolute end-0 bottom-0 p-4 opacity-25 d-none d-md-block">
+                <i class="bi bi-buildings text-white" style="font-size: 100px;"></i>
+            </div>
+        </div>
+        <div class="card-body px-4 pb-4 pt-0 position-relative">
+            <div class="d-flex flex-column flex-md-row align-items-start align-items-md-end gap-3" style="margin-top: -50px;">
+                <div class="rounded-4 d-flex align-items-center justify-content-center text-white fw-bold shadow-lg" style="width: 100px; height: 100px; min-width: 100px; background: #0284c7; border: 4px solid #fff; font-size: 40px;">
+                    <i class="bi bi-building"></i>
+                </div>
+                <div class="flex-grow-1 overflow-hidden">
+                    <div class="d-flex flex-wrap align-items-center gap-2 mb-1">
+                        <h3 class="fw-bold text-dark mb-0" th:text="${employer.companyName}">Highlands Coffee Cần Thơ</h3>
+                        <span th:if="${employer.status == 'APPROVED'}" class="badge bg-success-subtle text-success border border-success-subtle px-2.5 py-1 rounded-pill small">
+                            <i class="bi bi-patch-check-fill me-1"></i>Doanh Nghiệp Đã Kiểm Duyệt
+                        </span>
+                        <span th:if="${employer.status == 'PENDING'}" class="badge bg-warning-subtle text-warning border border-warning-subtle px-2.5 py-1 rounded-pill small">
+                            <i class="bi bi-hourglass-split me-1"></i>Chờ Duyệt
+                        </span>
+                    </div>
+                    <div class="text-secondary small d-flex flex-wrap align-items-center gap-3">
+                        <span><i class="bi bi-geo-alt-fill text-danger me-1"></i><span th:text="${employer.address}">Quận Ninh Kiều, Cần Thơ</span></span>
+                        <span th:if="${employer.website}"><i class="bi bi-globe me-1 text-primary"></i><a th:href="${employer.website}" target="_blank" class="text-decoration-none" th:text="${employer.website}">website.com</a></span>
+                        <span><i class="bi bi-briefcase-fill text-info me-1"></i><span th:text="${activeJobs.size()}">0</span> việc làm đang mở</span>
+                    </div>
+                </div>
+                <div class="d-flex gap-2 mt-3 mt-md-0">
+                    <a href="#reviews" class="btn btn-outline-warning text-dark fw-semibold rounded-pill px-3">
+                        <i class="bi bi-star-fill text-warning me-1"></i>Xem Đánh Giá (<span th:text="${totalReviews}">0</span>)
+                    </a>
+                    <a href="#openJobs" class="btn btn-primary rounded-pill px-3 fw-bold">
+                        <i class="bi bi-search me-1"></i>Việc Làm Đang Tuyển
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Nội dung chính: 2 Cột -->
+    <div class="row g-4">
+        <!-- Cột trái: Giới thiệu & Chi nhánh & Việc làm đang mở -->
+        <div class="col-12 col-lg-8">
+            <!-- Giới thiệu công ty -->
+            <div class="card border-0 rounded-4 shadow-sm mb-4">
+                <div class="card-body p-4">
+                    <h5 class="fw-bold text-dark mb-3">
+                        <i class="bi bi-info-circle me-2 text-primary"></i>Giới Thiệu Doanh Nghiệp & Chi Nhánh Cần Thơ
+                    </h5>
+                    <div class="text-secondary" style="line-height: 1.8; font-size: 14.5px;">
+                        <p th:text="${employer.description != null ? employer.description : 'Đơn vị tuyển dụng sinh viên uy tín hàng đầu tại TP. Cần Thơ.'}">
+                            Mô tả công ty...
+                        </p>
+                    </div>
+
+                    <div class="border-top pt-3 mt-3">
+                        <h6 class="fw-bold text-dark mb-2">Thông Tin Liên Hệ Tuyển Dụng:</h6>
+                        <div class="row g-2 small text-secondary">
+                            <div class="col-12 col-md-6">
+                                <i class="bi bi-envelope-fill me-2 text-primary"></i>Email: <strong class="text-dark" th:text="${employer.contactEmail != null ? employer.contactEmail : 'Chưa cập nhật'}">hr@domain.com</strong>
+                            </div>
+                            <div class="col-12 col-md-6">
+                                <i class="bi bi-telephone-fill me-2 text-success"></i>Hotline: <strong class="text-dark" th:text="${employer.contactPhone != null ? employer.contactPhone : 'Chưa cập nhật'}">0292.xxx.xxx</strong>
+                            </div>
+                            <div class="col-12">
+                                <i class="bi bi-pin-map-fill me-2 text-danger"></i>Trụ sở / Chi nhánh: <span class="text-dark" th:text="${employer.address}">Cần Thơ</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Danh sách việc làm đang mở của công ty -->
+            <div class="card border-0 rounded-4 shadow-sm mb-4" id="openJobs">
+                <div class="card-header bg-white border-0 pt-4 px-4 pb-0 d-flex justify-content-between align-items-center">
+                    <h5 class="fw-bold text-dark mb-0">
+                        <i class="bi bi-briefcase me-2 text-primary"></i>Việc Làm Đang Tuyển Dụng (<span th:text="${activeJobs.size()}">0</span>)
+                    </h5>
+                </div>
+                <div class="card-body p-4">
+                    <div th:if="${activeJobs.empty}" class="text-center py-4 text-muted">
+                        <i class="bi bi-calendar-x fs-2 d-block mb-2 text-secondary"></i>
+                        Hiện tại doanh nghiệp này chưa có tin tuyển dụng nào đang mở.
+                    </div>
+
+                    <div class="d-flex flex-column gap-3" th:if="${!activeJobs.empty}">
+                        <div th:each="job : ${activeJobs}" class="p-3 rounded-3 border bg-white hover-shadow transition">
+                            <div class="d-flex justify-content-between align-items-start gap-2">
+                                <div>
+                                    <h6 class="fw-bold mb-1">
+                                        <a th:href="@{'/jobs/' + ${job.id}}" class="text-dark text-decoration-none" th:text="${job.title}">Pha chế cafe</a>
+                                    </h6>
+                                    <div class="text-secondary small d-flex flex-wrap gap-3 mt-1">
+                                        <span><i class="bi bi-clock me-1 text-primary"></i><span th:text="${job.shiftSchedule}">Ca tối</span></span>
+                                        <span><i class="bi bi-geo-alt me-1 text-danger"></i><span th:text="${job.location}">Ninh Kiều</span></span>
+                                        <span class="badge bg-light text-dark border fw-bold" th:text="${job.salaryRange}">25.000đ/h</span>
+                                    </div>
+                                </div>
+                                <a th:href="@{'/jobs/' + ${job.id}}" class="btn btn-sm btn-primary rounded-pill px-3 fw-semibold text-nowrap">
+                                    Ứng tuyển &rarr;
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Khu vực Đánh giá & Chấm sao từ sinh viên -->
+            <div class="card border-0 rounded-4 shadow-sm mb-4" id="reviews">
+                <div class="card-header bg-white border-0 pt-4 px-4 pb-0 d-flex justify-content-between align-items-center">
+                    <div>
+                        <h5 class="fw-bold text-dark mb-1">
+                            <i class="bi bi-star-fill text-warning me-2"></i>Đánh Giá & Nhận Xét Từ Sinh Viên
+                        </h5>
+                        <p class="text-muted small mb-0">Chia sẻ thực tế về môi trường làm việc, chế độ đãi ngộ và cảnh báo trả lương trễ/bóc lột</p>
+                    </div>
+                </div>
+                <div class="card-body p-4">
+                    <!-- Form gửi Đánh giá cho sinh viên -->
+                    <div class="p-3.5 rounded-4 bg-light border mb-4">
+                        <h6 class="fw-bold text-dark mb-2"><i class="bi bi-pencil-square me-1 text-primary"></i>Viết Đánh Giá Của Bạn Cho Doanh Nghiệp Này</h6>
+                        <form th:action="@{'/companies/' + ${employer.id} + '/reviews'}" method="post">
+                            <div class="row g-3">
+                                <div class="col-12 col-md-4">
+                                    <label class="form-label small fw-semibold">Số sao đánh giá (1 - 5 sao)</label>
+                                    <select name="rating" class="form-select form-select-sm" required>
+                                        <option value="5" selected>⭐⭐⭐⭐⭐ (5 sao - Tuyệt vời)</option>
+                                        <option value="4">⭐⭐⭐⭐ (4 sao - Tốt)</option>
+                                        <option value="3">⭐⭐⭐ (3 sao - Bình thường)</option>
+                                        <option value="2">⭐⭐ (2 sao - Cần cải thiện)</option>
+                                        <option value="1">⭐ (1 sao - Rất tệ / Tránh xa)</option>
+                                    </select>
+                                </div>
+                                <div class="col-12 col-md-4">
+                                    <label class="form-label small fw-semibold">Vấn đề trả lương</label>
+                                    <select name="salaryRating" class="form-select form-select-sm">
+                                        <option value="Đúng hạn" selected>Trả lương đúng hẹn / Minh bạch</option>
+                                        <option value="Hay trễ lương">Cảnh báo: Hay trễ lương sinh viên</option>
+                                        <option value="Giam lương / Phạt vô lý">Cảnh báo: Giam lương / Phạt tiền</option>
+                                    </select>
+                                </div>
+                                <div class="col-12 col-md-4">
+                                    <label class="form-label small fw-semibold">Môi trường làm việc</label>
+                                    <select name="environmentRating" class="form-select form-select-sm">
+                                        <option value="Thân thiện hỗ trợ" selected>Thân thiện, hỗ trợ sinh viên học tập</option>
+                                        <option value="Chuyên nghiệp">Chuyên nghiệp, đúng quy trình</option>
+                                        <option value="Áp lực / Bóc lột">Cảnh báo: Quá tải, bóc lột sức lao động</option>
+                                    </select>
+                                </div>
+                                <div class="col-12">
+                                    <label class="form-label small fw-semibold">Tiêu đề đánh giá</label>
+                                    <input type="text" name="title" class="form-control form-control-sm" placeholder="VD: Môi trường ca tối vui vẻ, quản lý tạo điều kiện lịch học..." required>
+                                </div>
+                                <div class="col-12">
+                                    <label class="form-label small fw-semibold">Nội dung nhận xét chi tiết</label>
+                                    <textarea name="content" class="form-control form-control-sm" rows="3" placeholder="Chia sẻ kinh nghiệm làm việc, thời gian trả lương, khối lượng công việc để giúp các bạn sinh viên khác..." required></textarea>
+                                </div>
+                                <div class="col-12 text-end">
+                                    <button type="submit" class="btn btn-warning text-dark fw-bold btn-sm rounded-pill px-4">
+                                        <i class="bi bi-send-fill me-1"></i>Gửi Đánh Giá Ngay
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Danh sách các bài đánh giá -->
+                    <div class="d-flex flex-column gap-3">
+                        <div th:if="${reviews.empty}" class="text-center py-3 text-muted small">
+                            Chưa có nhận xét nào. Hãy là sinh viên đầu tiên chia sẻ trải nghiệm làm việc tại đây!
+                        </div>
+
+                        <div th:each="rev : ${reviews}" class="p-3 rounded-3 border bg-white">
+                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                <div class="d-flex align-items-center gap-2">
+                                    <strong class="text-dark small" th:text="${rev.studentName}">Sinh viên Cần Thơ</strong>
+                                    <span class="badge bg-success-subtle text-success small" style="font-size: 10px;">
+                                        <i class="bi bi-shield-check"></i> Đã xác thực
+                                    </span>
+                                </div>
+                                <div class="text-warning small">
+                                    <span th:each="i : ${#numbers.sequence(1, rev.rating)}">★</span>
+                                </div>
+                            </div>
+                            <h6 class="fw-bold text-dark mb-1" th:text="${rev.title}">Tiêu đề</h6>
+                            <p class="text-secondary small mb-2" th:text="${rev.content}">Nội dung review...</p>
+                            <div class="d-flex flex-wrap gap-2">
+                                <span class="badge bg-light text-dark border small" th:text="'Lương: ' + ${rev.salaryRating}">Đúng hạn</span>
+                                <span class="badge bg-light text-dark border small" th:text="'Môi trường: ' + ${rev.environmentRating}">Thân thiện</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Cột phải: Thống kê đánh giá uy tín -->
+        <div class="col-12 col-lg-4">
+            <div class="card border-0 rounded-4 shadow-sm mb-4">
+                <div class="card-body p-4 text-center">
+                    <div class="text-secondary small fw-bold text-uppercase mb-1">Chỉ Số Uy Tín Doanh Nghiệp</div>
+                    <div class="display-3 fw-bold text-dark my-2" th:text="${averageRating}">4.8</div>
+                    <div class="text-warning fs-5 mb-2">
+                        <i class="bi bi-star-fill"></i>
+                        <i class="bi bi-star-fill"></i>
+                        <i class="bi bi-star-fill"></i>
+                        <i class="bi bi-star-fill"></i>
+                        <i class="bi bi-star-half"></i>
+                    </div>
+                    <div class="badge bg-success-subtle text-success px-3 py-1.5 rounded-pill mb-3">
+                        <span th:text="${recommendPercent}">96</span>% sinh viên khuyến nghị làm việc
+                    </div>
+                    <div class="small text-muted border-top pt-3 text-start">
+                        <div class="d-flex align-items-center gap-2 mb-2">
+                            <i class="bi bi-check-circle-fill text-success"></i>
+                            <span>Không thu phí đồng phục/cọc tiền</span>
+                        </div>
+                        <div class="d-flex align-items-center gap-2 mb-2">
+                            <i class="bi bi-check-circle-fill text-success"></i>
+                            <span>Linh hoạt sắp xếp ca theo lịch học</span>
+                        </div>
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="bi bi-check-circle-fill text-success"></i>
+                            <span>Có hợp đồng và giấy xác nhận thực tập</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Hotline hỗ trợ sinh viên -->
+            <div class="card border-0 rounded-4 shadow-sm p-4 text-center" style="background: linear-gradient(135deg, #fef3c7, #fee2e2);">
+                <i class="bi bi-telephone-outbound text-danger fs-2 mb-2"></i>
+                <h6 class="fw-bold text-dark mb-1">Báo Cáo Bóc Lột & Nợ Lương</h6>
+                <p class="text-secondary small mb-3">
+                    Nếu phát hiện quán trả trễ lương quá 15 ngày hoặc bắt cọc tiền, hãy phản ánh ngay tới Super Admin.
+                </p>
+                <a href="tel:19008888" class="btn btn-danger btn-sm rounded-pill fw-bold px-3">
+                    <i class="bi bi-telephone me-1"></i>Hotline: 1900 8888
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer th:replace="~{common/footer :: footer}"></footer>
+</body>
+</html>

@@ -22,6 +22,27 @@
                     <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                 </div>
 
+                <!-- Cảnh báo Trạng thái Công ty PENDING / LOCKED -->
+                <div th:if="${employer != null and employer.status == 'PENDING'}" class="alert alert-warning border-warning d-flex align-items-center gap-3 p-3.5 rounded-4 shadow-sm mb-4">
+                    <i class="bi bi-hourglass-split fs-2 text-warning"></i>
+                    <div>
+                        <h6 class="fw-bold mb-1 text-dark">Hồ sơ Doanh nghiệp đang CHỜ SUPER ADMIN PHÊ DUYỆT (PENDING)</h6>
+                        <p class="mb-0 small text-secondary">
+                            Tài khoản của bạn đã được đăng ký thành công. Ban quản trị đang kiểm duyệt giấy tờ và chi nhánh tại Cần Thơ để phòng chống tin lừa đảo/đa cấp. Sau khi được duyệt, bạn sẽ có thể đăng bài tuyển dụng công khai.
+                        </p>
+                    </div>
+                </div>
+
+                <div th:if="${employer != null and employer.status == 'LOCKED'}" class="alert alert-danger border-danger d-flex align-items-center gap-3 p-3.5 rounded-4 shadow-sm mb-4">
+                    <i class="bi bi-slash-circle-fill fs-2 text-danger"></i>
+                    <div>
+                        <h6 class="fw-bold mb-1 text-danger">CẢNH BÁO: Doanh nghiệp của bạn đang bị TẠM KHÓA (LOCKED)</h6>
+                        <p class="mb-0 small text-secondary">
+                            Tài khoản đã bị tạm khóa bởi Super Admin do khiếu nại nợ lương hoặc vi phạm quy chế bảo vệ sinh viên Cần Thơ. Mọi bài đăng hiện đã bị ẩn khỏi sàn.
+                        </p>
+                    </div>
+                </div>
+
                 <div class="hero-dashboard-banner">
                     <img th:src="@{/images/employer-banner.jpg}" src="/images/employer-banner.jpg" alt="Employer Recruitment Banner" class="hero-banner-bg-img">
                     <div class="hero-banner-overlay"></div>

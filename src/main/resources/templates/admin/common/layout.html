@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head th:fragment="head(pageTitle)">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${pageTitle} + ' - Super Admin | Job Portal Cần Thơ'">Super Admin - Job Portal</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" th:href="@{/css/employer.css}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <style>
+        :root {
+            --admin-red: #dc2626;
+            --admin-dark: #0f172a;
+            --admin-gold: #f59e0b;
+        }
+        .admin-sidebar {
+            background: #090d16 !important;
+            border-right: 1px solid rgba(255,255,255,0.08);
+        }
+        .admin-sidebar .sidebar-brand {
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+        }
+        .admin-sidebar .brand-logo-symbol {
+            background: linear-gradient(135deg, #dc2626, #991b1b) !important;
+            color: #fff;
+        }
+        .admin-badge {
+            background: rgba(220, 38, 38, 0.2);
+            color: #f87171;
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            padding: 3px 8px;
+            border-radius: 6px;
+            border: 1px solid rgba(220, 38, 38, 0.4);
+            display: inline-block;
+        }
+        .admin-sidebar .employer-nav-link {
+            color: #94a3b8;
+        }
+        .admin-sidebar .employer-nav-link:hover {
+            color: #fff;
+            background: rgba(255,255,255,0.06);
+        }
+        .admin-sidebar .employer-nav-link.active {
+            background: linear-gradient(135deg, rgba(220, 38, 38, 0.25), rgba(153, 27, 27, 0.15)) !important;
+            color: #fca5a5 !important;
+            border-left: 3px solid #dc2626;
+            font-weight: 700;
+        }
+        .admin-sidebar .nav-section-label {
+            color: #64748b;
+        }
+        .badge-pending {
+            background: #fffbeb;
+            color: #b45309;
+            border: 1px solid #fde68a;
+            padding: 4px 10px;
+            border-radius: 9999px;
+            font-size: 11.5px;
+            font-weight: 700;
+        }
+        .badge-approved {
+            background: #ecfdf5;
+            color: #047857;
+            border: 1px solid #a7f3d0;
+            padding: 4px 10px;
+            border-radius: 9999px;
+            font-size: 11.5px;
+            font-weight: 700;
+        }
+        .badge-locked {
+            background: #fef2f2;
+            color: #b91c1c;
+            border: 1px solid #fecaca;
+            padding: 4px 10px;
+            border-radius: 9999px;
+            font-size: 11.5px;
+            font-weight: 700;
+        }
+    </style>
+</head>
+<body>
+
+<aside th:fragment="sidebar(activeMenu)" class="employer-sidebar admin-sidebar" id="employerSidebar">
+    <div class="sidebar-brand">
+        <div class="brand-logo-symbol">
+            <i class="bi bi-shield-lock-fill"></i>
+        </div>
+        <div>
+            <div class="brand-title-text text-white">JOB <span class="brand-title-accent text-danger">PORTAL</span></div>
+            <span class="admin-badge mt-1"><i class="bi bi-patch-check-fill me-1"></i>SUPER ADMIN</span>
+        </div>
+    </div>
+
+    <div class="sidebar-nav">
+        <div class="nav-section-label">Điều Hành Sàn Tuyển Dụng</div>
+
+        <a th:href="@{/admin/dashboard}" class="employer-nav-link" th:classappend="${activeMenu == 'dashboard' ? 'active' : ''}">
+            <i class="bi bi-speedometer2"></i>
+            <span>Tổng quan sàn</span>
+        </a>
+
+        <a th:href="@{/admin/companies}" class="employer-nav-link" th:classappend="${activeMenu == 'companies' ? 'active' : ''}">
+            <i class="bi bi-building-check"></i>
+            <span>Duyệt & Quản lý Công ty</span>
+        </a>
+
+        <a th:href="@{/admin/jobs}" class="employer-nav-link" th:classappend="${activeMenu == 'jobs' ? 'active' : ''}">
+            <i class="bi bi-file-earmark-text"></i>
+            <span>Giám sát tin đăng TP.CT</span>
+        </a>
+
+        <a th:href="@{/admin/reports}" class="employer-nav-link" th:classappend="${activeMenu == 'reports' ? 'active' : ''}">
+            <i class="bi bi-bar-chart-line-fill"></i>
+            <span>Báo cáo thống kê sàn</span>
+        </a>
+
+        <div class="nav-section-label mt-2">Chuyển Phân Hệ</div>
+
+        <a th:href="@{/}" class="employer-nav-link">
+            <i class="bi bi-globe2"></i>
+            <span>Sàn sinh viên (Trang chủ)</span>
+        </a>
+
+        <a th:href="@{/employer/dashboard}" class="employer-nav-link">
+            <i class="bi bi-briefcase"></i>
+            <span>Cổng Nhà tuyển dụng</span>
+        </a>
+
+        <a th:href="@{/profile}" class="employer-nav-link">
+            <i class="bi bi-person-gear"></i>
+            <span>Hồ sơ cá nhân</span>
+        </a>
+    </div>
+
+    <div class="employer-sidebar-footer" style="background: rgba(0,0,0,0.3); border-top: 1px solid rgba(255,255,255,0.06);">
+        <div class="d-flex align-items-center justify-content-between">
+            <div class="d-flex align-items-center gap-2 overflow-hidden">
+                <div class="rounded-circle d-flex align-items-center justify-content-center fw-bold text-white" style="width: 36px; height: 36px; min-width: 36px; background: #dc2626;">
+                    <i class="bi bi-shield-shaded"></i>
+                </div>
+                <div class="overflow-hidden">
+                    <div class="fw-bold text-truncate small text-white" th:text="${session.currentUser != null ? session.currentUser.username : 'superadmin'}">superadmin</div>
+                    <div class="text-secondary" style="font-size: 11px;">Quản trị tối cao sàn</div>
+                </div>
+            </div>
+            <a th:href="@{/logout}" class="btn btn-sm btn-outline-danger border-0 rounded-circle p-2" title="Đăng xuất">
+                <i class="bi bi-box-arrow-right"></i>
+            </a>
+        </div>
+    </div>
+</aside>
+
+<div th:fragment="topbar(pageTitle)" class="employer-topbar">
+    <div class="employer-topbar-inner">
+        <div class="d-flex align-items-center gap-3">
+            <button class="btn btn-outline-secondary d-lg-none btn-sm" id="sidebarToggleBtn" type="button">
+                <i class="bi bi-list fs-5"></i>
+            </button>
+            <div>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb mb-0" style="font-size: 12px;">
+                        <li class="breadcrumb-item"><a th:href="@{/admin/dashboard}" class="text-decoration-none text-secondary">Super Admin</a></li>
+                        <li class="breadcrumb-item active fw-bold text-danger" aria-current="page" th:text="${pageTitle}">Trang</li>
+                    </ol>
+                </nav>
+                <h5 class="fw-bold mb-0 d-none d-md-block" style="color: var(--navy-primary);" th:text="${pageTitle}">Tiêu đề trang</h5>
+            </div>
+        </div>
+
+        <div class="d-flex align-items-center gap-2.5">
+            <span class="badge bg-danger-subtle text-danger px-3 py-1.5 rounded-pill fw-semibold small d-none d-sm-inline">
+                <i class="bi bi-shield-check me-1"></i>Chế độ Giám sát Sàn Cần Thơ
+            </span>
+
+            <a th:href="@{/profile}" class="topbar-user-badge text-decoration-none">
+                <div class="user-avatar-circle" style="background:#dc2626;">
+                    <i class="bi bi-shield-fill"></i>
+                </div>
+                <div class="d-none d-md-block text-start">
+                    <div class="user-name text-truncate" style="max-width: 120px;" th:text="${session.currentUser != null ? session.currentUser.username : 'superadmin'}">superadmin</div>
+                    <div class="user-role text-danger" style="font-size: 10.5px; font-weight: 700;">SUPER_ADMIN</div>
+                </div>
+            </a>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const toggleBtn = document.getElementById('sidebarToggleBtn');
+        const sidebar = document.getElementById('employerSidebar');
+        if (toggleBtn && sidebar) {
+            toggleBtn.addEventListener('click', function () {
+                sidebar.classList.toggle('show');
+            });
+        }
+    });
+</script>
+</body>
+</html>

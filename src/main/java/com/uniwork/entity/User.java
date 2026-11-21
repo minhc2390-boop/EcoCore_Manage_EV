@@ -39,6 +39,10 @@ public class User {
     @Column(length = 255)
     private String avatar;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "company_id")
+    private Employer company;
+
     @Builder.Default
     @Column(nullable = false)
     private Boolean active = true;

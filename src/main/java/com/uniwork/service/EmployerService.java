@@ -3,6 +3,7 @@ package com.uniwork.service;
 import com.uniwork.entity.Employer;
 import com.uniwork.entity.User;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -18,4 +19,18 @@ public interface EmployerService {
     Employer getEmployerById(Long id);
 
     Employer saveEmployer(Employer employer);
+
+    List<Employer> getAllEmployers();
+
+    List<Employer> getEmployersByStatus(String status);
+
+    Employer approveEmployer(Long id);
+
+    Employer lockEmployer(Long id);
+
+    Employer unlockEmployer(Long id);
+
+    long countEmployersByStatus(String status);
+
+    long countTotalEmployers();
 }

@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{admin/common/layout :: head('Báo Cáo Tổng Sàn Cần Thơ')}"></head>
+<body class="employer-portal">
+
+<div class="employer-layout">
+    <div th:replace="~{admin/common/layout :: sidebar('reports')}"></div>
+
+    <div class="employer-main">
+        <div th:replace="~{admin/common/layout :: topbar('Báo Cáo & Thống Kê Tổng Sàn Tuyển Dụng Sinh Viên Cần Thơ')}"></div>
+
+        <div class="employer-content">
+            <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-4">
+                <div>
+                    <h4 class="fw-bold mb-1" style="color: var(--navy-primary);">Báo Cáo Tổng Hợp Toàn Thành Phố</h4>
+                    <p class="text-secondary small mb-0">Thống kê dữ liệu sinh viên đi làm, cơ cấu doanh nghiệp và mức độ hài lòng tại 9 quận/huyện Cần Thơ</p>
+                </div>
+                <div>
+                    <button class="btn btn-outline-secondary btn-sm rounded-pill px-3" onclick="window.print()">
+                        <i class="bi bi-printer me-1"></i>In báo cáo
+                    </button>
+                </div>
+            </div>
+
+            <!-- 4 Thống kê chính -->
+            <div class="row g-3 mb-4">
+                <div class="col-6 col-lg-3">
+                    <div class="portal-card mb-0 text-center p-4">
+                        <div class="text-secondary small text-uppercase fw-bold mb-2">Tổng Doanh Nghiệp Cần Thơ</div>
+                        <div class="display-5 fw-bold text-dark" th:text="${totalCompanies}">7</div>
+                        <div class="small text-muted mt-2">100% doanh nghiệp có chi nhánh Cần Thơ</div>
+                    </div>
+                </div>
+
+                <div class="col-6 col-lg-3">
+                    <div class="portal-card mb-0 text-center p-4">
+                        <div class="text-secondary small text-uppercase fw-bold mb-2">Tổng Tin Tuyển Dụng Toàn Thành Phố</div>
+                        <div class="display-5 fw-bold text-primary" th:text="${totalJobs}">24</div>
+                        <div class="small text-muted mt-2">Bao phủ 9 quận/huyện</div>
+                    </div>
+                </div>
+
+                <div class="col-6 col-lg-3">
+                    <div class="portal-card mb-0 text-center p-4">
+                        <div class="text-secondary small text-uppercase fw-bold mb-2">Lượt Ứng Tuyển Của Sinh Viên</div>
+                        <div class="display-5 fw-bold text-warning" th:text="${totalApplications}">18</div>
+                        <div class="small text-muted mt-2">Từ ĐH Cần Thơ, FPT Poly...</div>
+                    </div>
+                </div>
+
+                <div class="col-6 col-lg-3">
+                    <div class="portal-card mb-0 text-center p-4 border-success border">
+                        <div class="text-success small text-uppercase fw-bold mb-2">Tỷ Lệ Sinh Viên Có Việc Làm</div>
+                        <div class="display-5 fw-bold text-success" th:text="${employedRate}">86.4%</div>
+                        <div class="small text-success mt-2">Được nhận việc sau phỏng vấn</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bảng phân bố theo 9 quận huyện Cần Thơ -->
+            <div class="row g-4">
+                <div class="col-12 col-lg-7">
+                    <div class="portal-card mb-0">
+                        <div class="portal-card-header">
+                            <h6 class="fw-bold mb-0">Phân Bố Tin Tuyển Dụng Theo 9 Quận/Huyện Cần Thơ</h6>
+                        </div>
+                        <div class="portal-card-body">
+                            <div class="d-flex flex-column gap-3">
+                                <div>
+                                    <div class="d-flex justify-content-between small fw-bold mb-1">
+                                        <span>Quận Ninh Kiều (Trung tâm TP, Bến Ninh Kiều, Mậu Thân)</span>
+                                        <span class="text-primary">48% (12 tin)</span>
+                                    </div>
+                                    <div class="progress" style="height: 10px;">
+                                        <div class="progress-bar bg-primary" role="progressbar" style="width: 48%;"></div>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <div class="d-flex justify-content-between small fw-bold mb-1">
+                                        <span>Quận Cái Răng (Gần ĐH Tây Đô, KCN Hưng Phú)</span>
+                                        <span class="text-info">24% (6 tin)</span>
+                                    </div>
+                                    <div class="progress" style="height: 10px;">
+                                        <div class="progress-bar bg-info" role="progressbar" style="width: 24%;"></div>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <div class="d-flex justify-content-between small fw-bold mb-1">
+                                        <span>Quận Bình Thủy (Gần Sân bay, KCN Trà Nóc)</span>
+                                        <span class="text-success">16% (4 tin)</span>
+                                    </div>
+                                    <div class="progress" style="height: 10px;">
+                                        <div class="progress-bar bg-success" role="progressbar" style="width: 16%;"></div>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <div class="d-flex justify-content-between small fw-bold mb-1">
+                                        <span>Quận Ô Môn & Thốt Nốt & Các Huyện Ngoại Thành</span>
+                                        <span class="text-secondary">12% (2 tin)</span>
+                                    </div>
+                                    <div class="progress" style="height: 10px;">
+                                        <div class="progress-bar bg-secondary" role="progressbar" style="width: 12%;"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Phân loại hình thức làm việc -->
+                <div class="col-12 col-lg-5">
+                    <div class="portal-card mb-0">
+                        <div class="portal-card-header">
+                            <h6 class="fw-bold mb-0">Cơ Cấu Hình Thức Làm Việc Của Sinh Viên</h6>
+                        </div>
+                        <div class="portal-card-body">
+                            <ul class="list-group list-group-flush small">
+                                <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+                                    <span><i class="bi bi-clock me-2 text-primary"></i>Part-time (Bán thời gian ca xoay)</span>
+                                    <span class="badge bg-primary-subtle text-primary rounded-pill">62%</span>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+                                    <span><i class="bi bi-laptop me-2 text-info"></i>Thực tập sinh (Internship CNTT)</span>
+                                    <span class="badge bg-info-subtle text-info rounded-pill">25%</span>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+                                    <span><i class="bi bi-calendar-check me-2 text-success"></i>Việc làm cuối tuần (T7, CN)</span>
+                                    <span class="badge bg-success-subtle text-success rounded-pill">13%</span>
+                                </li>
+                            </ul>
+                            <div class="mt-4 p-3 rounded-3 bg-light text-center small text-secondary">
+                                <i class="bi bi-shield-check text-success fs-5 d-block mb-1"></i>
+                                100% việc làm trên sàn được bảo chứng không thu tiền đồng phục hay cọc tiền phi lý.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
