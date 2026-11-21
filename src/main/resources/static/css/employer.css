@@ -492,7 +492,38 @@ h1, h2, h3, h4, h5, h6 {
     font-family: 'Manrope', sans-serif;
     font-size: 11.5px;
     font-weight: 700;
-    white-space: nowrap;
+    white-space: nowrap !important;
+}
+
+.badge-pending, .badge-approved, .badge-locked {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    white-space: nowrap !important;
+    padding: 4px 10px;
+    border-radius: var(--radius-pill);
+    font-family: 'Manrope', sans-serif;
+    font-size: 11.5px;
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+.badge-pending {
+    background: #fffbeb;
+    color: #b45309;
+    border: 1px solid #fde68a;
+}
+
+.badge-approved {
+    background: #ecfdf5;
+    color: #047857;
+    border: 1px solid #a7f3d0;
+}
+
+.badge-locked {
+    background: #fef2f2;
+    color: #b91c1c;
+    border: 1px solid #fecaca;
 }
 
 .badge-active-custom {

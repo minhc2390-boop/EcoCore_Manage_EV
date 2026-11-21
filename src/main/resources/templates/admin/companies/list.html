@@ -60,15 +60,15 @@
             <div class="portal-card">
                 <div class="portal-card-body p-0">
                     <div class="table-responsive">
-                        <table class="table table-hover align-middle mb-0" style="font-size: 13.5px;">
+                        <table class="table table-hover align-middle mb-0" style="font-size: 13.5px; min-width: 820px;">
                             <thead class="table-light">
                                 <tr>
                                     <th style="width: 50px;">Mã</th>
                                     <th>Tên Doanh Nghiệp & Thương Hiệu</th>
                                     <th>Địa chỉ tại Cần Thơ</th>
                                     <th>Thông tin Liên hệ</th>
-                                    <th>Trạng thái</th>
-                                    <th class="text-center" style="width: 220px;">Chế tài Super Admin</th>
+                                    <th class="text-center text-nowrap" style="width: 120px;">Trạng thái</th>
+                                    <th class="text-center text-nowrap" style="width: 220px;">Chế tài Super Admin</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -100,7 +100,7 @@
                                         <div><i class="bi bi-envelope me-1 text-secondary"></i><span th:text="${comp.contactEmail != null ? comp.contactEmail : 'Chưa có'}">email</span></div>
                                         <div class="small text-muted"><i class="bi bi-telephone me-1 text-secondary"></i><span th:text="${comp.contactPhone != null ? comp.contactPhone : 'Chưa có'}">phone</span></div>
                                     </td>
-                                    <td>
+                                    <td class="text-center text-nowrap">
                                         <span th:if="${comp.status == 'APPROVED'}" class="badge-approved">ĐÃ DUYỆT</span>
                                         <span th:if="${comp.status == 'PENDING'}" class="badge-pending">CHỜ DUYỆT</span>
                                         <span th:if="${comp.status == 'LOCKED'}" class="badge-locked">ĐÃ KHÓA</span>

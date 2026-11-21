@@ -23,15 +23,15 @@
             <div class="portal-card">
                 <div class="portal-card-body p-0">
                     <div class="table-responsive">
-                        <table class="table table-hover align-middle mb-0" style="font-size: 13.5px;">
+                        <table class="table table-hover align-middle mb-0" style="font-size: 13.5px; min-width: 760px;">
                             <thead class="table-light">
                                 <tr>
                                     <th>Tiêu đề công việc</th>
                                     <th>Doanh nghiệp đăng tin</th>
                                     <th>Quận/Huyện & Ca làm</th>
-                                    <th>Mức lương</th>
-                                    <th>Trạng thái</th>
-                                    <th class="text-end">Xem tin</th>
+                                    <th class="text-nowrap">Mức lương</th>
+                                    <th class="text-center text-nowrap" style="width: 120px;">Trạng thái</th>
+                                    <th class="text-end text-nowrap" style="width: 100px;">Xem tin</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -50,7 +50,7 @@
                                     <td>
                                         <span class="badge bg-light text-dark border fw-bold" th:text="${job.salaryRange}">25.000đ/h</span>
                                     </td>
-                                    <td>
+                                    <td class="text-center text-nowrap">
                                         <span th:if="${job.status == 'ACTIVE'}" class="badge bg-success-subtle text-success">Đang hiển thị</span>
                                         <span th:if="${job.status == 'HIDDEN'}" class="badge bg-secondary-subtle text-secondary">Đã ẩn</span>
                                         <span th:if="${job.status == 'EXPIRED'}" class="badge bg-danger-subtle text-danger">Hết hạn</span>
