@@ -722,7 +722,7 @@ public class CompanyJobController {
         model.addAttribute("popularShifts", POPULAR_SHIFTS);
         model.addAttribute("jobTypes", JOB_TYPES);
 
-        // Danh mục nghề nghiệp của Khanh (an toàn nếu Khanh chưa làm xong)
+        // Danh mục nghề nghiệp của Khanh
         List<JobCategory> categories = Collections.emptyList();
         try {
             categories = jobCategoryService.getAllActiveCategories();

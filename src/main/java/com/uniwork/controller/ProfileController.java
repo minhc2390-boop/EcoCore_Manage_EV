@@ -18,6 +18,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Controller Quản lý hồ sơ cá nhân và đổi mật khẩu
@@ -35,18 +36,19 @@ public class ProfileController {
     @GetMapping
     public String showProfile(HttpSession ss, Model model) {
         // lấy thông tin user từ session
-        User sesionUser = (User) ss.getAttribute("currentUser");
+        User sessionUser = (User) ss.getAttribute("currentUser");
         // Nếu chưa đăng nhập thì về login
-        if (sesionUser == null) {
+        if (sessionUser == null || sessionUser.getId() == null) {
             return "redirect:/login";
         }
-        // Lấy dữ liệu mới nhất từ csdl ra để hiển thị
-        User currentUser = userRepository.findById(sesionUser.getId()).orElse(sesionUser);
+        // Lấy dữ liệu mới nhất từ csdl ra để hiển thị (đảm bảo null-safety cho @NonNull Long id)
+        Long userId = Objects.requireNonNull(sessionUser.getId());
+        User currentUser = userRepository.findById(userId).orElse(sessionUser);
         model.addAttribute("user", currentUser);
 
         // Lấy danh sách lịch sử nộp hồ sơ ứng tuyển nếu người dùng là Sinh viên
         List<JobApplication> myApplications = Collections.emptyList();
-        if (currentUser.getRole() == Role.STUDENT) {
+        if (currentUser.getRole() == Role.STUDENT && currentUser.getId() != null) {
             try {
                 myApplications = jobApplicationService.getApplicationsByStudent(currentUser.getId());
             } catch (Exception ex) {
@@ -65,12 +67,13 @@ public class ProfileController {
             HttpSession session,
             RedirectAttributes redirectAttributes) {
         User sessionUser = (User) session.getAttribute("currentUser");
-        if (sessionUser == null) {
+        if (sessionUser == null || sessionUser.getId() == null) {
             return "redirect:/login";
         }
 
         try {
-            User user = userRepository.findById(sessionUser.getId())
+            Long userId = Objects.requireNonNull(sessionUser.getId());
+            User user = userRepository.findById(userId)
                     .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy thông tin người dùng!"));
 
             // cập nhật thông tin mới
@@ -98,11 +101,12 @@ public class ProfileController {
             HttpSession session,
             RedirectAttributes redirectAttributes) {
         User sessionUser = (User) session.getAttribute("currentUser");
-        if (sessionUser == null) {
+        if (sessionUser == null || sessionUser.getId() == null) {
             return "redirect:/login";
         }
 
-        User user = userRepository.findById(sessionUser.getId())
+        Long userId = Objects.requireNonNull(sessionUser.getId());
+        User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy tài khoản!"));
 
         // Kiểm tra mật khẩu hiện tại có đúng không

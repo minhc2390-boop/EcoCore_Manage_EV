@@ -54,7 +54,7 @@ public class JobController {
      * để hiển thị đúng trạng thái nút ứng tuyển trên giao diện.
      */
     @GetMapping("/{id}")
-    public String jobDetail(@PathVariable Long id, HttpSession session, Model model) {
+    public String jobDetail(@PathVariable("id") Long id, HttpSession session, Model model) {
         jobPostingService.incrementViewCount(id);
         JobPosting job = jobPostingService.getJobById(id);
         model.addAttribute("job", job);
@@ -65,7 +65,7 @@ public class JobController {
 
         // Kiểm tra sinh viên đã nộp đơn ứng tuyển cho bài đăng này chưa
         boolean hasApplied = false;
-        if (currentUser != null && currentUser.getRole() == Role.STUDENT) {
+        if (currentUser != null && currentUser.getId() != null && currentUser.getRole() == Role.STUDENT) {
             try {
                 hasApplied = jobApplicationService.hasApplied(currentUser.getId(), id);
             } catch (Exception e) {
