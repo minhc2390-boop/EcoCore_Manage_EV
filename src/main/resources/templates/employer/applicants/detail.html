@@ -19,12 +19,12 @@
             <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-4">
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb mb-0 small">
-                        <li class="breadcrumb-item"><a th:href="@{/employer/applicants}" class="text-decoration-none fw-bold" style="color: var(--navy-primary);">Danh sách ứng viên</a></li>
+                        <li class="breadcrumb-item"><a th:href="@{/employer/applications}" class="text-decoration-none fw-bold" style="color: var(--navy-primary);">Danh sách ứng viên</a></li>
                         <li class="breadcrumb-item active text-secondary" aria-current="page">Hồ sơ ứng viên #<span th:text="${applicantId != null ? applicantId : 1}">1</span></li>
                     </ol>
                 </nav>
                 <div class="d-flex gap-2">
-                    <a th:href="@{/employer/applicants}" class="btn btn-outline-custom btn-sm">
+                    <a th:href="@{/employer/applications}" class="btn btn-outline-custom btn-sm">
                         <i class="bi bi-arrow-left me-1"></i>Quay lại danh sách
                     </a>
                 </div>

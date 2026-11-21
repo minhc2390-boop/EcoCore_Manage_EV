@@ -37,11 +37,12 @@
                     </div>
                     <div class="border-start ps-3">
                         <small class="text-muted d-block">Địa điểm:</small>
-                        <strong class="text-dark" th:text="${job.location}">TP. HCM</strong>
+                        <strong class="text-dark" th:text="${job.location != null ? job.location : 'TP. Cần Thơ'}">TP. Cần Thơ</strong>
                     </div>
                     <div class="border-start ps-3">
                         <small class="text-muted d-block">Hạn nộp hồ sơ:</small>
-                        <strong class="text-danger" th:text="${job.deadline}">2026-12-31</strong>
+                        <strong class="text-danger" th:if="${job.deadline != null}" th:text="${#temporals.format(job.deadline, 'dd/MM/yyyy')}">31/12/2026</strong>
+                        <strong class="text-muted" th:if="${job.deadline == null}">Tuyển liên tục</strong>
                     </div>
                 </div>
 

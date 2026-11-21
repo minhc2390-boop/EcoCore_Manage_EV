@@ -37,7 +37,7 @@
                         </div>
                         <div class="d-flex flex-wrap gap-2 mb-3">
                             <a th:href="@{/employer/jobs/create}" class="btn btn-primary-custom">Đăng tin tuyển dụng</a>
-                            <a th:href="@{/employer/applicants}" class="btn btn-outline-custom">Danh sách ứng viên</a>
+                            <a th:href="@{/employer/applications}" class="btn btn-outline-custom">Danh sách ứng viên</a>
                         </div>
                         <div class="d-flex flex-wrap align-items-center gap-3 pt-2 border-top text-secondary small">
                             <div>Trụ sở: <strong class="text-dark" th:text="${employer != null and employer.address != null ? employer.address : 'TP. Cần Thơ'}">TP. Cần Thơ</strong></div>
@@ -69,15 +69,15 @@
                     <div class="stat-box">
                         <div>
                             <div class="text-secondary small fw-bold" style="font-family: 'Manrope', sans-serif;">Hồ sơ ứng tuyển</div>
-                            <div class="stat-value" style="color: var(--navy-primary);">48</div>
-                            <div class="small text-success fw-semibold">+14 tuần này</div>
+                            <div class="stat-value" style="color: var(--navy-primary);" th:text="${totalApplications != null ? totalApplications : 0}">0</div>
+                            <div class="small text-success fw-semibold">Ứng viên đã nộp</div>
                         </div>
                     </div>
 
                     <div class="stat-box">
                         <div>
                             <div class="text-secondary small fw-bold" style="font-family: 'Manrope', sans-serif;">Hồ sơ chờ xử lý</div>
-                            <div class="stat-value" style="color: var(--warning);">12</div>
+                            <div class="stat-value" style="color: var(--warning);" th:text="${pendingApplications != null ? pendingApplications : 0}">0</div>
                             <div class="small text-warning fw-semibold">Cần phản hồi sớm</div>
                         </div>
                     </div>
@@ -201,64 +201,31 @@
                                 <h6 class="fw-bold mb-0">Ứng viên mới nộp</h6>
                                 <div class="text-secondary small">Hồ sơ sinh viên ứng tuyển gần đây</div>
                             </div>
-                            <a th:href="@{/employer/applicants}" class="btn btn-sm btn-outline-custom">Tất cả</a>
+                            <a th:href="@{/employer/applications}" class="btn btn-sm btn-outline-custom">Tất cả</a>
                         </div>
                         <div class="portal-card-body p-0">
                             <div class="list-group list-group-flush">
-                                <div class="list-group-item p-3 d-flex align-items-center justify-content-between">
+                                <div th:each="app : ${recentApplications}" class="list-group-item p-3 d-flex align-items-center justify-content-between">
                                     <div class="d-flex align-items-center gap-3">
                                         <div class="rounded-circle fw-bold d-flex align-items-center justify-content-center" style="width: 40px; height: 40px; background: rgba(20, 43, 74, 0.08); color: var(--navy-primary);">
-                                            HN
+                                            <span th:text="${app.student != null and app.student.fullName != null and !app.student.fullName.isEmpty() ? #strings.substring(app.student.fullName, 0, 1) : 'U'}">U</span>
                                         </div>
                                         <div>
-                                            <div class="fw-bold text-dark">Nguyễn Hoàng Nam</div>
-                                            <div class="text-secondary small">Vị trí: Nhân viên pha chế &bull; FPT Poly Cần Thơ</div>
-                                            <div class="text-muted" style="font-size: 11px;">Nộp lúc: Hôm nay 14:20</div>
+                                            <div class="fw-bold text-dark" th:text="${app.student != null ? app.student.fullName : 'Sinh viên'}">Họ tên</div>
+                                            <div class="text-secondary small">Vị trí: <span class="fw-medium text-dark" th:text="${app.jobPosting != null ? app.jobPosting.title : 'Việc làm'}">Vị trí</span></div>
+                                            <div class="text-muted" style="font-size: 11px;">
+                                                Nộp lúc: <span th:if="${app.appliedAt != null}" th:text="${#temporals.format(app.appliedAt, 'HH:mm - dd/MM/yyyy')}">14:20</span>
+                                            </div>
                                         </div>
                                     </div>
-                                    <span class="badge-tag-custom badge-pending-custom">Chờ xem</span>
+                                    <span th:if="${app.status == 'PENDING'}" class="badge-tag-custom badge-pending-custom">Chờ xem</span>
+                                    <span th:if="${app.status == 'REVIEWING'}" class="badge-tag-custom badge-reviewing-custom">Đang xem</span>
+                                    <span th:if="${app.status == 'INTERVIEW'}" class="badge-tag-custom badge-active-custom" style="background:#eff6ff;color:#2563eb;">Mời PV</span>
+                                    <span th:if="${app.status == 'ACCEPTED'}" class="badge-tag-custom badge-active-custom">Đã nhận</span>
+                                    <span th:if="${app.status == 'REJECTED'}" class="badge-tag-custom badge-hidden-custom">Từ chối</span>
                                 </div>
-
-                                <div class="list-group-item p-3 d-flex align-items-center justify-content-between">
-                                    <div class="d-flex align-items-center gap-3">
-                                        <div class="rounded-circle fw-bold d-flex align-items-center justify-content-center text-success" style="width: 40px; height: 40px; background: var(--success-light);">
-                                            TM
-                                        </div>
-                                        <div>
-                                            <div class="fw-bold text-dark">Lê Thị Mai</div>
-                                            <div class="text-secondary small">Vị trí: Bán hàng ca linh hoạt &bull; ĐH Cần Thơ</div>
-                                            <div class="text-muted" style="font-size: 11px;">Nộp lúc: Hôm qua 09:15</div>
-                                        </div>
-                                    </div>
-                                    <span class="badge-tag-custom badge-reviewing-custom">Đang xem</span>
-                                </div>
-
-                                <div class="list-group-item p-3 d-flex align-items-center justify-content-between">
-                                    <div class="d-flex align-items-center gap-3">
-                                        <div class="rounded-circle fw-bold d-flex align-items-center justify-content-center" style="width: 40px; height: 40px; background: var(--info-light); color: var(--navy-secondary);">
-                                            TQ
-                                        </div>
-                                        <div>
-                                            <div class="fw-bold text-dark">Trần Minh Quân</div>
-                                            <div class="text-secondary small">Vị trí: Thực tập sinh CNTT &bull; ĐH Nam Cần Thơ</div>
-                                            <div class="text-muted" style="font-size: 11px;">Nộp lúc: 2 ngày trước</div>
-                                        </div>
-                                    </div>
-                                    <span class="badge-tag-custom badge-active-custom">Chấp nhận</span>
-                                </div>
-
-                                <div class="list-group-item p-3 d-flex align-items-center justify-content-between">
-                                    <div class="d-flex align-items-center gap-3">
-                                        <div class="rounded-circle fw-bold d-flex align-items-center justify-content-center text-warning" style="width: 40px; height: 40px; background: var(--warning-light);">
-                                            VA
-                                        </div>
-                                        <div>
-                                            <div class="fw-bold text-dark">Phạm Vũ Anh</div>
-                                            <div class="text-secondary small">Vị trí: Phục vụ bàn ca sáng &bull; FPT Poly Cần Thơ</div>
-                                            <div class="text-muted" style="font-size: 11px;">Nộp lúc: 3 ngày trước</div>
-                                        </div>
-                                    </div>
-                                    <span class="badge-tag-custom badge-pending-custom">Chờ xem</span>
+                                <div th:if="${recentApplications == null or #lists.isEmpty(recentApplications)}" class="p-4 text-center text-muted small">
+                                    Chưa có đơn ứng tuyển mới nào.
                                 </div>
                             </div>
                         </div>

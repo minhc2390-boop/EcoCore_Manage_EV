@@ -212,6 +212,74 @@
             </form>
         </div>
 
+        <!-- 3. THẺ LỊCH SỬ NỘP ĐƠN ỨNG TUYỂN CỦA SINH VIÊN (VY & MINH) -->
+        <div class="profile-card" th:if="${user.role.name() == 'STUDENT'}">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+                <h3 style="margin:0; font-size:18px; color:#334155;">
+                    <i data-lucide="briefcase" style="width:18px;height:18px;vertical-align:-3px;margin-right:6px;color:#0284c7;"></i>
+                    Lịch sử nộp hồ sơ ứng tuyển
+                </h3>
+                <span style="font-size:13px; color:#64748b; font-weight:600;" th:if="${myApplications != null}">
+                    Tổng số: <strong style="color:#0284c7;" th:text="${myApplications.size()}">0</strong> đơn
+                </span>
+            </div>
+
+            <!-- Nếu chưa nộp hồ sơ nào -->
+            <div th:if="${myApplications == null or #lists.isEmpty(myApplications)}" style="text-align:center; padding:30px 10px; color:#94a3b8;">
+                <i data-lucide="inbox" style="width:40px;height:40px;margin:0 auto 10px;display:block;color:#cbd5e1;"></i>
+                <p style="margin-bottom:12px; font-size:14px;">Bạn chưa nộp hồ sơ ứng tuyển công việc nào.</p>
+                <a th:href="@{/jobs}" style="display:inline-block; padding:8px 18px; background:#142B4A; color:#fff; border-radius:20px; font-size:13px; font-weight:600; text-decoration:none;">Tìm việc làm ngay</a>
+            </div>
+
+            <!-- Danh sách đơn đã nộp -->
+            <div th:if="${myApplications != null and not #lists.isEmpty(myApplications)}" style="overflow-x:auto;">
+                <table style="width:100%; border-collapse:collapse; font-size:13.5px;">
+                    <thead>
+                        <tr style="border-bottom:2px solid #e2e8f0; text-align:left; color:#475569; font-size:12px; text-transform:uppercase;">
+                            <th style="padding:10px 8px;">Vị trí tuyển dụng</th>
+                            <th style="padding:10px 8px;">Doanh nghiệp</th>
+                            <th style="padding:10px 8px;">Lịch rảnh</th>
+                            <th style="padding:10px 8px;">Ngày nộp</th>
+                            <th style="padding:10px 8px; text-align:center;">Trạng thái</th>
+                            <th style="padding:10px 8px; text-align:end;">Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="app : ${myApplications}" style="border-bottom:1px solid #f1f5f9;">
+                            <td style="padding:12px 8px;">
+                                <div style="font-weight:700; color:#0f172a;" th:text="${app.jobPosting != null ? app.jobPosting.title : 'Việc làm'}">Tiêu đề</div>
+                                <span style="font-size:11px; color:#64748b; background:#f1f5f9; padding:2px 6px; border-radius:4px;" th:if="${app.jobPosting != null}" th:text="${app.jobPosting.jobType}">Part-time</span>
+                            </td>
+                            <td style="padding:12px 8px;">
+                                <span style="color:#334155; font-weight:500;" th:text="${app.jobPosting != null and app.jobPosting.employer != null ? app.jobPosting.employer.companyName : 'Doanh nghiệp'}">Tên công ty</span>
+                            </td>
+                            <td style="padding:12px 8px; max-width:160px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">
+                                <span th:if="${app.studentScheduleNotes != null and !app.studentScheduleNotes.isEmpty()}" th:text="${app.studentScheduleNotes}" style="color:#0284c7; font-size:12.5px;">Ca tối</span>
+                                <span th:if="${app.studentScheduleNotes == null or app.studentScheduleNotes.isEmpty()}" style="color:#94a3b8; font-size:12px;">Linh hoạt</span>
+                            </td>
+                            <td style="padding:12px 8px; white-space:nowrap;">
+                                <div style="font-weight:600; color:#334155;" th:if="${app.appliedAt != null}" th:text="${#temporals.format(app.appliedAt, 'dd/MM/yyyy')}">20/12/2026</div>
+                                <small style="color:#94a3b8; font-size:11px;" th:if="${app.appliedAt != null}" th:text="${#temporals.format(app.appliedAt, 'HH:mm')}">14:00</small>
+                            </td>
+                            <td style="padding:12px 8px; text-align:center; white-space:nowrap;">
+                                <span th:if="${app.status == 'PENDING'}" style="background:#fffbeb; color:#d97706; padding:3px 10px; border-radius:20px; font-weight:600; font-size:11.5px; border:1px solid #fde68a;">Chờ duyệt</span>
+                                <span th:if="${app.status == 'REVIEWING'}" style="background:#eff6ff; color:#2563eb; padding:3px 10px; border-radius:20px; font-weight:600; font-size:11.5px; border:1px solid #bfdbfe;">Đang xem</span>
+                                <span th:if="${app.status == 'INTERVIEW'}" style="background:#fef3c7; color:#b45309; padding:3px 10px; border-radius:20px; font-weight:700; font-size:11.5px; border:1px solid #fcd34d;">Mời PV 🎉</span>
+                                <span th:if="${app.status == 'ACCEPTED'}" style="background:#ecfdf5; color:#059669; padding:3px 10px; border-radius:20px; font-weight:700; font-size:11.5px; border:1px solid #a7f3d0;">Đã nhận ✅</span>
+                                <span th:if="${app.status == 'REJECTED'}" style="background:#fef2f2; color:#dc2626; padding:3px 10px; border-radius:20px; font-weight:600; font-size:11.5px; border:1px solid #fecaca;">Từ chối</span>
+                            </td>
+                            <td style="padding:12px 8px; text-align:end; white-space:nowrap;">
+                                <a th:if="${app.jobPosting != null}" th:href="@{/jobs/{id}(id=${app.jobPosting.id})}" target="_blank"
+                                   style="display:inline-block; padding:4px 10px; background:#f1f5f9; color:#0284c7; border-radius:6px; font-size:12px; font-weight:600; text-decoration:none;">
+                                    Xem tin
+                                </a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
     </main>
 
 </body>

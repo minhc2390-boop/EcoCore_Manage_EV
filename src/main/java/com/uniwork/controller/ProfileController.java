@@ -1,7 +1,10 @@
 package com.uniwork.controller;
 
+import com.uniwork.entity.JobApplication;
+import com.uniwork.entity.Role;
 import com.uniwork.entity.User;
 import com.uniwork.repository.UserRepository;
+import com.uniwork.service.JobApplicationService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -13,6 +16,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.Collections;
+import java.util.List;
+
 /**
  * Controller Quản lý hồ sơ cá nhân và đổi mật khẩu
  * @author Cao Trần Duy Minh - PC11166
@@ -23,6 +29,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @Slf4j
 public class ProfileController {
     private final UserRepository userRepository;
+    private final JobApplicationService jobApplicationService;
 
     // Hiển thị trang cá nhân của người dùng đăng nhập
     @GetMapping
@@ -36,6 +43,18 @@ public class ProfileController {
         // Lấy dữ liệu mới nhất từ csdl ra để hiển thị
         User currentUser = userRepository.findById(sesionUser.getId()).orElse(sesionUser);
         model.addAttribute("user", currentUser);
+
+        // Lấy danh sách lịch sử nộp hồ sơ ứng tuyển nếu người dùng là Sinh viên
+        List<JobApplication> myApplications = Collections.emptyList();
+        if (currentUser.getRole() == Role.STUDENT) {
+            try {
+                myApplications = jobApplicationService.getApplicationsByStudent(currentUser.getId());
+            } catch (Exception ex) {
+                log.warn("Không thể tải danh sách ứng tuyển của sinh viên {}: {}", currentUser.getUsername(), ex.getMessage());
+            }
+        }
+        model.addAttribute("myApplications", myApplications);
+
         return "profile";
     }
 

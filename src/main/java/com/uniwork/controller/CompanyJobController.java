@@ -105,6 +105,13 @@ public class CompanyJobController {
         long hiddenJobs = jobPostingService.countJobsByEmployerAndStatus(employer.getId(), "HIDDEN");
         long totalViews = jobPostingService.getTotalViewsByEmployer(employer.getId());
 
+        // Bổ sung số liệu hồ sơ ứng viên thực tế từ JobApplicationService (VY & KHÁNH)
+        long totalApplications = jobApplicationService.countApplicationsByEmployer(employer.getId());
+        long pendingApplications = jobApplicationService.countApplicationsByEmployerAndStatus(employer.getId(), "PENDING");
+        long acceptedApplications = jobApplicationService.countApplicationsByEmployerAndStatus(employer.getId(), "ACCEPTED");
+        List<JobApplication> recentApplications = jobApplicationService.getApplicationsByEmployer(employer.getId())
+                .stream().limit(5).toList();
+
         model.addAttribute("jobs", allJobs);
         model.addAttribute("recentJobs", recentJobs);
         model.addAttribute("employer", employer);
@@ -113,6 +120,10 @@ public class CompanyJobController {
         model.addAttribute("activeJobs", activeJobs);
         model.addAttribute("hiddenJobs", hiddenJobs);
         model.addAttribute("totalViews", totalViews);
+        model.addAttribute("totalApplications", totalApplications);
+        model.addAttribute("pendingApplications", pendingApplications);
+        model.addAttribute("acceptedApplications", acceptedApplications);
+        model.addAttribute("recentApplications", recentApplications);
 
         return "employer/dashboard";
     }
@@ -564,23 +575,8 @@ public class CompanyJobController {
     }
 
     @GetMapping("/applicants")
-    public String listApplicants(HttpSession session,
-                                 Model model,
-                                 RedirectAttributes redirectAttributes) {
-        User currentUser = getAuthenticatedCompanyAdmin(session);
-        if (currentUser == null) {
-            redirectAttributes.addFlashAttribute("error", "Vui lòng đăng nhập với tài khoản Nhà tuyển dụng để truy cập!");
-            return "redirect:/login";
-        }
-
-        Employer employer = employerService.getOrCreateEmployerForUser(currentUser);
-        List<JobPosting> jobs = jobPostingService.getJobsByEmployerId(employer.getId());
-
-        model.addAttribute("currentUser", currentUser);
-        model.addAttribute("employer", employer);
-        model.addAttribute("jobs", jobs);
-
-        return "employer/applicants/list";
+    public String listApplicants() {
+        return "redirect:/employer/applications";
     }
 
     @GetMapping("/applicants/{id}")

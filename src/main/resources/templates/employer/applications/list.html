@@ -1,432 +1,433 @@
 <!DOCTYPE html>
 <!--
-  UniWork Cần Thơ - Cổng Quản Trị: Quản Lý Ứng Viên
-  Xem danh sách sinh viên nộp vào công ty mình, cập nhật trạng thái đơn ứng tuyển.
+  UniWork Cần Thơ - Cổng Quản Trị: Quản Lý Đơn Ứng Tuyển Của Sinh Viên
+  Xem danh sách sinh viên nộp vào công ty mình, kiểm tra CV, lịch rảnh và cập nhật trạng thái đơn.
   @author VY - Company Admin Portal (Phần Tuyển dụng & Quản lý ứng viên)
+  @author Cao Trần Duy Minh - PC11166 (Responsive UI, Mobile Card View & Real-time Integration)
 -->
 <html lang="vi" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quản Lý Ứng Viên - Company Admin Portal | UniWork Cần Thơ</title>
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <!-- Bootstrap 5 & Icons -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    <link rel="stylesheet" th:href="@{/css/style.css}">
+<head th:replace="~{employer/common/layout :: head('Quản lý hồ sơ ứng viên')}"></head>
+<body class="employer-portal">
 
-    <style>
-        body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            background-color: #f8fafc;
-            color: #1e293b;
-        }
-        .portal-header {
-            background: linear-gradient(135deg, #142B4A 0%, #1e3a5f 100%);
-            box-shadow: 0 4px 15px rgba(20, 43, 74, 0.15);
-        }
-        .hero-banner {
-            background: #ffffff;
-            border-radius: 16px;
-            padding: 28px 32px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
-            margin-bottom: 24px;
-            border-left: 5px solid #8b5cf6;
-        }
-        .stat-card {
-            background: #ffffff;
-            border-radius: 14px;
-            padding: 22px 24px;
-            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
-            border: 1px solid #edf2f7;
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-        }
-        .stat-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
-        }
-        .stat-icon {
-            width: 48px;
-            height: 48px;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 22px;
-        }
-        .bg-icon-primary  { background: #e0f2fe; color: #0284c7; }
-        .bg-icon-warning  { background: #fef3c7; color: #d97706; }
-        .bg-icon-orange   { background: #ffedd5; color: #ea580c; }
-        .bg-icon-success  { background: #dcfce7; color: #16a34a; }
-        .bg-icon-purple   { background: #f3e8ff; color: #9333ea; }
-        .job-table-card {
-            background: #ffffff;
-            border-radius: 16px;
-            padding: 24px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
-            border: 1px solid #edf2f7;
-        }
-        .filter-tab {
-            padding: 8px 18px;
-            border-radius: 10px;
-            font-weight: 600;
-            font-size: 14px;
-            text-decoration: none;
-            color: #64748b;
-            background: #f1f5f9;
-            transition: all 0.2s;
-            white-space: nowrap;
-        }
-        .filter-tab.active {
-            background: #142B4A;
-            color: #ffffff;
-        }
-        .filter-tab:hover:not(.active) {
-            background: #e2e8f0;
-            color: #1e293b;
-        }
-        /* Badge trạng thái đơn ứng tuyển */
-        .badge-pending   { background: #fef3c7; color: #b45309; border: 1px solid #fde68a; font-weight: 600; }
-        .badge-reviewing { background: #dbeafe; color: #1d4ed8; border: 1px solid #bfdbfe; font-weight: 600; }
-        .badge-interview { background: #ffedd5; color: #c2410c; border: 1px solid #fed7aa; font-weight: 600; }
-        .badge-accepted  { background: #dcfce7; color: #15803d; border: 1px solid #86efac; font-weight: 600; }
-        .badge-rejected  { background: #fee2e2; color: #b91c1c; border: 1px solid #fca5a5; font-weight: 600; }
-        .action-btn-group form { display: inline; }
-        .action-btn-group .btn {
-            padding: 5px 10px;
-            font-size: 12px;
-            border-radius: 8px;
-            font-weight: 600;
-        }
-        .cv-link {
-            color: #0284c7;
-            font-size: 13px;
-            text-decoration: none;
-            font-weight: 600;
-        }
-        .cv-link:hover { text-decoration: underline; }
-        .table th {
-            font-size: 12px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            color: #64748b;
-            border-bottom: 2px solid #e2e8f0;
-            padding: 12px 10px;
-        }
-        .table td { padding: 14px 10px; vertical-align: middle; }
-        .student-name { font-weight: 700; color: #1e293b; }
-        .student-email { font-size: 12px; color: #64748b; }
-        .schedule-notes { font-size: 12px; color: #475569; max-width: 160px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .cover-letter-short { font-size: 12px; color: #64748b; max-width: 180px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    </style>
-</head>
-<body>
+<style>
+    /* Styling cho Bảng Ứng Viên Chuyên Nghiệp */
+    .stat-card-app {
+        background: #ffffff;
+        border-radius: 14px;
+        padding: 16px 18px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+        border: 1px solid #edf2f7;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+        height: 100%;
+    }
+    .stat-card-app:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.06);
+    }
+    .stat-icon-app {
+        width: 42px;
+        height: 42px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 19px;
+        flex-shrink: 0;
+    }
 
-    <!-- TOP NAVBAR CHO COMPANY ADMIN (giống employer/jobs/list.html) -->
-    <header class="portal-header text-white sticky-top py-2">
-        <div class="container d-flex justify-content-between align-items-center">
-            <a th:href="@{/}" class="text-white text-decoration-none fw-bold fs-5 d-flex align-items-center gap-2">
-                <span class="badge bg-warning text-dark py-1 px-2 rounded-3"><i class="bi bi-briefcase-fill"></i></span>
-                <span>Uni<span class="text-warning">Work</span> Cần Thơ</span>
-                <span class="badge bg-white bg-opacity-10 text-warning ms-2 px-2 py-1 small fw-normal">Cổng Tuyển Dụng</span>
-            </a>
-            <div class="d-flex align-items-center gap-3">
-                <a th:href="@{/employer/jobs}" class="text-white-50 text-decoration-none small">
-                    <i class="bi bi-file-text me-1"></i>Tin Tuyển Dụng
-                </a>
-                <a th:href="@{/employer/applications}" class="text-warning text-decoration-none small fw-bold">
-                    <i class="bi bi-people-fill me-1"></i>Ứng Viên
-                </a>
-                <a th:href="@{/}" class="text-white-50 text-decoration-none small">
-                    <i class="bi bi-house-door me-1"></i>Trang chủ
-                </a>
-                <a th:href="@{/profile}" class="text-white-50 text-decoration-none small">
-                    <i class="bi bi-person-circle me-1"></i>Hồ sơ
-                </a>
-                <span class="text-white-50">|</span>
-                <span class="badge bg-warning text-dark fw-bold px-2 py-1">
-                    <i class="bi bi-building me-1"></i><span th:text="${currentUser.username}">admin</span>
-                </span>
-                <a th:href="@{/logout}" class="btn btn-outline-danger btn-sm text-white border-danger rounded-pill px-3">
-                    <i class="bi bi-box-arrow-right me-1"></i>Đăng xuất
-                </a>
+    /* Filter Tabs */
+    .filter-tabs-scroll {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        overflow-x: auto;
+        white-space: nowrap;
+        padding-bottom: 4px;
+        -webkit-overflow-scrolling: touch;
+    }
+    .filter-tabs-scroll::-webkit-scrollbar {
+        height: 4px;
+    }
+    .filter-tabs-scroll::-webkit-scrollbar-thumb {
+        background: #cbd5e1;
+        border-radius: 4px;
+    }
+    .filter-tab {
+        padding: 7px 16px;
+        border-radius: 9999px;
+        font-weight: 600;
+        font-size: 13.5px;
+        text-decoration: none;
+        color: #64748b;
+        background: #f1f5f9;
+        transition: all 0.2s ease;
+        border: 1px solid transparent;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+    }
+    .filter-tab:hover {
+        background: #e2e8f0;
+        color: #1e293b;
+    }
+    .filter-tab.active {
+        background: #142B4A;
+        color: #ffffff;
+        box-shadow: 0 2px 8px rgba(20, 43, 74, 0.2);
+    }
+
+    /* Bảng dữ liệu ứng viên */
+    .app-table {
+        min-width: 1100px;
+        width: 100%;
+        margin-bottom: 0;
+        border-collapse: separate;
+        border-spacing: 0;
+    }
+    .app-table thead th {
+        background-color: #f8fafc;
+        color: #475569;
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+        padding: 14px;
+        border-bottom: 2px solid #e2e8f0;
+        vertical-align: middle;
+        white-space: nowrap;
+    }
+    .app-table tbody td {
+        padding: 15px 14px;
+        vertical-align: middle;
+        border-bottom: 1px solid #f1f5f9;
+        font-size: 13.5px;
+        background-color: #ffffff;
+    }
+    .app-table tbody tr:hover td {
+        background-color: #f8fafc;
+    }
+
+    .candidate-avatar {
+        width: 38px;
+        height: 38px;
+        border-radius: 50%;
+        background: #e0f2fe;
+        color: #0369a1;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 15px;
+        flex-shrink: 0;
+    }
+
+    .badge-status-pending {
+        background: #fffbeb;
+        color: #d97706;
+        border: 1px solid #fde68a;
+        font-weight: 600;
+        font-size: 12px;
+        padding: 4px 10px;
+        border-radius: 9999px;
+        white-space: nowrap;
+    }
+    .badge-status-interview {
+        background: #eff6ff;
+        color: #2563eb;
+        border: 1px solid #bfdbfe;
+        font-weight: 600;
+        font-size: 12px;
+        padding: 4px 10px;
+        border-radius: 9999px;
+        white-space: nowrap;
+    }
+    .badge-status-accepted {
+        background: #ecfdf5;
+        color: #059669;
+        border: 1px solid #a7f3d0;
+        font-weight: 600;
+        font-size: 12px;
+        padding: 4px 10px;
+        border-radius: 9999px;
+        white-space: nowrap;
+    }
+    .badge-status-rejected {
+        background: #fef2f2;
+        color: #dc2626;
+        border: 1px solid #fecaca;
+        font-weight: 600;
+        font-size: 12px;
+        padding: 4px 10px;
+        border-radius: 9999px;
+        white-space: nowrap;
+    }
+
+    .btn-action-app {
+        padding: 5px 10px;
+        font-size: 12px;
+        font-weight: 600;
+        border-radius: 6px;
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        line-height: 1.2;
+    }
+
+    /* Mobile Candidate Cards */
+    .mobile-app-card {
+        background: #ffffff;
+        border-radius: 14px;
+        padding: 16px;
+        margin-bottom: 14px;
+        border: 1px solid #edf2f7;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+    }
+</style>
+
+<div class="employer-layout">
+    <!-- SIDEBAR DÙNG CHUNG -->
+    <div th:replace="~{employer/common/layout :: sidebar('applications')}"></div>
+
+    <div class="employer-main">
+        <!-- TOPBAR DÙNG CHUNG -->
+        <div th:replace="~{employer/common/layout :: topbar('Quản Lý Hồ Sơ Ứng Viên')}"></div>
+
+        <div class="employer-content">
+            <!-- FLASH MESSAGES -->
+            <div th:if="${success}" class="alert alert-success alert-dismissible fade show rounded-4 shadow-sm mb-4" role="alert">
+                <i class="bi bi-check-circle-fill me-2 fs-5"></i>
+                <span th:text="${success}">Thao tác thành công!</span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
-        </div>
-    </header>
-
-    <div class="container py-4">
-
-        <!-- FLASH MESSAGES -->
-        <div th:if="${success}" class="alert alert-success alert-dismissible fade show rounded-4 shadow-sm mb-4" role="alert">
-            <i class="bi bi-check-circle-fill me-2 fs-5"></i>
-            <span th:text="${success}">Thao tác thành công!</span>
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-        <div th:if="${error}" class="alert alert-danger alert-dismissible fade show rounded-4 shadow-sm mb-4" role="alert">
-            <i class="bi bi-exclamation-triangle-fill me-2 fs-5"></i>
-            <span th:text="${error}">Đã xảy ra lỗi!</span>
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-        <div th:if="${info}" class="alert alert-warning alert-dismissible fade show rounded-4 shadow-sm mb-4" role="alert">
-            <i class="bi bi-info-circle-fill me-2 fs-5"></i>
-            <span th:text="${info}">Thông báo</span>
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-
-        <!-- HERO BANNER -->
-        <div class="hero-banner d-flex flex-wrap justify-content-between align-items-center gap-3">
-            <div>
-                <span class="badge bg-purple bg-opacity-10 fw-bold mb-2 px-3 py-1 rounded-pill"
-                      style="background:#f3e8ff; color:#7c3aed;">
-                    <i class="bi bi-people-fill me-1"></i>Quản Lý Ứng Viên — Phụ trách: VY
-                </span>
-                <h3 class="fw-bold mb-1">
-                    <span th:text="${employer.companyName}">Doanh Nghiệp</span>
-                    <span class="text-muted fw-normal fs-6 ms-2">— Danh sách đơn ứng tuyển</span>
-                </h3>
-                <p class="text-muted mb-0 small">
-                    <i class="bi bi-geo-alt-fill text-danger me-1"></i>
-                    <span th:text="${employer.address}">TP. Cần Thơ</span>
-                    <span class="mx-2">•</span>
-                    <i class="bi bi-envelope-fill text-primary me-1"></i>
-                    <span th:text="${employer.contactEmail != null ? employer.contactEmail : currentUser.email}">contact@company.com</span>
-                </p>
+            <div th:if="${error}" class="alert alert-danger alert-dismissible fade show rounded-4 shadow-sm mb-4" role="alert">
+                <i class="bi bi-exclamation-triangle-fill me-2 fs-5"></i>
+                <span th:text="${error}">Đã xảy ra lỗi!</span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
-            <div>
-                <a th:href="@{/employer/jobs}" class="btn btn-outline-secondary fw-bold px-4 py-2 rounded-3 d-flex align-items-center gap-2">
-                    <i class="bi bi-file-earmark-text-fill fs-5"></i>
-                    <span>Quản Lý Tin Tuyển Dụng</span>
-                </a>
-            </div>
-        </div>
 
-        <!-- 4 THẺ THỐNG KÊ ỨNG VIÊN -->
-        <div class="row g-3 mb-4">
-            <div class="col-6 col-md-3">
-                <div class="stat-card d-flex align-items-center justify-content-between">
-                    <div>
-                        <div class="text-muted small fw-medium">Tổng đơn</div>
-                        <div class="fs-3 fw-bold text-dark mt-1" th:text="${totalApplications}">0</div>
+            <!-- 5 THẺ THỐNG KÊ TRẠNG THÁI ỨNG VIÊN -->
+            <div class="row g-3 mb-4">
+                <div class="col-6 col-lg-2-4 col-md-4">
+                    <div class="stat-card-app d-flex align-items-center justify-content-between">
+                        <div>
+                            <div class="text-secondary small fw-bold">Tổng đơn</div>
+                            <div class="fs-4 fw-bold mt-1 text-dark" th:text="${totalApplications}">0</div>
+                        </div>
+                        <div class="stat-icon-app" style="background: rgba(20, 43, 74, 0.08); color: #142B4A;">
+                            <i class="bi bi-people-fill"></i>
+                        </div>
                     </div>
-                    <div class="stat-icon bg-icon-primary">
-                        <i class="bi bi-inbox-fill"></i>
+                </div>
+                <div class="col-6 col-lg-2-4 col-md-4">
+                    <div class="stat-card-app d-flex align-items-center justify-content-between">
+                        <div>
+                            <div class="text-secondary small fw-bold">Chờ duyệt</div>
+                            <div class="fs-4 fw-bold mt-1 text-warning" th:text="${pendingCount}">0</div>
+                        </div>
+                        <div class="stat-icon-app" style="background: #fef3c7; color: #d97706;">
+                            <i class="bi bi-hourglass-split"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6 col-lg-2-4 col-md-4">
+                    <div class="stat-card-app d-flex align-items-center justify-content-between">
+                        <div>
+                            <div class="text-secondary small fw-bold">Mời phỏng vấn</div>
+                            <div class="fs-4 fw-bold mt-1 text-primary" th:text="${interviewCount}">0</div>
+                        </div>
+                        <div class="stat-icon-app" style="background: #dbeafe; color: #2563eb;">
+                            <i class="bi bi-calendar-check-fill"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6 col-lg-2-4 col-md-6">
+                    <div class="stat-card-app d-flex align-items-center justify-content-between">
+                        <div>
+                            <div class="text-secondary small fw-bold">Đã nhận việc</div>
+                            <div class="fs-4 fw-bold mt-1 text-success" th:text="${acceptedCount}">0</div>
+                        </div>
+                        <div class="stat-icon-app" style="background: #dcfce7; color: #16a34a;">
+                            <i class="bi bi-check-circle-fill"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6 col-lg-2-4 col-md-6">
+                    <div class="stat-card-app d-flex align-items-center justify-content-between">
+                        <div>
+                            <div class="text-secondary small fw-bold">Từ chối</div>
+                            <div class="fs-4 fw-bold mt-1 text-danger" th:text="${rejectedCount}">0</div>
+                        </div>
+                        <div class="stat-icon-app" style="background: #fee2e2; color: #dc2626;">
+                            <i class="bi bi-x-circle-fill"></i>
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="col-6 col-md-3">
-                <div class="stat-card d-flex align-items-center justify-content-between">
-                    <div>
-                        <div class="text-muted small fw-medium">Chờ duyệt</div>
-                        <div class="fs-3 fw-bold text-warning mt-1" th:text="${pendingCount}">0</div>
-                    </div>
-                    <div class="stat-icon bg-icon-warning">
-                        <i class="bi bi-hourglass-split"></i>
-                    </div>
-                </div>
-            </div>
-            <div class="col-6 col-md-3">
-                <div class="stat-card d-flex align-items-center justify-content-between">
-                    <div>
-                        <div class="text-muted small fw-medium">Mời phỏng vấn</div>
-                        <div class="fs-3 fw-bold mt-1" style="color:#ea580c;" th:text="${interviewCount}">0</div>
-                    </div>
-                    <div class="stat-icon bg-icon-orange">
-                        <i class="bi bi-calendar-check-fill"></i>
-                    </div>
-                </div>
-            </div>
-            <div class="col-6 col-md-3">
-                <div class="stat-card d-flex align-items-center justify-content-between">
-                    <div>
-                        <div class="text-muted small fw-medium">Đã nhận việc</div>
-                        <div class="fs-3 fw-bold text-success mt-1" th:text="${acceptedCount}">0</div>
-                    </div>
-                    <div class="stat-icon bg-icon-success">
-                        <i class="bi bi-person-check-fill"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
 
-        <!-- BẢNG DANH SÁCH ỨNG VIÊN -->
-        <div class="job-table-card">
+            <!-- BẢNG DANH SÁCH ĐƠN ỨNG TUYỂN -->
+            <div class="card border-0 rounded-4 shadow-sm p-4">
+                
+                <!-- BỘ LỌC TRẠNG THÁI TAB -->
+                <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+                    <div class="filter-tabs-scroll">
+                        <a th:href="@{/employer/applications(status='ALL')}" 
+                           class="filter-tab" th:classappend="${currentStatus == 'ALL' or currentStatus == null ? 'active' : ''}">
+                            <i class="bi bi-collection me-1"></i>Tất cả (<span th:text="${totalApplications}">0</span>)
+                        </a>
+                        <a th:href="@{/employer/applications(status='PENDING')}" 
+                           class="filter-tab" th:classappend="${currentStatus == 'PENDING' ? 'active' : ''}">
+                            <i class="bi bi-hourglass-split me-1"></i>Chờ duyệt (<span th:text="${pendingCount}">0</span>)
+                        </a>
+                        <a th:href="@{/employer/applications(status='INTERVIEW')}" 
+                           class="filter-tab" th:classappend="${currentStatus == 'INTERVIEW' ? 'active' : ''}">
+                            <i class="bi bi-calendar-check me-1"></i>Mời PV (<span th:text="${interviewCount}">0</span>)
+                        </a>
+                        <a th:href="@{/employer/applications(status='ACCEPTED')}" 
+                           class="filter-tab" th:classappend="${currentStatus == 'ACCEPTED' ? 'active' : ''}">
+                            <i class="bi bi-check-circle me-1"></i>Đã nhận (<span th:text="${acceptedCount}">0</span>)
+                        </a>
+                        <a th:href="@{/employer/applications(status='REJECTED')}" 
+                           class="filter-tab" th:classappend="${currentStatus == 'REJECTED' ? 'active' : ''}">
+                            <i class="bi bi-x-circle me-1"></i>Từ chối (<span th:text="${rejectedCount}">0</span>)
+                        </a>
+                    </div>
 
-            <!-- Filter Tabs + Tiêu đề -->
-            <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
-                <div>
-                    <h5 class="fw-bold mb-1">
-                        <i class="bi bi-people-fill me-2 text-primary"></i>Danh Sách Ứng Viên
-                        <span class="badge bg-primary bg-opacity-10 text-primary fs-6 ms-2" th:text="${applications.size()}">0</span>
-                    </h5>
-                    <p class="text-muted small mb-0">Tất cả sinh viên đã nộp hồ sơ ứng tuyển vào công ty của bạn</p>
+                    <a th:href="@{/employer/jobs}" class="btn btn-outline-secondary btn-sm rounded-pill px-3">
+                        <i class="bi bi-arrow-left me-1"></i>Về trang tin tuyển dụng
+                    </a>
                 </div>
-            </div>
 
-            <!-- Filter Tabs -->
-            <div class="d-flex flex-wrap gap-2 mb-4 filter-tabs-scroll">
-                <a th:href="@{/employer/applications}"
-                   th:classappend="${currentStatus == 'ALL' or currentStatus == null} ? 'active' : ''"
-                   class="filter-tab">
-                    <i class="bi bi-grid-fill me-1"></i>Tất cả
-                    <span class="ms-1 small" th:text="'(' + ${totalApplications} + ')'"></span>
-                </a>
-                <a th:href="@{/employer/applications(status='PENDING')}"
-                   th:classappend="${currentStatus == 'PENDING'} ? 'active' : ''"
-                   class="filter-tab">
-                    <i class="bi bi-hourglass-split me-1"></i>Chờ duyệt
-                    <span class="ms-1 small" th:text="'(' + ${pendingCount} + ')'"></span>
-                </a>
-                <a th:href="@{/employer/applications(status='REVIEWING')}"
-                   th:classappend="${currentStatus == 'REVIEWING'} ? 'active' : ''"
-                   class="filter-tab">
-                    <i class="bi bi-eye me-1"></i>Đang xem xét
-                    <span class="ms-1 small" th:text="'(' + ${reviewingCount} + ')'"></span>
-                </a>
-                <a th:href="@{/employer/applications(status='INTERVIEW')}"
-                   th:classappend="${currentStatus == 'INTERVIEW'} ? 'active' : ''"
-                   class="filter-tab">
-                    <i class="bi bi-calendar-event me-1"></i>Mời phỏng vấn
-                    <span class="ms-1 small" th:text="'(' + ${interviewCount} + ')'"></span>
-                </a>
-                <a th:href="@{/employer/applications(status='ACCEPTED')}"
-                   th:classappend="${currentStatus == 'ACCEPTED'} ? 'active' : ''"
-                   class="filter-tab">
-                    <i class="bi bi-check-circle-fill me-1"></i>Đã nhận
-                    <span class="ms-1 small" th:text="'(' + ${acceptedCount} + ')'"></span>
-                </a>
-                <a th:href="@{/employer/applications(status='REJECTED')}"
-                   th:classappend="${currentStatus == 'REJECTED'} ? 'active' : ''"
-                   class="filter-tab">
-                    <i class="bi bi-x-circle-fill me-1"></i>Từ chối
-                    <span class="ms-1 small" th:text="'(' + ${rejectedCount} + ')'"></span>
-                </a>
-            </div>
+                <!-- NẾU CHƯA CÓ ĐƠN ỨNG TUYỂN NÀO -->
+                <div th:if="${#lists.isEmpty(applications)}" class="text-center py-5">
+                    <i class="bi bi-inbox text-muted" style="font-size: 48px;"></i>
+                    <h5 class="fw-bold mt-3 text-secondary">Chưa có đơn ứng tuyển nào!</h5>
+                    <p class="text-muted small">Khi sinh viên nộp hồ sơ vào các bài tuyển dụng của công ty bạn, danh sách ứng viên sẽ xuất hiện tại đây.</p>
+                    <a th:href="@{/employer/jobs}" class="btn btn-primary rounded-pill px-4 btn-sm">Xem bài đăng tuyển</a>
+                </div>
 
-            <!-- Bảng ứng viên -->
-            <div th:if="${applications != null and !applications.isEmpty()}">
-                <div class="table-responsive">
-                    <table class="table table-hover align-middle">
+                <!-- 1. BẢNG DÀNH CHO MÀN HÌNH MÁY TÍNH (>= 992px) -->
+                <div th:if="${not #lists.isEmpty(applications)}" class="table-responsive d-none d-lg-block">
+                    <table class="table app-table align-middle">
                         <thead>
                             <tr>
-                                <th style="width:50px">#</th>
-                                <th>Ứng Viên</th>
-                                <th>Vị Trí Ứng Tuyển</th>
-                                <th>Link CV</th>
-                                <th>Lịch Rảnh</th>
-                                <th>Ngày Nộp</th>
-                                <th>Trạng Thái</th>
-                                <th style="width:220px">Thao Tác</th>
+                                <th style="min-width: 200px;">Ứng viên</th>
+                                <th style="min-width: 170px;">Thông tin liên hệ</th>
+                                <th style="min-width: 220px;">Vị trí ứng tuyển</th>
+                                <th style="min-width: 160px;">Lịch rảnh đăng ký</th>
+                                <th style="min-width: 100px; text-align: center;">Hồ sơ CV</th>
+                                <th style="min-width: 130px;">Ngày nộp</th>
+                                <th style="min-width: 120px; text-align: center;">Trạng thái</th>
+                                <th style="min-width: 190px; text-align: end;">Thao tác</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr th:each="app, stat : ${applications}">
-                                <!-- Số thứ tự -->
-                                <td class="text-muted small fw-medium" th:text="${stat.count}">1</td>
-
-                                <!-- Thông tin ứng viên -->
+                            <tr th:each="app : ${applications}">
+                                <!-- Ứng viên -->
                                 <td>
-                                    <div class="student-name" th:text="${app.student != null ? (app.student.fullName != null ? app.student.fullName : app.student.username) : 'Không xác định'}">Sinh viên</div>
-                                    <div class="student-email">
-                                        <i class="bi bi-envelope me-1"></i>
-                                        <span th:text="${app.student != null ? app.student.email : ''}"></span>
+                                    <div class="d-flex align-items-center gap-2">
+                                        <div class="candidate-avatar">
+                                            <span th:text="${app.student != null and app.student.fullName != null and !app.student.fullName.isEmpty() ? #strings.substring(app.student.fullName, 0, 1) : 'U'}">U</span>
+                                        </div>
+                                        <div>
+                                            <div class="fw-bold text-dark" th:text="${app.student != null ? app.student.fullName : 'Sinh viên'}">Họ tên</div>
+                                            <small class="text-muted" th:text="'@' + ${app.student != null ? app.student.username : 'username'}">@username</small>
+                                        </div>
                                     </div>
-                                    <div class="student-email" th:if="${app.student != null and app.student.phone != null}">
-                                        <i class="bi bi-telephone me-1"></i>
-                                        <span th:text="${app.student.phone}"></span>
+                                </td>
+
+                                <!-- Liên hệ -->
+                                <td>
+                                    <div class="small">
+                                        <i class="bi bi-envelope text-secondary me-1"></i>
+                                        <span th:text="${app.student != null ? app.student.email : 'Chưa có'}">email@example.com</span>
                                     </div>
-                                    <!-- Thư giới thiệu ngắn -->
-                                    <div class="cover-letter-short mt-1" th:if="${app.coverLetter != null and !#strings.isEmpty(app.coverLetter)}"
-                                         th:title="${app.coverLetter}">
-                                        <i class="bi bi-chat-left-quote me-1"></i>
-                                        <span th:text="${app.coverLetter}"></span>
+                                    <div class="small mt-1" th:if="${app.student != null and app.student.phone != null and !app.student.phone.isEmpty()}">
+                                        <i class="bi bi-telephone text-success me-1"></i>
+                                        <a th:href="'tel:' + ${app.student.phone}" class="text-decoration-none text-dark fw-medium" th:text="${app.student.phone}">0939123456</a>
                                     </div>
                                 </td>
 
                                 <!-- Vị trí ứng tuyển -->
                                 <td>
-                                    <div class="fw-semibold text-dark small" th:text="${app.jobPosting != null ? app.jobPosting.title : 'Không xác định'}">Vị trí</div>
-                                    <div class="text-muted" style="font-size:11px;" th:if="${app.jobPosting != null and app.jobPosting.jobType != null}" th:text="${app.jobPosting.jobType}"></div>
+                                    <div class="fw-bold text-dark small" th:text="${app.jobPosting != null ? app.jobPosting.title : 'Vị trí công việc'}">Tên bài đăng</div>
+                                    <div class="d-flex flex-wrap gap-1 mt-1">
+                                        <span class="badge bg-light text-secondary border px-1.5 py-0.5" style="font-size: 11px;"
+                                              th:if="${app.jobPosting != null and app.jobPosting.jobType != null}" th:text="${app.jobPosting.jobType}">Part-time</span>
+                                        <span class="badge bg-light text-muted border px-1.5 py-0.5" style="font-size: 11px;"
+                                              th:if="${app.jobPosting != null and app.jobPosting.shiftSchedule != null}" th:text="${app.jobPosting.shiftSchedule}">Ca sáng</span>
+                                    </div>
                                 </td>
 
-                                <!-- Link CV -->
+                                <!-- Lịch rảnh đăng ký -->
                                 <td>
-                                    <a th:if="${app.cvUrl != null and !#strings.isEmpty(app.cvUrl)}"
-                                       th:href="${app.cvUrl}" target="_blank" class="cv-link">
+                                    <div class="small text-truncate" style="max-width: 160px;" th:title="${app.studentScheduleNotes}"
+                                         th:if="${app.studentScheduleNotes != null and !app.studentScheduleNotes.isEmpty()}">
+                                        <i class="bi bi-clock-history text-primary me-1"></i>
+                                        <span th:text="${app.studentScheduleNotes}">Rảnh sáng 2, 4, 6</span>
+                                    </div>
+                                    <span th:if="${app.studentScheduleNotes == null or app.studentScheduleNotes.isEmpty()}" class="text-muted small">Linh hoạt theo ca</span>
+                                </td>
+
+                                <!-- CV Link -->
+                                <td class="text-center">
+                                    <a th:if="${app.cvUrl != null and !app.cvUrl.isEmpty()}" 
+                                       th:href="${app.cvUrl}" target="_blank" class="btn btn-outline-primary btn-sm rounded-pill px-2.5 py-1" style="font-size: 11.5px;" title="Xem CV online">
                                         <i class="bi bi-file-earmark-person-fill me-1"></i>Xem CV
                                     </a>
-                                    <span th:if="${app.cvUrl == null or #strings.isEmpty(app.cvUrl)}" class="text-muted small">
-                                        <i class="bi bi-dash me-1"></i>Chưa có
-                                    </span>
-                                </td>
-
-                                <!-- Lịch rảnh -->
-                                <td>
-                                    <div class="schedule-notes"
-                                         th:if="${app.studentScheduleNotes != null and !#strings.isEmpty(app.studentScheduleNotes)}"
-                                         th:title="${app.studentScheduleNotes}"
-                                         th:text="${app.studentScheduleNotes}">
-                                    </div>
-                                    <span th:if="${app.studentScheduleNotes == null or #strings.isEmpty(app.studentScheduleNotes)}" class="text-muted small">—</span>
+                                    <span th:if="${app.cvUrl == null or app.cvUrl.isEmpty()}" class="text-muted small">Chưa đính kèm</span>
                                 </td>
 
                                 <!-- Ngày nộp -->
                                 <td>
-                                    <div class="small text-dark" th:if="${app.appliedAt != null}"
-                                         th:text="${#temporals.format(app.appliedAt, 'dd/MM/yyyy')}">01/01/2026</div>
-                                    <div class="text-muted" style="font-size:11px;" th:if="${app.appliedAt != null}"
-                                         th:text="${#temporals.format(app.appliedAt, 'HH:mm')}"></div>
+                                    <div class="text-nowrap small text-dark fw-medium" th:if="${app.appliedAt != null}"
+                                         th:text="${#temporals.format(app.appliedAt, 'dd/MM/yyyy')}">20/12/2026</div>
+                                    <small class="text-muted" th:if="${app.appliedAt != null}"
+                                           th:text="${#temporals.format(app.appliedAt, 'HH:mm')}">08:30</small>
                                 </td>
 
-                                <!-- Badge trạng thái -->
-                                <td>
-                                    <span th:switch="${app.status}">
-                                        <span th:case="'PENDING'"   class="badge badge-pending rounded-pill px-3 py-1"><i class="bi bi-hourglass-split me-1"></i>Chờ duyệt</span>
-                                        <span th:case="'REVIEWING'" class="badge badge-reviewing rounded-pill px-3 py-1"><i class="bi bi-eye me-1"></i>Đang xem</span>
-                                        <span th:case="'INTERVIEW'" class="badge badge-interview rounded-pill px-3 py-1"><i class="bi bi-calendar-check me-1"></i>Mời PV</span>
-                                        <span th:case="'ACCEPTED'"  class="badge badge-accepted rounded-pill px-3 py-1"><i class="bi bi-check-circle me-1"></i>Đã nhận</span>
-                                        <span th:case="'REJECTED'"  class="badge badge-rejected rounded-pill px-3 py-1"><i class="bi bi-x-circle me-1"></i>Từ chối</span>
-                                        <span th:case="*"           class="badge bg-secondary rounded-pill px-3 py-1" th:text="${app.status}">?</span>
-                                    </span>
+                                <!-- Trạng thái -->
+                                <td class="text-center">
+                                    <span th:if="${app.status == 'PENDING'}" class="badge-status-pending"><i class="bi bi-hourglass-split me-1"></i>Chờ duyệt</span>
+                                    <span th:if="${app.status == 'REVIEWING'}" class="badge-status-pending"><i class="bi bi-eye me-1"></i>Đang xem</span>
+                                    <span th:if="${app.status == 'INTERVIEW'}" class="badge-status-interview"><i class="bi bi-calendar-check me-1"></i>Mời PV</span>
+                                    <span th:if="${app.status == 'ACCEPTED'}" class="badge-status-accepted"><i class="bi bi-check-circle-fill me-1"></i>Đã nhận</span>
+                                    <span th:if="${app.status == 'REJECTED'}" class="badge-status-rejected"><i class="bi bi-x-circle-fill me-1"></i>Từ chối</span>
                                 </td>
 
-                                <!-- Nút thao tác -->
-                                <td>
-                                    <div class="action-btn-group d-flex flex-wrap gap-1">
-
-                                        <!-- [Mời Phỏng Vấn] — PENDING hoặc REVIEWING -->
-                                        <form th:if="${app.status == 'PENDING' or app.status == 'REVIEWING'}"
-                                              th:action="@{/employer/applications/{id}/status(id=${app.id})}" method="post">
+                                <!-- Thao tác -->
+                                <td class="text-end">
+                                    <div class="d-inline-flex align-items-center gap-1 justify-content-end">
+                                        <!-- Mời PV -->
+                                        <form th:if="${app.status == 'PENDING' or app.status == 'REVIEWING'}" 
+                                              th:action="@{/employer/applications/{id}/status(id=${app.id})}" method="POST" class="d-inline m-0">
                                             <input type="hidden" name="newStatus" value="INTERVIEW">
-                                            <button type="submit" class="btn btn-warning btn-sm"
-                                                    onclick="return confirm('Mời ứng viên này đi phỏng vấn?')">
+                                            <button type="submit" class="btn btn-warning btn-sm text-dark fw-semibold px-2 py-1" style="font-size: 11.5px;"
+                                                    onclick="return confirm('Xác nhận gửi lời mời phỏng vấn đến sinh viên này?');" title="Mời phỏng vấn">
                                                 <i class="bi bi-calendar-check me-1"></i>Mời PV
                                             </button>
                                         </form>
 
-                                        <!-- [Nhận Việc] — không phải ACCEPTED và không phải REJECTED -->
-                                        <form th:if="${app.status != 'ACCEPTED' and app.status != 'REJECTED'}"
-                                              th:action="@{/employer/applications/{id}/status(id=${app.id})}" method="post">
+                                        <!-- Nhận việc -->
+                                        <form th:if="${app.status != 'ACCEPTED' and app.status != 'REJECTED'}" 
+                                              th:action="@{/employer/applications/{id}/status(id=${app.id})}" method="POST" class="d-inline m-0">
                                             <input type="hidden" name="newStatus" value="ACCEPTED">
-                                            <button type="submit" class="btn btn-success btn-sm"
-                                                    onclick="return confirm('Xác nhận nhận ứng viên này vào làm việc?')">
+                                            <button type="submit" class="btn btn-success btn-sm fw-semibold px-2 py-1" style="font-size: 11.5px;"
+                                                    onclick="return confirm('Xác nhận tiếp nhận sinh viên này vào làm việc?');" title="Chấp nhận vào làm">
                                                 <i class="bi bi-person-check-fill me-1"></i>Nhận việc
                                             </button>
                                         </form>
 
-                                        <!-- [Từ Chối] — không phải REJECTED -->
-                                        <form th:if="${app.status != 'REJECTED'}"
-                                              th:action="@{/employer/applications/{id}/status(id=${app.id})}" method="post">
+                                        <!-- Từ chối -->
+                                        <form th:if="${app.status != 'REJECTED'}" 
+                                              th:action="@{/employer/applications/{id}/status(id=${app.id})}" method="POST" class="d-inline m-0">
                                             <input type="hidden" name="newStatus" value="REJECTED">
-                                            <button type="submit" class="btn btn-outline-danger btn-sm"
-                                                    onclick="return confirm('Xác nhận từ chối ứng viên này?')">
-                                                <i class="bi bi-x-lg me-1"></i>Từ chối
+                                            <button type="submit" class="btn btn-outline-danger btn-sm px-2 py-1" style="font-size: 11.5px;"
+                                                    onclick="return confirm('Xác nhận từ chối đơn ứng tuyển này?');" title="Từ chối">
+                                                <i class="bi bi-x-lg"></i>
                                             </button>
                                         </form>
-
                                     </div>
                                 </td>
                             </tr>
@@ -434,52 +435,87 @@
                     </table>
                 </div>
 
-                <!-- Footer thống kê nhỏ -->
-                <div class="d-flex justify-content-between align-items-center mt-3 pt-3 border-top">
-                    <span class="text-muted small">
-                        Hiển thị <strong th:text="${applications.size()}">0</strong> đơn ứng tuyển
-                        <span th:if="${currentStatus != 'ALL' and currentStatus != null}">
-                            theo trạng thái: <strong th:text="${currentStatus}"></strong>
-                        </span>
-                    </span>
-                    <a th:href="@{/employer/jobs}" class="text-primary text-decoration-none small fw-semibold">
-                        <i class="bi bi-arrow-left me-1"></i>Về trang tin tuyển dụng
-                    </a>
+                <!-- 2. DANH SÁCH DẠNG THẺ (CARDS) DÀNH CHO MOBILE (< 992px) -->
+                <div th:if="${not #lists.isEmpty(applications)}" class="d-block d-lg-none mt-2">
+                    <div th:each="app : ${applications}" class="mobile-app-card">
+                        <div class="d-flex justify-content-between align-items-center mb-2 pb-2 border-bottom">
+                            <div class="d-flex align-items-center gap-2">
+                                <div class="candidate-avatar" style="width:32px; height:32px; font-size:13px;">
+                                    <span th:text="${app.student != null and app.student.fullName != null and !app.student.fullName.isEmpty() ? #strings.substring(app.student.fullName, 0, 1) : 'U'}">U</span>
+                                </div>
+                                <strong class="text-dark" th:text="${app.student != null ? app.student.fullName : 'Sinh viên'}">Họ tên</strong>
+                            </div>
+                            <div>
+                                <span th:if="${app.status == 'PENDING'}" class="badge-status-pending">Chờ duyệt</span>
+                                <span th:if="${app.status == 'REVIEWING'}" class="badge-status-pending">Đang xem</span>
+                                <span th:if="${app.status == 'INTERVIEW'}" class="badge-status-interview">Mời PV</span>
+                                <span th:if="${app.status == 'ACCEPTED'}" class="badge-status-accepted">Đã nhận</span>
+                                <span th:if="${app.status == 'REJECTED'}" class="badge-status-rejected">Từ chối</span>
+                            </div>
+                        </div>
+
+                        <div class="small mb-2">
+                            <div class="text-muted">Vị trí:</div>
+                            <strong class="text-dark d-block" th:text="${app.jobPosting != null ? app.jobPosting.title : 'Công việc'}">Tên vị trí</strong>
+                        </div>
+
+                        <div class="row g-2 small mb-3">
+                            <div class="col-6">
+                                <span class="text-muted d-block">Điện thoại:</span>
+                                <a th:if="${app.student != null and app.student.phone != null}" th:href="'tel:' + ${app.student.phone}" class="fw-semibold text-dark text-decoration-none">
+                                    <i class="bi bi-telephone text-success me-1"></i><span th:text="${app.student.phone}">0939123456</span>
+                                </a>
+                                <span th:if="${app.student == null or app.student.phone == null}" class="text-muted">—</span>
+                            </div>
+                            <div class="col-6">
+                                <span class="text-muted d-block">Ngày nộp:</span>
+                                <span class="text-dark fw-medium" th:if="${app.appliedAt != null}" th:text="${#temporals.format(app.appliedAt, 'dd/MM/yyyy HH:mm')}">20/12/2026</span>
+                            </div>
+                            <div class="col-12 mt-1" th:if="${app.studentScheduleNotes != null and !app.studentScheduleNotes.isEmpty()}">
+                                <span class="text-muted d-block">Lịch rảnh:</span>
+                                <span class="text-primary fw-medium" th:text="${app.studentScheduleNotes}">Rảnh sáng 2, 4, 6</span>
+                            </div>
+                            <div class="col-12 mt-1" th:if="${app.coverLetter != null and !app.coverLetter.isEmpty()}">
+                                <span class="text-muted d-block">Lời nhắn:</span>
+                                <div class="p-2 bg-light rounded text-secondary" style="font-size: 12px;" th:text="${app.coverLetter}">Lời nhắn từ sinh viên...</div>
+                            </div>
+                        </div>
+
+                        <div class="d-flex flex-wrap gap-1 justify-content-between pt-2 border-top">
+                            <a th:if="${app.cvUrl != null and !app.cvUrl.isEmpty()}" th:href="${app.cvUrl}" target="_blank" class="btn btn-outline-primary btn-sm flex-fill text-center">
+                                <i class="bi bi-file-earmark-person me-1"></i>Xem CV
+                            </a>
+                            <form th:if="${app.status == 'PENDING' or app.status == 'REVIEWING'}" 
+                                  th:action="@{/employer/applications/{id}/status(id=${app.id})}" method="POST" class="d-inline m-0 flex-fill">
+                                <input type="hidden" name="newStatus" value="INTERVIEW">
+                                <button type="submit" class="btn btn-warning btn-sm w-100 text-dark fw-semibold" onclick="return confirm('Mời ứng viên này đi phỏng vấn?');">
+                                    <i class="bi bi-calendar-check me-1"></i>Mời PV
+                                </button>
+                            </form>
+                            <form th:if="${app.status != 'ACCEPTED' and app.status != 'REJECTED'}" 
+                                  th:action="@{/employer/applications/{id}/status(id=${app.id})}" method="POST" class="d-inline m-0 flex-fill">
+                                <input type="hidden" name="newStatus" value="ACCEPTED">
+                                <button type="submit" class="btn btn-success btn-sm w-100 fw-semibold" onclick="return confirm('Nhận ứng viên này vào làm việc?');">
+                                    <i class="bi bi-person-check me-1"></i>Nhận việc
+                                </button>
+                            </form>
+                            <form th:if="${app.status != 'REJECTED'}" 
+                                  th:action="@{/employer/applications/{id}/status(id=${app.id})}" method="POST" class="d-inline m-0">
+                                <input type="hidden" name="newStatus" value="REJECTED">
+                                <button type="submit" class="btn btn-outline-danger btn-sm" onclick="return confirm('Từ chối ứng viên này?');" title="Từ chối">
+                                    <i class="bi bi-x-lg"></i>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
                 </div>
+
             </div>
 
-            <!-- EMPTY STATE — Chưa có đơn nào -->
-            <div th:if="${applications == null or applications.isEmpty()}"
-                 class="text-center py-5">
-                <div class="mb-3">
-                    <i class="bi bi-inbox" style="font-size: 60px; color: #cbd5e1;"></i>
-                </div>
-                <h5 class="text-muted fw-semibold mb-2">
-                    <span th:if="${currentStatus == 'ALL' or currentStatus == null}">Chưa có đơn ứng tuyển nào</span>
-                    <span th:if="${currentStatus != 'ALL' and currentStatus != null}">Không có đơn nào ở trạng thái này</span>
-                </h5>
-                <p class="text-muted small mb-4">
-                    <span th:if="${currentStatus == 'ALL' or currentStatus == null}">
-                        Sinh viên chưa nộp hồ sơ cho công ty của bạn. Hãy đảm bảo bạn đã đăng tin tuyển dụng!
-                    </span>
-                    <span th:if="${currentStatus != 'ALL' and currentStatus != null}">
-                        Thử xem tất cả đơn hoặc chọn trạng thái khác để tìm kiếm.
-                    </span>
-                </p>
-                <div class="d-flex gap-3 justify-content-center">
-                    <a th:href="@{/employer/applications}" class="btn btn-outline-primary rounded-pill px-4">
-                        <i class="bi bi-grid-fill me-1"></i>Xem tất cả đơn
-                    </a>
-                    <a th:href="@{/employer/jobs/create}" class="btn btn-warning text-dark fw-bold rounded-pill px-4">
-                        <i class="bi bi-plus-circle-fill me-1"></i>Đăng tin tuyển dụng mới
-                    </a>
-                </div>
-            </div>
+        </div>
+    </div>
+</div>
 
-        </div><!-- end job-table-card -->
-
-    </div><!-- end container -->
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
