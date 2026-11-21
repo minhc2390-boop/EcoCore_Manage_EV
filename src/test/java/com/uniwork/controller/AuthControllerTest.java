@@ -101,7 +101,7 @@ class AuthControllerTest {
     }
 
     @Test
-    @DisplayName("Kiểm tra đăng nhập thành công vai trò Company Admin -> chuyển hướng sang Cổng tuyển dụng")
+    @DisplayName("Kiểm tra đăng nhập thành công vai trò Company Admin -> chuyển hướng sang Trang Tổng Quan (Dashboard)")
     void should_RedirectToEmployerPortal_When_EmployerLogsIn() {
         MockHttpSession session = new MockHttpSession();
         Model model = new ConcurrentModel();
@@ -111,7 +111,7 @@ class AuthControllerTest {
 
         String view = authController.processLogin("highlandscantho", "123456", session, model);
 
-        assertEquals("redirect:/employer/jobs", view);
+        assertEquals("redirect:/employer/dashboard", view);
         assertEquals(employerUser, session.getAttribute("currentUser"));
         assertEquals("COMPANY_ADMIN", session.getAttribute("userRole"));
     }

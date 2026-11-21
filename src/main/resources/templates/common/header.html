@@ -54,9 +54,9 @@
                     </a>
                 </li>
                 <!-- Menu Cổng Tuyển Dụng dành cho Company Admin -->
-                <li class="nav-item" th:if="${session.currentUser != null and (session.currentUser.role.name() == 'COMPANY_ADMIN' or session.currentUser.role.name() == 'SUPER_ADMIN')}">
-                    <a class="nav-link text-warning fw-bold text-nowrap" th:href="@{/employer/jobs}">
-                        <i class="bi bi-building-gear me-1"></i>Quản Lý Tuyển Dụng
+                <li class="nav-item" th:if="${session.currentUser != null and session.currentUser.role.name() == 'COMPANY_ADMIN'}">
+                    <a class="nav-link text-warning fw-bold text-nowrap" th:href="@{/employer/dashboard}">
+                        <i class="bi bi-grid-1x2-fill me-1"></i>Tổng Quan Doanh Nghiệp
                     </a>
                 </li>
                 <!-- Menu Dành riêng cho Super Admin -->

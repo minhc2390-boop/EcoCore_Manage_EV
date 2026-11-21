@@ -99,8 +99,8 @@
             <i data-lucide="shield" style="width:14px;height:14px;vertical-align:-2px;margin-right:4px;"></i>Quản trị sàn
           </a>
           <a th:if="${session.currentUser.role.name() == 'COMPANY_ADMIN'}" 
-             th:href="@{/employer/jobs}" class="btn btn-outline text-nowrap" style="border-color: #0284c7; color: #0284c7; font-size: 13px; padding: 6px 12px; white-space: nowrap;">
-            <i data-lucide="layout-dashboard" style="width:14px;height:14px;vertical-align:-2px;margin-right:4px;"></i>Quản lý tin
+             th:href="@{/employer/dashboard}" class="btn btn-outline text-nowrap" style="border-color: #0284c7; color: #0284c7; font-size: 13px; padding: 6px 12px; white-space: nowrap;">
+            <i data-lucide="layout-dashboard" style="width:14px;height:14px;vertical-align:-2px;margin-right:4px;"></i>Tổng quan
           </a>
         </th:block>
         <th:block th:if="${session.currentUser != null}">
