@@ -265,14 +265,41 @@
     // Hỗ trợ toggle dropdown tùy biến (dành cho trang index.html không dùng Bootstrap dropdown)
     const notifBtn = document.getElementById('notifDropdownBtn');
     const notifMenu = document.getElementById('notifDropdownMenu');
+    const notifClose = document.getElementById('btnCloseNotif');
+
+    function closeNotifDropdown() {
+      if (notifMenu && !notifMenu.classList.contains('d-none')) {
+        notifMenu.classList.add('d-none');
+      }
+    }
+
     if (notifBtn && notifMenu) {
       notifBtn.addEventListener('click', function (e) {
+        e.preventDefault();
         e.stopPropagation();
         notifMenu.classList.toggle('d-none');
       });
+
+      // Nút Đóng (✕)
+      if (notifClose) {
+        notifClose.addEventListener('click', function (e) {
+          e.preventDefault();
+          e.stopPropagation();
+          closeNotifDropdown();
+        });
+      }
+
+      // Đóng khi click ra bên ngoài bảng thông báo
       document.addEventListener('click', function (e) {
-        if (!notifMenu.contains(e.target) && e.target !== notifBtn) {
-          notifMenu.classList.add('d-none');
+        if (!notifMenu.contains(e.target) && !notifBtn.contains(e.target) && e.target !== notifBtn) {
+          closeNotifDropdown();
+        }
+      });
+
+      // Đóng khi nhấn phím ESC
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' || e.key === 'Esc') {
+          closeNotifDropdown();
         }
       });
     }

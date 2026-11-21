@@ -78,7 +78,10 @@
             <div id="notifDropdownMenu" class="notif-menu-panel d-none" style="position: absolute; right: 0; top: 100%; margin-top: 8px; width: 320px; max-height: 400px; background: #fff; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.15); border: 1px solid #e2e8f0; z-index: 1000; overflow-y: auto;">
               <div style="padding: 12px 16px; border-bottom: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; background: #f8fafc; border-radius: 12px 12px 0 0;">
                 <span style="font-weight: 700; font-size: 13px; color: #0f172a;"><i data-lucide="bell" style="width: 14px; height: 14px; vertical-align: -2px; margin-right: 4px;"></i>Thông Báo Realtime</span>
-                <button type="button" id="btnClearNotif" style="background: none; border: none; font-size: 11.5px; color: #64748b; cursor: pointer; padding: 0;">Đã đọc hết</button>
+                <div style="display: flex; align-items: center; gap: 8px;">
+                  <button type="button" id="btnClearNotif" style="background: none; border: none; font-size: 11.5px; color: #64748b; cursor: pointer; padding: 0;">Đã đọc hết</button>
+                  <button type="button" id="btnCloseNotif" style="background: #f1f5f9; border: 1px solid #cbd5e1; font-size: 11px; color: #475569; cursor: pointer; width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; line-height: 1; transition: all 0.15s ease;" title="Đóng bảng thông báo" onmouseover="this.style.background='#e2e8f0';this.style.color='#0f172a'" onmouseout="this.style.background='#f1f5f9';this.style.color='#475569'">✕</button>
+                </div>
               </div>
               <div id="notifList" style="padding: 8px;">
                 <div id="notifEmpty" style="text-align: center; color: #94a3b8; font-size: 12.5px; padding: 20px 0;">Không có thông báo mới</div>

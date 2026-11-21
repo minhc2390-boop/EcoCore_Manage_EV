@@ -84,7 +84,10 @@
                         <div class="dropdown-menu dropdown-menu-end shadow-lg border-0 rounded-4 p-0 mt-2" aria-labelledby="notifDropdownBtn" style="width: 320px; max-height: 400px; overflow-y: auto;">
                             <div class="p-3 border-bottom d-flex justify-content-between align-items-center bg-light rounded-top-4">
                                 <h6 class="mb-0 fw-bold text-dark" style="font-size: 13.5px;"><i class="bi bi-bell me-1 text-primary"></i>Thông Báo Realtime</h6>
-                                <button class="btn btn-link btn-sm text-decoration-none p-0 text-muted" id="btnClearNotif" style="font-size: 11px;">Đã đọc hết</button>
+                                <div class="d-flex align-items-center gap-2">
+                                    <button class="btn btn-link btn-sm text-decoration-none p-0 text-muted" id="btnClearNotif" style="font-size: 11px;">Đã đọc hết</button>
+                                    <button type="button" class="btn btn-light btn-sm text-muted rounded-circle p-0 d-flex align-items-center justify-content-center" data-bs-toggle="dropdown" style="width: 22px; height: 22px; font-size: 11px; border: 1px solid #dee2e6;" title="Đóng thông báo">✕</button>
+                                </div>
                             </div>
                             <div id="notifList" class="p-2">
                                 <div class="text-center text-muted py-3 small" id="notifEmpty">Không có thông báo mới</div>
