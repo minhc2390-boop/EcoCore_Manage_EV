@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Việc Làm Cần Thơ | Tìm kiếm việc làm</title>
+<style>
+:root{--blue:#2563eb;--blue-dark:#1d4ed8;--ink:#172033;--muted:#64748b;--line:#e5eaf2;--bg:#f5f7fb;--white:#fff;--green:#0f9f6e}
+*{box-sizing:border-box}body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--ink)}
+header{background:#fff;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:5}
+.nav{max-width:1160px;margin:auto;padding:17px 22px;display:flex;align-items:center;justify-content:space-between;gap:20px}
+.logo{font-size:22px;font-weight:800;color:var(--blue)}.logo span{color:#172033}
+nav{display:flex;gap:24px;align-items:center}nav a{color:#475569;text-decoration:none;font-size:14px;font-weight:600}nav a:hover{color:var(--blue)}
+.container{max-width:1160px;margin:34px auto;padding:0 22px}
+.hero{background:linear-gradient(120deg,#173b78,#2563eb);color:#fff;padding:36px;border-radius:18px;margin-bottom:26px}
+.hero h1{font-size:30px;margin:0 0 10px}.hero p{margin:0;color:#dbeafe;line-height:1.6}
+.search-panel{background:#fff;border:1px solid var(--line);border-radius:14px;padding:20px;margin-top:-5px;box-shadow:0 8px 24px #1720330a}
+.filters{display:grid;grid-template-columns:1.2fr 1fr 1fr auto;gap:13px;align-items:end}
+.field label{display:block;font-size:13px;font-weight:700;margin-bottom:8px;color:#334155}
+select,input{width:100%;height:44px;border:1px solid #d8e0eb;border-radius:9px;padding:0 12px;background:#fff;color:#172033;font-size:14px;outline:none}
+select:focus,input:focus{border-color:var(--blue);box-shadow:0 0 0 3px #2563eb18}
+.btn{border:0;border-radius:9px;background:var(--blue);color:white;padding:0 20px;height:44px;font-weight:700;cursor:pointer}.btn:hover{background:var(--blue-dark)}
+.btn.light{background:#eff6ff;color:var(--blue)}.btn.light:hover{background:#dbeafe}
+.content-head{display:flex;justify-content:space-between;align-items:center;margin:30px 0 15px;gap:12px}.content-head h2{font-size:21px;margin:0}.muted{color:var(--muted);font-size:13px}
+.layout{display:grid;grid-template-columns: minmax(0,1fr) 290px;gap:20px}
+.jobs{display:grid;gap:13px}
+.job-card,.side-card,.company-card{background:#fff;border:1px solid var(--line);border-radius:13px;padding:18px}
+.job-top{display:flex;gap:14px;align-items:flex-start}.company-logo{width:48px;height:48px;flex:0 0 48px;border-radius:12px;background:#eff6ff;color:var(--blue);display:grid;place-items:center;font-weight:800;font-size:18px}
+.job-card h3{margin:1px 0 7px;font-size:17px}.job-card h3 button{font:inherit;color:var(--ink);background:none;border:0;padding:0;cursor:pointer;text-align:left}.job-card h3 button:hover{color:var(--blue)}
+.company-name{font-size:13px;color:var(--muted);margin-bottom:10px}.tags{display:flex;gap:8px;flex-wrap:wrap}.tag{background:#f1f5f9;color:#475569;border-radius:20px;padding:6px 9px;font-size:12px}
+.job-bottom{display:flex;justify-content:space-between;align-items:center;margin-top:15px;padding-top:13px;border-top:1px solid #f0f2f6;gap:10px}.salary{font-weight:700;color:var(--green);font-size:14px}
+.side-card h3{font-size:16px;margin:0 0 13px}.side-card p{font-size:13px;line-height:1.6;color:var(--muted)}
+.company-list{display:grid;gap:10px}.company-row{display:flex;justify-content:space-between;font-size:13px;padding:9px 0;border-bottom:1px solid #f1f3f7}.company-row:last-child{border:0}
+.empty{padding:35px;text-align:center;background:#fff;border:1px dashed #cbd5e1;border-radius:12px;color:var(--muted)}
+footer{text-align:center;color:#94a3b8;font-size:12px;padding:35px}
+.modal-backdrop{display:none;position:fixed;inset:0;background:#0f172a88;z-index:10;padding:20px;overflow:auto}.modal-backdrop.show{display:block}
+.modal{max-width:720px;background:#fff;border-radius:16px;margin:5vh auto;padding:25px;position:relative}.close{position:absolute;right:18px;top:15px;border:0;background:#f1f5f9;border-radius:8px;width:34px;height:34px;font-size:20px;cursor:pointer}
+.profile-head{display:flex;gap:15px;align-items:center;padding:8px 35px 20px 0;border-bottom:1px solid var(--line)}.profile-head .company-logo{width:64px;height:64px;font-size:23px}.profile-head h2{margin:0 0 6px}.profile-section{padding-top:18px}.profile-section h3{font-size:16px;margin:0 0 10px}.branch{padding:10px 12px;background:#f8fafc;border-radius:9px;margin:8px 0;font-size:14px}.profile-jobs{display:grid;gap:8px}.profile-job{padding:12px;border:1px solid var(--line);border-radius:9px;font-size:14px}
+@media(max-width:800px){.filters{grid-template-columns:1fr 1fr}.layout{grid-template-columns:1fr}.hero{padding:26px}.hero h1{font-size:24px}}
+@media(max-width:520px){nav{display:none}.filters{grid-template-columns:1fr}.content-head{align-items:flex-start;flex-direction:column}.job-bottom{align-items:flex-start;flex-direction:column}}
+</style>
+</head>
+<body>
+<header><div class="nav"><div class="logo">JOB<span>CT</span></div><nav><a href="#">Trang chủ</a><a href="#jobs">Việc làm</a><a href="#companies">Công ty</a><a href="#about">Giới thiệu</a></nav><button class="btn light" onclick="document.getElementById('jobs').scrollIntoView({behavior:'smooth'})">Tìm việc ngay</button></div></header>
+<main class="container">
+<section class="hero"><h1>Tìm công việc phù hợp tại Cần Thơ</h1><p>Khám phá cơ hội nghề nghiệp từ các công ty và khu vực bạn quan tâm.</p></section>
+<section class="search-panel" aria-label="Bộ lọc việc làm">
+<div class="filters">
+ <div class="field"><label for="companyFilter">Công ty</label><select id="companyFilter"><option value="">Tất cả công ty</option><option>Highlands Coffee</option><option>FPT</option><option>The Coffee House</option><option>Siêu thị GO!</option></select></div>
+ <div class="field"><label for="districtFilter">Quận / Huyện</label><select id="districtFilter"><option value="">Tất cả khu vực</option><option>Ninh Kiều</option><option>Bình Thủy</option><option>Cái Răng</option><option>Ô Môn</option><option>Thốt Nốt</option><option>Phong Điền</option><option>Thới Lai</option><option>Cờ Đỏ</option><option>Vĩnh Thạnh</option></select></div>
+ <div class="field"><label for="sortFilter">Sắp xếp theo</label><select id="sortFilter"><option value="newest">Mới đăng trước</option><option value="salaryHigh">Lương cao đến thấp</option><option value="salaryLow">Lương thấp đến cao</option><option value="title">Tên công việc A–Z</option></select></div>
+ <button class="btn" id="resetBtn">Xóa bộ lọc</button>
+</div>
+</section>
+<div class="content-head" id="jobs"><div><h2>Việc làm đang tuyển</h2><div class="muted" id="resultCount"></div></div><span class="muted">Địa điểm: Cần Thơ</span></div>
+<div class="layout"><section class="jobs" id="jobList"></section><aside>
+<div class="side-card" id="companies"><h3>Công ty nổi bật</h3><div class="company-list" id="companyList"></div></div>
+<div class="side-card" style="margin-top:15px" id="about"><h3>Mẹo tìm việc</h3><p>Chọn công ty và quận/huyện để thu hẹp kết quả. Bạn có thể kết hợp cả hai bộ lọc và thay đổi cách sắp xếp danh sách.</p></div>
+</aside></div>
+</main>
+<footer>© 2026 JOBCT – Giao diện minh họa chức năng tìm kiếm việc làm tại Cần Thơ.</footer>
+<div class="modal-backdrop" id="companyModal"><div class="modal"><button class="close" id="closeModal" aria-label="Đóng">×</button><div id="companyDetail"></div></div></div>
+<script>
+const jobs=[
+{id:1,title:"Nhân viên phục vụ",company:"Highlands Coffee",district:"Ninh Kiều",salary:7000000,displaySalary:"6 – 8 triệu/tháng",date:6,type:"Toàn thời gian",initial:"H"},
+{id:2,title:"Nhân viên pha chế",company:"Highlands Coffee",district:"Cái Răng",salary:7500000,displaySalary:"7 – 8 triệu/tháng",date:4,type:"Toàn thời gian",initial:"H"},
+{id:3,title:"Nhân viên kinh doanh",company:"FPT",district:"Ninh Kiều",salary:12000000,displaySalary:"10 – 14 triệu/tháng",date:2,type:"Toàn thời gian",initial:"F"},
+{id:4,title:"Kỹ thuật viên IT",company:"FPT",district:"Bình Thủy",salary:14000000,displaySalary:"12 – 16 triệu/tháng",date:1,type:"Toàn thời gian",initial:"F"},
+{id:5,title:"Thu ngân",company:"The Coffee House",district:"Ninh Kiều",salary:6500000,displaySalary:"6 – 7 triệu/tháng",date:3,type:"Bán thời gian",initial:"C"},
+{id:6,title:"Nhân viên kho",company:"Siêu thị GO!",district:"Cái Răng",salary:8000000,displaySalary:"7 – 9 triệu/tháng",date:5,type:"Toàn thời gian",initial:"G"},
+{id:7,title:"Chăm sóc khách hàng",company:"FPT",district:"Ô Môn",salary:9000000,displaySalary:"8 – 10 triệu/tháng",date:7,type:"Toàn thời gian",initial:"F"}
+];
+const companies={
+"Highlands Coffee":{initial:"H",intro:"Chuỗi cửa hàng cà phê phục vụ đồ uống và bánh tại Việt Nam.",branches:["Vincom Xuân Khánh – Ninh Kiều, Cần Thơ","Khu dân cư Hưng Phú – Cái Răng, Cần Thơ"]},
+"FPT":{initial:"F",intro:"Doanh nghiệp hoạt động trong lĩnh vực công nghệ, viễn thông và dịch vụ số.",branches:["Đường 30/4 – Ninh Kiều, Cần Thơ","Khu vực Bình Thủy – Cần Thơ"]},
+"The Coffee House":{initial:"C",intro:"Thương hiệu kinh doanh cà phê và dịch vụ đồ uống.",branches:["Đường Mậu Thân – Ninh Kiều, Cần Thơ"]},
+"Siêu thị GO!":{initial:"G",intro:"Trung tâm thương mại và bán lẻ hàng tiêu dùng.",branches:["Khu vực Cái Răng, Cần Thơ"]}
+};
+const $=id=>document.getElementById(id);
+function filteredJobs(){
+let list=jobs.filter(j=>(!$("companyFilter").value||j.company===$("companyFilter").value)&&(!$("districtFilter").value||j.district===$("districtFilter").value));
+const sort=$("sortFilter").value;
+if(sort==="salaryHigh")list.sort((a,b)=>b.salary-a.salary);
+if(sort==="salaryLow")list.sort((a,b)=>a.salary-b.salary);
+if(sort==="title")list.sort((a,b)=>a.title.localeCompare(b.title,"vi"));
+if(sort==="newest")list.sort((a,b)=>a.date-b.date);
+return list;
+}
+function render(){
+const list=filteredJobs();$("resultCount").textContent=`Tìm thấy ${list.length} công việc phù hợp`;
+$("jobList").innerHTML=list.length?list.map(j=>`<article class="job-card"><div class="job-top"><div class="company-logo">${j.initial}</div><div style="flex:1"><h3><button data-company="${j.company}">${j.title}</button></h3><div class="company-name">${j.company}</div><div class="tags"><span class="tag">⌖ ${j.district}, Cần Thơ</span><span class="tag">${j.type}</span><span class="tag">Đăng ${j.date} ngày trước</span></div></div></div><div class="job-bottom"><span class="salary">${j.displaySalary}</span><button class="btn light" data-company="${j.company}">Xem công ty</button></div></article>`).join(""):`<div class="empty">Không tìm thấy việc làm phù hợp. Hãy thử thay đổi bộ lọc.</div>`;
+$("companyList").innerHTML=Object.keys(companies).map(c=>`<div class="company-row"><a href="#" data-company="${c}" style="color:#2563eb;text-decoration:none;font-weight:600">${c}</a><span class="muted">${jobs.filter(j=>j.company===c).length} việc</span></div>`).join("");
+}
+function showCompany(name){
+const c=companies[name];const list=jobs.filter(j=>j.company===name);
+$("companyDetail").innerHTML=`<div class="profile-head"><div class="company-logo">${c.initial}</div><div><h2>${name}</h2><div class="muted">Hồ sơ công ty · Cần Thơ</div></div></div><section class="profile-section"><h3>Giới thiệu công ty</h3><p class="muted">${c.intro}</p></section><section class="profile-section"><h3>Chi nhánh tại Cần Thơ</h3>${c.branches.map(b=>`<div class="branch">📍 ${b}</div>`).join("")}</section><section class="profile-section"><h3>Việc làm đang tuyển (${list.length})</h3><div class="profile-jobs">${list.length?list.map(j=>`<div class="profile-job"><strong>${j.title}</strong><div class="muted">${j.district} · ${j.displaySalary}</div></div>`).join(""):"<div class='muted'>Hiện chưa có vị trí đang tuyển.</div>"}</div></section>`;
+$("companyModal").classList.add("show");
+}
+$("jobList").addEventListener("click",e=>{const b=e.target.closest("[data-company]");if(b)showCompany(b.dataset.company)});
+$("companyList").addEventListener("click",e=>{const b=e.target.closest("[data-company]");if(b){e.preventDefault();showCompany(b.dataset.company)}});
+["companyFilter","districtFilter","sortFilter"].forEach(id=>$(id).addEventListener("change",render));
+$("resetBtn").addEventListener("click",()=>{$("companyFilter").value="";$("districtFilter").value="";$("sortFilter").value="newest";render()});
+$("closeModal").addEventListener("click",()=>$("companyModal").classList.remove("show"));
+$("companyModal").addEventListener("click",e=>{if(e.target===$("companyModal"))$("companyModal").classList.remove("show")});
+render();
+</script>
+</body>
+</html>
