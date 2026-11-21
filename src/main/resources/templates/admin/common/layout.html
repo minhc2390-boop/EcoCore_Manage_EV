@@ -12,49 +12,6 @@
     <link rel="stylesheet" th:href="@{/css/employer.css}">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
     <style>
-        :root {
-            --admin-red: #dc2626;
-            --admin-dark: #0f172a;
-            --admin-gold: #f59e0b;
-        }
-        .admin-sidebar {
-            background: #090d16 !important;
-            border-right: 1px solid rgba(255,255,255,0.08);
-        }
-        .admin-sidebar .sidebar-brand {
-            border-bottom: 1px solid rgba(255,255,255,0.08);
-        }
-        .admin-sidebar .brand-logo-symbol {
-            background: linear-gradient(135deg, #dc2626, #991b1b) !important;
-            color: #fff;
-        }
-        .admin-badge {
-            background: rgba(220, 38, 38, 0.2);
-            color: #f87171;
-            font-size: 10px;
-            font-weight: 800;
-            letter-spacing: 0.5px;
-            padding: 3px 8px;
-            border-radius: 6px;
-            border: 1px solid rgba(220, 38, 38, 0.4);
-            display: inline-block;
-        }
-        .admin-sidebar .employer-nav-link {
-            color: #94a3b8;
-        }
-        .admin-sidebar .employer-nav-link:hover {
-            color: #fff;
-            background: rgba(255,255,255,0.06);
-        }
-        .admin-sidebar .employer-nav-link.active {
-            background: linear-gradient(135deg, rgba(220, 38, 38, 0.25), rgba(153, 27, 27, 0.15)) !important;
-            color: #fca5a5 !important;
-            border-left: 3px solid #dc2626;
-            font-weight: 700;
-        }
-        .admin-sidebar .nav-section-label {
-            color: #64748b;
-        }
         .badge-pending {
             background: #fffbeb;
             color: #b45309;
@@ -84,16 +41,16 @@
         }
     </style>
 </head>
-<body>
+<body class="employer-portal">
 
-<aside th:fragment="sidebar(activeMenu)" class="employer-sidebar admin-sidebar" id="employerSidebar">
+<aside th:fragment="sidebar(activeMenu)" class="employer-sidebar" id="employerSidebar">
     <div class="sidebar-brand">
-        <div class="brand-logo-symbol">
+        <div class="brand-logo-symbol" style="background: #dc2626; color: #fff;">
             <i class="bi bi-shield-lock-fill"></i>
         </div>
         <div>
-            <div class="brand-title-text text-white">JOB <span class="brand-title-accent text-danger">PORTAL</span></div>
-            <span class="admin-badge mt-1"><i class="bi bi-patch-check-fill me-1"></i>SUPER ADMIN</span>
+            <div class="brand-title-text">JOB <span class="brand-title-accent text-danger">PORTAL</span></div>
+            <span class="badge mt-1" style="background: rgba(220, 38, 38, 0.08); color: #dc2626; font-size: 10.5px; font-weight: 700;">Super Admin</span>
         </div>
     </div>
 
@@ -138,14 +95,14 @@
         </a>
     </div>
 
-    <div class="employer-sidebar-footer" style="background: rgba(0,0,0,0.3); border-top: 1px solid rgba(255,255,255,0.06);">
+    <div class="employer-sidebar-footer">
         <div class="d-flex align-items-center justify-content-between">
             <div class="d-flex align-items-center gap-2 overflow-hidden">
                 <div class="rounded-circle d-flex align-items-center justify-content-center fw-bold text-white" style="width: 36px; height: 36px; min-width: 36px; background: #dc2626;">
                     <i class="bi bi-shield-shaded"></i>
                 </div>
                 <div class="overflow-hidden">
-                    <div class="fw-bold text-truncate small text-white" th:text="${session.currentUser != null ? session.currentUser.username : 'superadmin'}">superadmin</div>
+                    <div class="fw-bold text-truncate small" style="color: var(--navy-primary);" th:text="${session.currentUser != null ? session.currentUser.username : 'superadmin'}">superadmin</div>
                     <div class="text-secondary" style="font-size: 11px;">Quản trị tối cao sàn</div>
                 </div>
             </div>
@@ -175,32 +132,48 @@
 
         <div class="d-flex align-items-center gap-2.5">
             <span class="badge bg-danger-subtle text-danger px-3 py-1.5 rounded-pill fw-semibold small d-none d-sm-inline">
-                <i class="bi bi-shield-check me-1"></i>Chế độ Giám sát Sàn Cần Thơ
+                <i class="bi bi-shield-check me-1"></i>Chế độ Giám sát Sàn
             </span>
 
-            <a th:href="@{/profile}" class="topbar-user-badge text-decoration-none">
-                <div class="user-avatar-circle" style="background:#dc2626;">
-                    <i class="bi bi-shield-fill"></i>
-                </div>
-                <div class="d-none d-md-block text-start">
-                    <div class="user-name text-truncate" style="max-width: 120px;" th:text="${session.currentUser != null ? session.currentUser.username : 'superadmin'}">superadmin</div>
-                    <div class="user-role text-danger" style="font-size: 10.5px; font-weight: 700;">SUPER_ADMIN</div>
-                </div>
-            </a>
+            <div class="dropdown">
+                <button class="btn btn-light bg-white border rounded-pill d-flex align-items-center gap-2 py-1 px-3 dropdown-toggle shadow-sm" type="button" data-bs-toggle="dropdown">
+                    <div class="rounded-circle d-flex align-items-center justify-content-center fw-bold" style="width: 28px; height: 28px; background: rgba(220, 38, 38, 0.1); color: #dc2626;">
+                        <i class="bi bi-shield-shaded"></i>
+                    </div>
+                    <span class="small fw-bold" style="color: var(--navy-primary);" th:text="${session.currentUser != null ? session.currentUser.username : 'superadmin'}">superadmin</span>
+                </button>
+                <ul class="dropdown-menu dropdown-menu-end shadow border-0 rounded-3 mt-2">
+                    <li><a class="dropdown-item py-2" th:href="@{/profile}"><i class="bi bi-person me-2 text-primary"></i>Hồ sơ quản trị</a></li>
+                    <li><a class="dropdown-item py-2" th:href="@{/employer/dashboard}"><i class="bi bi-briefcase me-2 text-primary"></i>Cổng tuyển dụng</a></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><a class="dropdown-item py-2 text-danger" th:href="@{/logout}"><i class="bi bi-box-arrow-right me-2"></i>Đăng xuất</a></li>
+                </ul>
+            </div>
         </div>
     </div>
 </div>
 
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const toggleBtn = document.getElementById('sidebarToggleBtn');
-        const sidebar = document.getElementById('employerSidebar');
-        if (toggleBtn && sidebar) {
-            toggleBtn.addEventListener('click', function () {
-                sidebar.classList.toggle('show');
-            });
-        }
-    });
-</script>
+<div th:fragment="scripts">
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var sidebar = document.getElementById('employerSidebar');
+            var overlay = document.getElementById('sidebarOverlay');
+            var toggleBtn = document.getElementById('sidebarToggleBtn');
+
+            if (toggleBtn && sidebar && overlay) {
+                toggleBtn.addEventListener('click', function () {
+                    sidebar.classList.toggle('show');
+                    overlay.classList.toggle('show');
+                });
+                overlay.addEventListener('click', function () {
+                    sidebar.classList.remove('show');
+                    overlay.classList.remove('show');
+                });
+            }
+        });
+    </script>
+</div>
 </body>
 </html>

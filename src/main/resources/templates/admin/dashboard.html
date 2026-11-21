@@ -10,16 +10,16 @@
         <div th:replace="~{admin/common/layout :: topbar('Tổng Quan Sàn Tuyển Dụng Sinh Viên TP. Cần Thơ')}"></div>
 
         <div class="employer-content">
-            <!-- Banner chào mừng Super Admin -->
-            <div class="portal-card mb-4" style="background: linear-gradient(135deg, #090d16 0%, #1e1b4b 50%, #881337 100%); color: #fff; border: none;">
+            <!-- Banner chào mừng Super Admin (Giao diện trắng tinh tế, đồng bộ toàn hệ thống) -->
+            <div class="portal-card mb-4 bg-white border shadow-sm">
                 <div class="portal-card-body p-4">
                     <div class="row align-items-center">
                         <div class="col-12 col-md-8">
-                            <span class="badge bg-danger px-3 py-1.5 rounded-pill mb-2 fw-bold text-uppercase" style="font-size: 11px;">
-                                <i class="bi bi-shield-lock me-1"></i>Hệ Thống Kiểm Soát Sàn UniWork Cần Thơ
+                            <span class="badge bg-danger-subtle text-danger border border-danger-subtle px-3 py-1.5 rounded-pill mb-2 fw-bold" style="font-size: 11px;">
+                                <i class="bi bi-shield-lock-fill me-1"></i>HỆ THỐNG KIỂM SOÁT SÀN UNIWORK CẦN THƠ
                             </span>
-                            <h3 class="fw-bold text-white mb-2">Xin chào, <span th:text="${superAdmin.username}">superadmin</span>!</h3>
-                            <p class="text-white-50 mb-0" style="font-size: 13.5px; line-height: 1.6;">
+                            <h3 class="fw-bold text-dark mb-2">Xin chào, <span th:text="${superAdmin.username}">superadmin</span>!</h3>
+                            <p class="text-secondary mb-0" style="font-size: 14px; line-height: 1.6;">
                                 Giám sát toàn bộ hoạt động tuyển dụng sinh viên trên 9 quận/huyện TP. Cần Thơ. Kiểm duyệt hồ sơ doanh nghiệp mới, phòng chống các bẫy tuyển dụng đa cấp và bảo vệ quyền lợi sinh viên.
                             </p>
                         </div>
