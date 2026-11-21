@@ -190,6 +190,22 @@ img {
   padding: 0 24px;
 }
 
+/* Utility classes */
+.d-none {
+  display: none !important;
+}
+
+.text-truncate {
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+}
+
+.notif-menu-panel.d-none,
+#notifDropdownMenu.d-none {
+  display: none !important;
+}
+
 .header-container {
   width: 100%;
   max-width: 1440px;

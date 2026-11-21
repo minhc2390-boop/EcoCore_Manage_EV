@@ -268,8 +268,9 @@
     const notifClose = document.getElementById('btnCloseNotif');
 
     function closeNotifDropdown() {
-      if (notifMenu && !notifMenu.classList.contains('d-none')) {
+      if (notifMenu) {
         notifMenu.classList.add('d-none');
+        notifMenu.style.display = 'none';
       }
     }
 
@@ -277,7 +278,13 @@
       notifBtn.addEventListener('click', function (e) {
         e.preventDefault();
         e.stopPropagation();
-        notifMenu.classList.toggle('d-none');
+        if (notifMenu.classList.contains('d-none') || notifMenu.style.display === 'none') {
+          notifMenu.classList.remove('d-none');
+          notifMenu.style.display = 'block';
+        } else {
+          notifMenu.classList.add('d-none');
+          notifMenu.style.display = 'none';
+        }
       });
 
       // Nút Đóng (✕)

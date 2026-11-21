@@ -49,7 +49,7 @@
           <a th:href="@{/register}" class="nav-link mobile-only-auth"><i data-lucide="user-plus" style="width:16px;height:16px;vertical-align:-2px;margin-right:6px;"></i>Đăng ký</a>
         </th:block>
         <th:block th:if="${session.currentUser != null}">
-          <a th:href="@{/profile}" class="nav-link mobile-only-auth"><i data-lucide="user" style="width:16px;height:16px;vertical-align:-2px;margin-right:6px;"></i>Hồ sơ: <span th:text="${session.currentUser.fullName != null ? session.currentUser.fullName : session.currentUser.username}">Tài khoản</span></a>
+          <a th:href="@{/profile}" class="nav-link mobile-only-auth"><i data-lucide="user" style="width:16px;height:16px;vertical-align:-2px;margin-right:6px;"></i>Hồ sơ: <span th:text="${session.currentUser.username}">Tài khoản</span></a>
           <a th:if="${session.currentUser.role.name() == 'COMPANY_ADMIN' or session.currentUser.role.name() == 'SUPER_ADMIN'}" th:href="@{/employer/jobs}" class="nav-link mobile-only-auth"><i data-lucide="layout-dashboard" style="width:16px;height:16px;vertical-align:-2px;margin-right:6px;"></i>Cổng tuyển dụng</a>
           <a th:href="@{/logout}" class="nav-link mobile-only-auth" style="color:#ef4444;"><i data-lucide="log-out" style="width:16px;height:16px;vertical-align:-2px;margin-right:6px;"></i>Đăng xuất</a>
         </th:block>
@@ -71,7 +71,7 @@
         <th:block th:if="${session.currentUser != null}">
           <!-- Chuông Thông Báo Realtime SSE -->
           <div class="notif-dropdown-wrapper" style="position: relative;">
-            <button type="button" class="btn btn-outline" id="notifDropdownBtn" style="padding: 6px 10px; border-radius: 50%; width: 36px; height: 36px; display: inline-flex; align-items: center; justify-content: center; position: relative;" title="Thông báo thời gian thực">
+            <button type="button" class="btn btn-outline" id="notifDropdownBtn" style="padding: 6px 10px; border-radius: 50%; width: 36px; height: 36px; display: inline-flex; align-items: center; justify-content: center; position: relative;" title="Thông báo thời gian thực" onclick="var m=document.getElementById('notifDropdownMenu');if(m){if(m.classList.contains('d-none')||m.style.display==='none'){m.classList.remove('d-none');m.style.display='block';}else{m.classList.add('d-none');m.style.display='none';}}">
               <i data-lucide="bell" style="width: 16px; height: 16px;"></i>
               <span id="notifBadge" class="d-none" style="position: absolute; top: -4px; right: -4px; background: #ef4444; color: #fff; font-size: 10px; font-weight: 700; padding: 2px 5px; border-radius: 9999px; line-height: 1;">0</span>
             </button>
@@ -80,7 +80,7 @@
                 <span style="font-weight: 700; font-size: 13px; color: #0f172a;"><i data-lucide="bell" style="width: 14px; height: 14px; vertical-align: -2px; margin-right: 4px;"></i>Thông Báo Realtime</span>
                 <div style="display: flex; align-items: center; gap: 8px;">
                   <button type="button" id="btnClearNotif" style="background: none; border: none; font-size: 11.5px; color: #64748b; cursor: pointer; padding: 0;">Đã đọc hết</button>
-                  <button type="button" id="btnCloseNotif" style="background: #f1f5f9; border: 1px solid #cbd5e1; font-size: 11px; color: #475569; cursor: pointer; width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; line-height: 1; transition: all 0.15s ease;" title="Đóng bảng thông báo" onmouseover="this.style.background='#e2e8f0';this.style.color='#0f172a'" onmouseout="this.style.background='#f1f5f9';this.style.color='#475569'">✕</button>
+                  <button type="button" id="btnCloseNotif" onclick="var m=document.getElementById('notifDropdownMenu');if(m){m.classList.add('d-none');m.style.display='none';}" style="background: #f1f5f9; border: 1px solid #cbd5e1; font-size: 11px; color: #475569; cursor: pointer; width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; line-height: 1; transition: all 0.15s ease;" title="Đóng bảng thông báo" onmouseover="this.style.background='#e2e8f0';this.style.color='#0f172a'" onmouseout="this.style.background='#f1f5f9';this.style.color='#475569'">✕</button>
                 </div>
               </div>
               <div id="notifList" style="padding: 8px;">
@@ -100,10 +100,10 @@
           </a>
         </th:block>
         <th:block th:if="${session.currentUser != null}">
-          <a th:href="@{/profile}" class="btn btn-outline text-nowrap" style="display:inline-flex;align-items:center;gap:6px;font-weight:600;padding:6px 12px;font-size:13px;white-space:nowrap;" th:title="${session.currentUser.fullName != null ? session.currentUser.fullName : session.currentUser.username}">
+          <a th:href="@{/profile}" class="btn btn-outline text-nowrap" style="display:inline-flex;align-items:center;gap:6px;font-weight:600;padding:6px 12px;font-size:13px;white-space:nowrap;" th:title="${session.currentUser.username}">
             <i data-lucide="user" style="width:14px;height:14px;flex-shrink:0;"></i>
             <span class="user-display-name text-truncate" style="max-width: 130px; display: inline-block; vertical-align: middle;" 
-                  th:text="${session.currentUser.fullName != null ? session.currentUser.fullName : session.currentUser.username}">Tài khoản</span>
+                  th:text="${session.currentUser.username}">Tài khoản</span>
           </a>
           <a th:href="@{/logout}" class="btn btn-outline text-nowrap" style="color:#ef4444;border-color:rgba(239,68,68,0.3);padding:6px 10px;font-size:13px;white-space:nowrap;" title="Đăng xuất khỏi hệ thống">
             <i data-lucide="log-out" style="width:14px;height:14px;vertical-align:-2px;"></i>
