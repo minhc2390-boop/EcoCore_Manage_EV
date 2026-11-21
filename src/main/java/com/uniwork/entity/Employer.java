@@ -23,7 +23,7 @@ public class Employer {
     @Column(nullable = false, length = 150)
     private String companyName;
 
-    @Column(length = 255)
+    @Column(columnDefinition = "NVARCHAR(MAX)")
     private String companyLogo;
 
     @Column(length = 150)

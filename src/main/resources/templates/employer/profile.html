@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="vi" xmlns:th="http://www.thymeleaf.org">
 <head th:replace="~{employer/common/layout :: head('Hồ sơ doanh nghiệp')}"></head>
 <body class="employer-portal">
@@ -43,25 +43,51 @@
                             <div class="col-12 col-lg-4">
                                 <div class="portal-card h-100">
                                     <div class="portal-card-header">
-                                        <h6 class="fw-bold mb-0">Logo & Nhận diện</h6>
+                                        <h6 class="fw-bold mb-0"><i class="bi bi-image me-1.5 text-primary"></i>Logo & Nhận diện</h6>
                                     </div>
                                     <div class="portal-card-body text-center">
+                                        <!-- Vùng xem trước Logo -->
                                         <div class="mx-auto mb-3 position-relative" style="width: 120px; height: 120px;">
                                             <img id="logoPreviewImg" th:src="${employer != null and employer.companyLogo != null and !employer.companyLogo.isEmpty() ? employer.companyLogo : 'https://images.unsplash.com/photo-1549923746-c502d488b3ea?auto=format&fit=crop&w=300&q=80'}"
                                                  alt="Logo công ty" class="w-100 h-100 rounded-4 object-fit-cover border shadow-sm"
                                                  onerror="this.src='https://images.unsplash.com/photo-1549923746-c502d488b3ea?auto=format&fit=crop&w=300&q=80'">
+                                            <span class="position-absolute bottom-0 end-0 badge rounded-circle bg-primary p-2 border border-2 border-white shadow-sm" title="Logo thương hiệu">
+                                                <i class="bi bi-camera-fill text-white" style="font-size: 11px;"></i>
+                                            </span>
                                         </div>
 
+                                        <!-- Vùng Kéo & Thả (Drag & Drop) Ảnh Logo -->
+                                        <div class="upload-dropzone mb-3 text-center">
+                                            <input type="file" id="logoFileInput" accept="image/png, image/jpeg, image/jpg, image/webp, image/svg+xml" class="d-none">
+                                            <div class="dropzone-prompt" id="dropzonePrompt" title="Nhấp hoặc kéo thả tệp ảnh vào đây">
+                                                <i class="bi bi-cloud-arrow-up text-primary fs-2 d-block mb-1"></i>
+                                                <div class="fw-bold text-dark small">Kéo & thả ảnh logo vào đây</div>
+                                                <div class="text-secondary my-1" style="font-size: 11.5px;">hoặc <span class="text-primary text-decoration-underline fw-bold">Chọn tệp từ thiết bị</span></div>
+                                                <div class="text-muted" style="font-size: 10.5px;">PNG, JPG, WEBP, SVG (Tối đa 5MB)</div>
+                                            </div>
+
+                                            <!-- Thanh tiến trình upload -->
+                                            <div id="uploadProgress" class="progress mt-2 d-none" style="height: 5px;">
+                                                <div class="progress-bar progress-bar-striped progress-bar-animated bg-primary" role="progressbar" style="width: 100%"></div>
+                                            </div>
+                                            <!-- Thông báo trạng thái upload -->
+                                            <div id="uploadStatusMsg" class="small mt-1.5 fw-semibold d-none"></div>
+                                        </div>
+
+                                        <!-- Trường Đường dẫn Logo (URL) hỗ trợ dán link trực tiếp hoặc tự cập nhật sau khi kéo thả -->
                                         <div class="mb-3 text-start">
-                                            <label class="form-label small">Đường dẫn Logo (URL)</label>
-                                            <input type="url" class="form-control form-control-sm" name="companyLogo" id="companyLogoInput"
-                                                   th:value="${employer != null ? employer.companyLogo : ''}"
-                                                   placeholder="https://example.com/logo.png">
-                                            <div class="text-secondary mt-1" style="font-size: 11px;">Nhập đường dẫn ảnh logo chính thức (JPG, PNG, SVG).</div>
+                                            <label class="form-label small fw-semibold">Đường dẫn Logo (URL)</label>
+                                            <div class="input-group input-group-sm">
+                                                <span class="input-group-text bg-light text-muted"><i class="bi bi-link-45deg"></i></span>
+                                                <input type="text" class="form-control" name="companyLogo" id="companyLogoInput"
+                                                       th:value="${employer != null ? employer.companyLogo : ''}"
+                                                       placeholder="Tự động điền khi tải ảnh hoặc nhập URL...">
+                                            </div>
+                                            <div class="text-secondary mt-1" style="font-size: 11px;">Hệ thống tự động cập nhật URL khi kéo thả ảnh, hoặc bạn có thể nhập link trực tiếp.</div>
                                         </div>
 
                                         <div class="p-3 bg-light rounded-3 text-start border">
-                                            <div class="small fw-bold mb-1" style="color: var(--navy-primary);">Doanh nghiệp Job Portal</div>
+                                            <div class="small fw-bold mb-1" style="color: var(--navy-primary);"><i class="bi bi-patch-check-fill text-success me-1"></i>Doanh nghiệp Job Portal</div>
                                             <div class="text-secondary" style="font-size: 12px;">Hồ sơ công ty được hiển thị ưu tiên trên sàn tuyển dụng Job Portal Cần Thơ.</div>
                                         </div>
                                     </div>
@@ -237,6 +263,124 @@
                     if (livePreviewLogo) livePreviewLogo.src = url;
                 }
             });
+        }
+
+        // ==========================================
+        // Xử lý Kéo & Thả (Drag & Drop) và Upload Logo
+        // ==========================================
+        var dropzone = document.getElementById('dropzonePrompt');
+        var fileInput = document.getElementById('logoFileInput');
+        var uploadProgress = document.getElementById('uploadProgress');
+        var uploadStatusMsg = document.getElementById('uploadStatusMsg');
+
+        if (dropzone && fileInput) {
+            // Click vào dropzone để mở hộp thoại chọn tệp
+            dropzone.addEventListener('click', function () {
+                fileInput.click();
+            });
+
+            // Khi người dùng chọn tệp từ dialog
+            fileInput.addEventListener('change', function () {
+                if (fileInput.files && fileInput.files[0]) {
+                    handleLogoUpload(fileInput.files[0]);
+                }
+            });
+
+            // Hiệu ứng khi kéo tệp vào vùng dropzone
+            ['dragenter', 'dragover'].forEach(function (eventName) {
+                dropzone.addEventListener(eventName, function (e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    dropzone.classList.add('drag-active');
+                }, false);
+            });
+
+            ['dragleave', 'drop'].forEach(function (eventName) {
+                dropzone.addEventListener(eventName, function (e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    dropzone.classList.remove('drag-active');
+                }, false);
+            });
+
+            // Khi thả tệp vào dropzone
+            dropzone.addEventListener('drop', function (e) {
+                var dt = e.dataTransfer;
+                var files = dt.files;
+                if (files && files.length > 0) {
+                    handleLogoUpload(files[0]);
+                }
+            }, false);
+        }
+
+        function handleLogoUpload(file) {
+            if (!file) return;
+
+            // Kiểm tra định dạng ảnh
+            if (!file.type.match('image.*')) {
+                showUploadStatus('Vui lòng chọn tệp định dạng hình ảnh (PNG, JPG, SVG, WEBP)!', false);
+                return;
+            }
+
+            // Kiểm tra dung lượng (tối đa 5MB)
+            if (file.size > 5 * 1024 * 1024) {
+                showUploadStatus('Dung lượng ảnh vượt quá 5MB. Vui lòng chọn ảnh nhỏ hơn!', false);
+                return;
+            }
+
+            // Xem trước ngay lập tức bằng FileReader (local preview)
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                if (logoPreview) logoPreview.src = e.target.result;
+                if (livePreviewLogo) livePreviewLogo.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+
+            // Gửi tệp lên server qua AJAX endpoint
+            var formData = new FormData();
+            formData.append('file', file);
+
+            if (uploadProgress) uploadProgress.classList.remove('d-none');
+            showUploadStatus('Đang tải ảnh lên...', null);
+
+            fetch('/employer/upload-logo', {
+                method: 'POST',
+                body: formData
+            })
+            .then(function (response) {
+                return response.json();
+            })
+            .then(function (data) {
+                if (uploadProgress) uploadProgress.classList.add('d-none');
+                if (data.success && data.url) {
+                    if (logoInput) {
+                        logoInput.value = data.url;
+                        logoInput.dispatchEvent(new Event('input'));
+                    }
+                    if (logoPreview) logoPreview.src = data.url;
+                    if (livePreviewLogo) livePreviewLogo.src = data.url;
+                    showUploadStatus('<i class="bi bi-check-circle-fill me-1"></i> Tải ảnh logo thành công!', true);
+                } else {
+                    showUploadStatus('<i class="bi bi-exclamation-circle-fill me-1"></i> ' + (data.message || 'Lỗi tải ảnh lên!'), false);
+                }
+            })
+            .catch(function (error) {
+                if (uploadProgress) uploadProgress.classList.add('d-none');
+                showUploadStatus('<i class="bi bi-exclamation-circle-fill me-1"></i> Không thể kết nối tới máy chủ!', false);
+            });
+        }
+
+        function showUploadStatus(msg, isSuccess) {
+            if (!uploadStatusMsg) return;
+            uploadStatusMsg.innerHTML = msg;
+            uploadStatusMsg.classList.remove('d-none', 'text-success', 'text-danger', 'text-secondary');
+            if (isSuccess === true) {
+                uploadStatusMsg.classList.add('text-success');
+            } else if (isSuccess === false) {
+                uploadStatusMsg.classList.add('text-danger');
+            } else {
+                uploadStatusMsg.classList.add('text-secondary');
+            }
         }
 
         function syncPreview() {

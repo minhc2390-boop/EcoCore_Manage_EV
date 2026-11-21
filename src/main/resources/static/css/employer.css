@@ -386,6 +386,36 @@ h1, h2, h3, h4, h5, h6 {
     color: var(--navy-secondary) !important;
 }
 
+/* =========================================================================
+   Drag & Drop Logo Upload Styling
+   ========================================================================= */
+.upload-dropzone {
+    width: 100%;
+}
+
+.dropzone-prompt {
+    border: 2px dashed #cbd5e1;
+    background-color: #f8fafc;
+    border-radius: 12px;
+    padding: 18px 14px;
+    cursor: pointer;
+    transition: all 0.25s ease-in-out;
+}
+
+.dropzone-prompt:hover {
+    border-color: #0284c7;
+    background-color: #f0f9ff;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(2, 132, 199, 0.08);
+}
+
+.dropzone-prompt.drag-active {
+    border-color: #2563eb !important;
+    background-color: #eff6ff !important;
+    box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.15);
+    transform: scale(1.02);
+}
+
 .portal-card-body {
     padding: 22px;
 }

@@ -17,16 +17,24 @@ import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -188,6 +196,65 @@ public class CompanyJobController {
         }
 
         return "redirect:/employer/profile";
+    }
+
+    /**
+     * API upload ảnh logo doanh nghiệp qua Drag & Drop hoặc chọn tệp
+     */
+    @PostMapping("/upload-logo")
+    @ResponseBody
+    public ResponseEntity<?> uploadCompanyLogo(@RequestParam("file") MultipartFile file, HttpSession session) {
+        User currentUser = getAuthenticatedCompanyAdmin(session);
+        if (currentUser == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of("success", false, "message", "Vui lòng đăng nhập với tài khoản Nhà tuyển dụng!"));
+        }
+
+        if (file == null || file.isEmpty()) {
+            return ResponseEntity.badRequest()
+                    .body(Map.of("success", false, "message", "Vui lòng chọn tệp hình ảnh để tải lên!"));
+        }
+
+        String contentType = file.getContentType();
+        if (contentType == null || (!contentType.startsWith("image/") && !contentType.equals("image/svg+xml"))) {
+            return ResponseEntity.badRequest()
+                    .body(Map.of("success", false, "message", "Định dạng tệp không hợp lệ! Vui lòng chọn tệp ảnh (PNG, JPG, JPEG, WEBP, SVG)."));
+        }
+
+        if (file.getSize() > 5 * 1024 * 1024) {
+            return ResponseEntity.badRequest()
+                    .body(Map.of("success", false, "message", "Dung lượng ảnh vượt quá 5MB. Vui lòng chọn ảnh nhỏ hơn!"));
+        }
+
+        try {
+            Path uploadPath = Paths.get("uploads", "logos").toAbsolutePath().normalize();
+            if (!Files.exists(uploadPath)) {
+                Files.createDirectories(uploadPath);
+            }
+
+            String originalFilename = file.getOriginalFilename();
+            String extension = ".jpg";
+            if (originalFilename != null && originalFilename.contains(".")) {
+                extension = originalFilename.substring(originalFilename.lastIndexOf(".")).toLowerCase();
+            }
+
+            String newFilename = "logo_" + System.currentTimeMillis() + "_" + UUID.randomUUID().toString().substring(0, 8) + extension;
+            Path targetPath = uploadPath.resolve(newFilename);
+            Files.copy(file.getInputStream(), targetPath, StandardCopyOption.REPLACE_EXISTING);
+
+            String fileUrl = "/uploads/logos/" + newFilename;
+            log.info("Doanh nghiệp '{}' đã tải lên logo mới thành công: {}", currentUser.getUsername(), fileUrl);
+
+            return ResponseEntity.ok(Map.of(
+                    "success", true,
+                    "url", fileUrl,
+                    "message", "Tải ảnh logo lên thành công!"
+            ));
+        } catch (Exception e) {
+            log.error("Lỗi khi lưu tệp logo doanh nghiệp: {}", e.getMessage(), e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("success", false, "message", "Lỗi lưu tệp: " + e.getMessage()));
+        }
     }
 
     /**
