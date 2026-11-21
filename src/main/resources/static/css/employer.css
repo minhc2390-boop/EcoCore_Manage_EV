@@ -379,6 +379,13 @@ h1, h2, h3, h4, h5, h6 {
     margin-bottom: 0;
 }
 
+.hover-primary {
+    transition: color 0.15s ease-in-out;
+}
+.hover-primary:hover {
+    color: var(--navy-secondary) !important;
+}
+
 .portal-card-body {
     padding: 22px;
 }
