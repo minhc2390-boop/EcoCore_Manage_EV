@@ -33,14 +33,9 @@
             <span>Tổng quan</span>
         </a>
 
-        <a th:href="@{/employer/jobs}" class="employer-nav-link" th:classappend="${activeMenu == 'jobs' ? 'active' : ''}">
+        <a th:href="@{/employer/jobs}" class="employer-nav-link" th:classappend="${activeMenu == 'jobs' or activeMenu == 'create-job' ? 'active' : ''}">
             <i class="bi bi-briefcase-fill"></i>
             <span>Quản lý tin đăng</span>
-        </a>
-
-        <a th:href="@{/employer/jobs/create}" class="employer-nav-link" th:classappend="${activeMenu == 'create-job' ? 'active' : ''}">
-            <i class="bi bi-plus-circle-fill"></i>
-            <span>Đăng tin mới</span>
         </a>
 
         <a th:href="@{/employer/applications}" class="employer-nav-link" th:classappend="${activeMenu == 'applicants' or activeMenu == 'applications' ? 'active' : ''}">
