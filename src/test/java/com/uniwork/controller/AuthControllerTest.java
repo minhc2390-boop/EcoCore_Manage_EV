@@ -85,8 +85,8 @@ class AuthControllerTest {
     }
 
     @Test
-    @DisplayName("Kiểm tra đăng nhập thành công vai trò Sinh viên -> chuyển hướng về trang chủ")
-    void should_RedirectToHome_When_StudentLogsIn() {
+    @DisplayName("Kiểm tra đăng nhập thành công vai trò Sinh viên -> chuyển hướng thẳng sang Sàn việc làm (/jobs)")
+    void should_RedirectToJobs_When_StudentLogsIn() {
         MockHttpSession session = new MockHttpSession();
         Model model = new ConcurrentModel();
 
@@ -95,7 +95,7 @@ class AuthControllerTest {
 
         String view = authController.processLogin("sinhvien_cantho", "123456", session, model);
 
-        assertEquals("redirect:/", view);
+        assertEquals("redirect:/jobs", view);
         assertEquals(studentUser, session.getAttribute("currentUser"));
         assertEquals("STUDENT", session.getAttribute("userRole"));
     }

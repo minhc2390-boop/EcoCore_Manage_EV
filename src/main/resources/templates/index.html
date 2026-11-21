@@ -26,7 +26,7 @@
 
       <nav class="main-nav" id="mainNav" role="navigation" aria-label="Menu chính">
         <a th:href="@{/#home}" href="#home" class="nav-link active text-nowrap">Trang chủ</a>
-        <a th:href="@{/#jobs}" href="#jobs" class="nav-link text-nowrap">Việc làm</a>
+        <a th:href="@{/jobs}" class="nav-link text-nowrap">Việc làm</a>
         <a th:href="@{/#categories}" href="#categories" class="nav-link text-nowrap">Ngành nghề</a>
         <a th:href="@{/#companies}" href="#companies" class="nav-link text-nowrap">Doanh nghiệp</a>
         <a th:href="@{/employer/jobs}" class="nav-link text-nowrap">Nhà tuyển dụng</a>
@@ -110,7 +110,7 @@
               Khám phá hàng ngàn công việc chất lượng cao từ các doanh nghiệp uy tín hàng đầu. Kết nối trực tiếp, tối ưu hồ sơ và phát triển sự nghiệp vững chắc.
             </p>
             <div class="hero-actions">
-              <a th:href="@{/#jobs}" href="#jobs" class="btn btn-white"><i data-lucide="search" style="width:16px;height:16px;margin-right:6px;"></i> Khám phá việc làm</a>
+              <a th:href="@{/jobs}" href="jobs.html" class="btn btn-white"><i data-lucide="search" style="width:16px;height:16px;margin-right:6px;"></i> Khám phá việc làm</a>
               <a th:href="@{/employer/jobs}" class="btn btn-outline-white">Dành cho nhà tuyển dụng <i data-lucide="arrow-right" style="width:16px;height:16px;margin-left:6px;"></i></a>
             </div>
             <!-- Trusted Logos -->
@@ -135,38 +135,33 @@
     <!-- Search Section -->
     <section class="search-section">
       <div class="container">
-        <form class="search-panel" action="#jobs" method="GET">
+        <form class="search-panel" th:action="@{/jobs}" method="GET">
           <div class="search-fields-grid">
             <div class="search-input-wrap">
               <i data-lucide="search" class="search-input-icon"></i>
-              <input type="text" class="search-input has-icon" placeholder="Từ khóa, chức danh hoặc kỹ năng..." aria-label="Tìm kiếm theo từ khóa">
+              <input type="text" name="keyword" class="search-input has-icon" placeholder="Từ khóa, chức danh hoặc kỹ năng tại Cần Thơ..." aria-label="Tìm kiếm theo từ khóa">
             </div>
             <div class="search-input-wrap">
               <i data-lucide="map-pin" class="search-input-icon"></i>
-              <input type="text" class="search-input has-icon" placeholder="Địa điểm (Hà Nội, TP.HCM...)" aria-label="Tìm kiếm theo địa điểm">
+              <input type="text" class="search-input has-icon" placeholder="TP. Cần Thơ (Ninh Kiều, Cái Răng...)" aria-label="Tìm kiếm theo địa điểm">
             </div>
-            <select class="search-select" aria-label="Chọn ngành nghề">
-              <option value="">Tất cả ngành nghề</option>
-              <option value="it">Công nghệ thông tin</option>
-              <option value="marketing">Marketing & Truyền thông</option>
-              <option value="business">Kinh doanh & Bán hàng</option>
-              <option value="finance">Tài chính - Kế toán</option>
-              <option value="design">Thiết kế & Sáng tạo</option>
-              <option value="hr">Nhân sự & Đào tạo</option>
-              <option value="logistics">Logistics & Chuỗi cung ứng</option>
-              <option value="education">Giáo dục & Khóa học</option>
+            <select class="search-select" name="jobType" aria-label="Chọn hình thức làm việc">
+              <option value="">Tất cả hình thức</option>
+              <option value="Part-time">Part-time (Bán thời gian)</option>
+              <option value="Internship">Thực tập sinh (Internship)</option>
+              <option value="Ca xoay">Ca xoay linh hoạt</option>
+              <option value="Full-time">Toàn thời gian</option>
             </select>
             <button type="submit" class="btn btn-primary btn-search"><i data-lucide="search" style="width:16px;height:16px;margin-right:6px;"></i> Tìm kiếm</button>
           </div>
           <!-- Popular Tags -->
           <div class="search-popular">
             <span class="search-popular-label">Phổ biến:</span>
-            <a href="#" class="search-tag">Java Developer</a>
-            <a href="#" class="search-tag">React</a>
-            <a href="#" class="search-tag">Marketing</a>
-            <a href="#" class="search-tag">Remote</a>
-            <a href="#" class="search-tag">Intern</a>
-            <a href="#" class="search-tag">Data Analyst</a>
+            <a th:href="@{/jobs(keyword='Pha chế')}" class="search-tag">Pha chế</a>
+            <a th:href="@{/jobs(jobType='Part-time')}" class="search-tag">Part-time</a>
+            <a th:href="@{/jobs(jobType='Internship')}" class="search-tag">Thực tập sinh</a>
+            <a th:href="@{/jobs(keyword='Thu ngân')}" class="search-tag">Thu ngân</a>
+            <a th:href="@{/jobs(keyword='Cần Thơ')}" class="search-tag">Cần Thơ</a>
           </div>
         </form>
       </div>

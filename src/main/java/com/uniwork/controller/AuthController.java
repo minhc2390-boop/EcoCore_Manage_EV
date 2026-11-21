@@ -77,10 +77,11 @@ public class AuthController {
         }
 
         // Phân luồng mặc định theo vai trò tài khoản
-        if (currentUser.getRole() == Role.COMPANY_ADMIN) {
+        if (currentUser.getRole() == Role.COMPANY_ADMIN || currentUser.getRole() == Role.SUPER_ADMIN) {
             return "redirect:/employer/jobs";
         } else {
-            return "redirect:/";
+            // Sinh viên đăng nhập thành công sẽ được chuyển thẳng tới Sàn việc làm (/jobs) để tìm việc & ứng tuyển
+            return "redirect:/jobs";
         }
     }
 
