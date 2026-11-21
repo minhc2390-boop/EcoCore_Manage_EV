@@ -30,11 +30,35 @@
             <div class="search-input-unified">
                 <i class="bi bi-search search-icon-prefix"></i>
                 <input type="text" name="keyword" class="form-control" 
-                       placeholder="Tìm kiếm chức danh, kỹ năng, địa điểm tại TP. Cần Thơ..." 
+                       placeholder="Tìm kiếm công việc, doanh nghiệp, kỹ năng hoặc địa điểm tại TP. Cần Thơ..." 
                        th:value="${searchDTO.keyword}">
                 <button type="submit" class="btn btn-primary btn-search-submit" title="Tìm kiếm">
                     <i class="bi bi-search me-1"></i><span class="btn-search-text">Tìm kiếm</span>
                 </button>
+            </div>
+
+            <!-- Quick Chips Gợi ý nhanh cho Sinh viên (Học hỏi phong cách Upzi) -->
+            <div class="quick-chips-row">
+                <a th:href="@{/jobs(experience='chưa có kinh nghiệm')}" class="quick-chip-item"
+                   th:classappend="${searchDTO.experience == 'chưa có kinh nghiệm'} ? 'active' : ''">
+                    <i class="bi bi-mortarboard text-primary"></i> Không yêu cầu kinh nghiệm
+                </a>
+                <a th:href="@{/jobs(jobType='Part-time')}" class="quick-chip-item"
+                   th:classappend="${searchDTO.jobType == 'Part-time'} ? 'active' : ''">
+                    <i class="bi bi-clock-history text-info"></i> Part-time sinh viên
+                </a>
+                <a th:href="@{/jobs(jobType='Internship')}" class="quick-chip-item"
+                   th:classappend="${searchDTO.jobType == 'Internship'} ? 'active' : ''">
+                    <i class="bi bi-award text-success"></i> Thực tập sinh
+                </a>
+                <a th:href="@{/jobs(jobType='Ca xoay')}" class="quick-chip-item"
+                   th:classappend="${searchDTO.jobType == 'Ca xoay'} ? 'active' : ''">
+                    <i class="bi bi-arrow-repeat text-warning"></i> Ca xoay linh hoạt
+                </a>
+                <a th:href="@{/jobs(keyword='Ninh Kiều')}" class="quick-chip-item"
+                   th:classappend="${searchDTO.keyword == 'Ninh Kiều'} ? 'active' : ''">
+                    <i class="bi bi-geo-alt text-danger"></i> Quận Ninh Kiều
+                </a>
             </div>
 
             <!-- Thanh 7 Filter Pills Dropdowns (Khớp 100% giao diện yêu cầu) -->
@@ -361,16 +385,19 @@
 
     <!-- Job Results Count & Pagination Summary -->
     <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
-        <h5 class="fw-bold mb-0">
-            Tìm thấy <span class="text-primary fw-bolder" th:text="${totalElements}">0</span> việc làm phù hợp cho sinh viên
-        </h5>
+        <div>
+            <h5 class="fw-bold mb-1">
+                Tuyển dụng <span class="text-primary fw-bolder" th:text="${totalElements}">0</span> việc làm mới nhất
+            </h5>
+            <p class="text-muted small mb-0">Việc làm part-time, ca xoay &amp; thực tập có trợ cấp dành riêng cho sinh viên TP. Cần Thơ</p>
+        </div>
         <div class="text-muted small" th:if="${totalPages > 0}">
             Trang <strong class="text-dark" th:text="${currentPage + 1}">1</strong> / <span th:text="${totalPages}">1</span>
             (10 việc làm/trang)
         </div>
     </div>
 
-    <!-- Job List -->
+    <!-- Job List (Học hỏi bố cục thẻ hiện đại, thân thiện sinh viên từ Upzi) -->
     <div class="row g-3">
         <div class="col-12 text-center py-5" th:if="${#lists.isEmpty(jobs)}">
             <div class="p-5 bg-white rounded-4 shadow-sm">
@@ -382,43 +409,104 @@
         </div>
 
         <div class="col-12" th:each="job : ${jobs}">
-            <div class="card job-list-card border-0 shadow-sm rounded-4 p-4 transition bg-white">
-                <div class="row align-items-center g-3">
-                    <div class="col-md-8">
-                        <div class="d-flex gap-2 mb-2">
-                            <span class="badge bg-primary bg-opacity-10 text-primary px-3 py-1 rounded-pill fw-semibold" th:text="${job.jobType}">
+            <div class="student-job-card">
+                <div class="d-flex align-items-start gap-3">
+                    <!-- Logo Doanh Nghiệp -->
+                    <div class="job-card-logo-wrap">
+                        <img th:if="${job.employer != null and job.employer.companyLogo != null and !job.employer.companyLogo.isEmpty()}" 
+                             th:src="${job.employer.companyLogo}" 
+                             onerror="this.style.display='none'; if(this.nextElementSibling) this.nextElementSibling.style.display='flex';"
+                             class="job-card-logo-img" alt="Logo">
+                        <div class="job-card-logo-fallback" 
+                             th:style="${job.employer != null and job.employer.companyLogo != null and !job.employer.companyLogo.isEmpty()} ? 'display:none;' : 'display:flex;'"
+                             th:text="${job.employer != null and job.employer.companyName != null and job.employer.companyName.length() >= 2 ? #strings.substring(job.employer.companyName, 0, 2).toUpperCase() : 'UW'}">
+                            UW
+                        </div>
+                    </div>
+
+                    <!-- Tiêu đề & Thông tin Doanh Nghiệp -->
+                    <div class="flex-grow-1 min-w-0">
+                        <div class="d-flex flex-wrap align-items-center gap-2 mb-1">
+                            <span class="badge bg-primary bg-opacity-10 text-primary px-2.5 py-0.5 rounded-pill fw-semibold" style="font-size:11.5px;" th:text="${job.jobType}">
                                 Part-time
                             </span>
-                            <span class="badge bg-info bg-opacity-10 text-info px-3 py-1 rounded-pill fw-semibold" 
+                            <span class="badge bg-secondary bg-opacity-10 text-secondary px-2.5 py-0.5 rounded-pill fw-medium" style="font-size:11.5px;" 
                                   th:text="${job.category != null ? job.category.name : 'Chung'}">
                                 Ngành nghề
                             </span>
                         </div>
-                        <h5 class="fw-bold mb-1">
-                            <a th:href="@{/jobs/{id}(id=${job.id})}" class="text-decoration-none text-dark hover-primary" th:text="${job.title}">
+                        <h5 class="job-card-title text-truncate">
+                            <a th:href="@{/jobs/{id}(id=${job.id})}" th:text="${job.title}">
                                 Tiêu đề việc làm
                             </a>
                         </h5>
-                        <p class="text-secondary small mb-2">
-                            <i class="bi bi-building me-1 text-primary"></i>
-                            <strong th:text="${job.employer != null ? job.employer.companyName : 'Doanh nghiệp'}">Tên công ty</strong>
-                            <span class="mx-2">•</span>
-                            <i class="bi bi-geo-alt me-1 text-danger"></i><span th:text="${job.location}">TP. Cần Thơ</span>
-                        </p>
-                        <div class="text-muted small">
-                            <i class="bi bi-clock-history me-1 text-warning"></i><span th:text="${job.shiftSchedule}">Ca làm</span>
+                        <div class="job-card-company text-truncate">
+                            <i class="bi bi-building text-secondary"></i>
+                            <span th:text="${job.employer != null ? job.employer.companyName : 'Doanh nghiệp Cần Thơ'}">Tên công ty</span>
+                            <i class="bi bi-patch-check-fill text-primary" title="Doanh nghiệp đã xác thực"></i>
                         </div>
                     </div>
-                    <div class="col-md-4 text-md-end">
-                        <div class="text-success fw-bold fs-5 mb-2" th:text="${job.salaryRange}">25k/h</div>
-                        <a th:href="@{/jobs/{id}(id=${job.id})}" class="btn btn-primary rounded-pill px-4 fw-medium shadow-sm">
-                            Xem &amp; Ứng Tuyển <i class="bi bi-arrow-right ms-1"></i>
-                        </a>
+
+                    <!-- Nút Lưu Tin Tuyển Dụng (Bookmark) -->
+                    <button type="button" class="job-card-bookmark-btn" onclick="toggleBookmark(this)" th:data-job-id="${job.id}" title="Lưu tin việc làm này">
+                        <i class="bi bi-heart"></i>
+                    </button>
+                </div>
+
+                <!-- Danh Sách Thông Số Công Việc (Specs & Gen Z Badges) -->
+                <div class="job-card-specs-list mt-2">
+                    <div class="job-card-spec-item">
+                        <i class="bi bi-cash-stack text-success"></i>
+                        <span class="job-card-salary-text" th:text="${job.salaryRange}">25.000đ - 35.000đ / giờ</span>
+                        <span th:if="${job.jobType == 'Part-time'}" class="badge-student-tag tag-parttime">Phù hợp lịch học 🎓</span>
+                        <span th:if="${job.jobType == 'Internship'}" class="badge-student-tag tag-intern">Thực tập có lương 🌟</span>
+                        <span th:if="${job.jobType == 'Ca xoay'}" class="badge-student-tag tag-shift">Ca xoay linh hoạt ⚡</span>
+                        <span th:unless="${job.jobType == 'Part-time' or job.jobType == 'Internship' or job.jobType == 'Ca xoay'}" class="badge-student-tag tag-salary">Lương chuẩn sinh viên 🔥</span>
                     </div>
+                    <div class="job-card-spec-item">
+                        <i class="bi bi-geo-alt-fill text-danger"></i>
+                        <span th:text="${job.location}">TP. Cần Thơ</span>
+                    </div>
+                    <div class="job-card-spec-item">
+                        <i class="bi bi-clock-history text-warning"></i>
+                        <span th:text="${job.shiftSchedule != null ? job.shiftSchedule : 'Đăng ký ca theo tuần theo lịch học'}">Ca sáng (07:00 - 11:30)</span>
+                    </div>
+                </div>
+
+                <!-- Chân Card: Trạng thái & Nút Ứng Tuyển Nhanh -->
+                <div class="job-card-footer">
+                    <div class="job-card-meta">
+                        <span class="job-urgency-badge">
+                            <i class="bi bi-lightning-charge-fill"></i>Ứng tuyển nhanh
+                        </span>
+                        <span class="d-none d-sm-inline text-muted">•</span>
+                        <span class="d-none d-sm-inline" th:if="${job.deadline != null}">
+                            <i class="bi bi-calendar-check me-1"></i>Hạn nộp: <span th:text="${#temporals.format(job.deadline, 'dd/MM/yyyy')}">20/12/2026</span>
+                        </span>
+                    </div>
+                    <a th:href="@{/jobs/{id}(id=${job.id})}" class="btn-job-apply-card">
+                        <span>Ứng tuyển ngay</span>
+                        <i class="bi bi-arrow-right"></i>
+                    </a>
                 </div>
             </div>
         </div>
     </div>
+
+    <script>
+        function toggleBookmark(btn) {
+            var icon = btn.querySelector('i');
+            if (icon.classList.contains('bi-heart')) {
+                icon.classList.remove('bi-heart');
+                icon.classList.add('bi-heart-fill');
+                btn.classList.add('active');
+            } else {
+                icon.classList.remove('bi-heart-fill');
+                icon.classList.add('bi-heart');
+                btn.classList.remove('active');
+            }
+        }
+    </script>
 
     <!-- Phân Trang (Pagination 10 jobs/trang) -->
     <nav th:if="${totalPages > 1}" aria-label="Job pagination" class="mt-4 pt-2">
