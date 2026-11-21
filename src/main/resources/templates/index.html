@@ -21,15 +21,15 @@
   <div class="scroll-progress" id="scrollProgress"></div>
 
   <header class="main-header">
-    <div class="container header-inner">
+    <div class="container-fluid px-3 px-xl-4 header-inner">
       <a th:href="@{/}" href="index.html" class="brand-logo">JOB <span class="brand-logo-accent">PORTAL</span></a>
 
       <nav class="main-nav" id="mainNav" role="navigation" aria-label="Menu chính">
-        <a th:href="@{/#home}" href="#home" class="nav-link active">Trang chủ</a>
-        <a th:href="@{/#jobs}" href="#jobs" class="nav-link">Việc làm</a>
-        <a th:href="@{/#categories}" href="#categories" class="nav-link">Ngành nghề</a>
-        <a th:href="@{/#companies}" href="#companies" class="nav-link">Doanh nghiệp</a>
-        <a th:href="@{/employer/jobs}" class="nav-link">Nhà tuyển dụng</a>
+        <a th:href="@{/#home}" href="#home" class="nav-link active text-nowrap">Trang chủ</a>
+        <a th:href="@{/#jobs}" href="#jobs" class="nav-link text-nowrap">Việc làm</a>
+        <a th:href="@{/#categories}" href="#categories" class="nav-link text-nowrap">Ngành nghề</a>
+        <a th:href="@{/#companies}" href="#companies" class="nav-link text-nowrap">Doanh nghiệp</a>
+        <a th:href="@{/employer/jobs}" class="nav-link text-nowrap">Nhà tuyển dụng</a>
         <!-- Auth links for mobile nav drawer -->
         <th:block th:if="${session.currentUser == null}">
           <a th:href="@{/login}" class="nav-link mobile-only-auth"><i data-lucide="log-in" style="width:16px;height:16px;vertical-align:-2px;margin-right:6px;"></i>Đăng nhập</a>
@@ -75,17 +75,18 @@
           </div>
 
           <a th:if="${session.currentUser.role.name() == 'COMPANY_ADMIN' or session.currentUser.role.name() == 'SUPER_ADMIN'}" 
-             th:href="@{/employer/jobs}" class="btn btn-outline" style="border-color: #0284c7; color: #0284c7; font-size: 13px; padding: 6px 12px;">
+             th:href="@{/employer/jobs}" class="btn btn-outline text-nowrap" style="border-color: #0284c7; color: #0284c7; font-size: 13px; padding: 6px 12px; white-space: nowrap;">
             <i data-lucide="layout-dashboard" style="width:14px;height:14px;vertical-align:-2px;margin-right:4px;"></i>Quản lý tin
           </a>
         </th:block>
         <th:block th:if="${session.currentUser != null}">
-          <a th:href="@{/profile}" class="btn btn-outline" style="display:inline-flex;align-items:center;gap:6px;font-weight:600;padding:6px 14px;font-size:13.5px;" title="Xem hồ sơ cá nhân">
-            <i data-lucide="user" style="width:15px;height:15px;"></i>
-            <span th:text="${session.currentUser.fullName != null ? session.currentUser.fullName : session.currentUser.username}">Tài khoản</span>
+          <a th:href="@{/profile}" class="btn btn-outline text-nowrap" style="display:inline-flex;align-items:center;gap:6px;font-weight:600;padding:6px 12px;font-size:13px;white-space:nowrap;" th:title="${session.currentUser.fullName != null ? session.currentUser.fullName : session.currentUser.username}">
+            <i data-lucide="user" style="width:14px;height:14px;flex-shrink:0;"></i>
+            <span class="user-display-name text-truncate" style="max-width: 130px; display: inline-block; vertical-align: middle;" 
+                  th:text="${session.currentUser.fullName != null ? session.currentUser.fullName : session.currentUser.username}">Tài khoản</span>
           </a>
-          <a th:href="@{/logout}" class="btn btn-outline" style="color:#ef4444;border-color:rgba(239,68,68,0.3);padding:6px 12px;font-size:13px;" title="Đăng xuất khỏi hệ thống">
-            <i data-lucide="log-out" style="width:15px;height:15px;vertical-align:-2px;"></i>
+          <a th:href="@{/logout}" class="btn btn-outline text-nowrap" style="color:#ef4444;border-color:rgba(239,68,68,0.3);padding:6px 10px;font-size:13px;white-space:nowrap;" title="Đăng xuất khỏi hệ thống">
+            <i data-lucide="log-out" style="width:14px;height:14px;vertical-align:-2px;"></i>
             <span class="d-none d-sm-inline ms-1">Đăng xuất</span>
           </a>
         </th:block>

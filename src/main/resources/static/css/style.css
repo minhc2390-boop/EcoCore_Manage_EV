@@ -233,6 +233,8 @@ img {
   display: inline-flex;
   align-items: center;
   gap: 5px;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .brand-logo-accent {
@@ -243,17 +245,19 @@ img {
 .main-nav {
   display: flex;
   align-items: center;
-  gap: 32px;
+  gap: clamp(10px, 1.6vw, 24px);
+  flex-shrink: 0;
 }
 
 .nav-link {
   font-family: 'Manrope', sans-serif;
-  font-size: 14.5px;
+  font-size: 14px;
   font-weight: 600;
   color: var(--text-secondary);
   padding: 8px 0;
   position: relative;
   transition: color 0.25s ease-in-out;
+  white-space: nowrap !important;
 }
 
 .nav-link:hover,
@@ -280,7 +284,13 @@ img {
 .header-actions {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 8px;
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+.header-actions .btn {
+  white-space: nowrap;
 }
 
 /* Dark Mode Toggle */
@@ -2087,7 +2097,7 @@ a.footer-link:hover {
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 991.98px) {
   /* Global viewport & overflow fix */
   html, body {
     overflow-x: hidden;
