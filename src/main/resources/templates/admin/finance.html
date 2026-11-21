@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quản Lý Tài Chính &amp; Gói Dịch Vụ - Super Admin</title>
+  <link rel="stylesheet" th:href="@{/css/finance.css}">
+</head>
+<body>
+
+<div class="finance-layout">
+  <aside class="finance-sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-brand">JOB <span>PORTAL</span></div>
+    </div>
+    <nav class="sidebar-menu">
+      <a th:href="@{/admin/dashboard}" class="sidebar-link">Tổng quan sàn</a>
+      <a th:href="@{/admin/companies}" class="sidebar-link">Duyệt &amp; Quản lý Công ty</a>
+      <a th:href="@{/admin/jobs}" class="sidebar-link">Giám sát tin đăng</a>
+      <a th:href="@{/admin/finance}" class="sidebar-link active">Quản lý Tài chính</a>
+      <a th:href="@{/admin/reports}" class="sidebar-link">Báo cáo thống kê</a>
+    </nav>
+    <div class="sidebar-footer">
+      <a th:href="@{/logout}" class="sidebar-link" style="color: #E11D48;">Đăng xuất</a>
+    </div>
+  </aside>
+
+  <main class="finance-main">
+    <header class="finance-topbar">
+      <div class="topbar-title">Quản Lý Tài Chính &amp; Gói Dịch Vụ</div>
+      <div class="topbar-user">
+        Tài khoản: <strong>Super Admin</strong>
+      </div>
+    </header>
+
+    <div class="finance-content">
+      <div class="kpi-grid">
+        <div class="kpi-card">
+          <div class="kpi-title">Tổng doanh thu tháng</div>
+          <div class="kpi-value primary">45.600.000đ</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-title">Hóa đơn chờ duyệt</div>
+          <div class="kpi-value warning">8</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-title">Tổng gói đã bán</div>
+          <div class="kpi-value">92</div>
+        </div>
+      </div>
+
+      <div class="table-panel">
+        <div class="panel-header">
+          <div class="section-title" style="margin-bottom: 0;">Quản Lý Giao Dịch</div>
+          <div class="filter-group">
+            <button type="button" class="filter-btn active" data-filter="ALL">Tất cả</button>
+            <button type="button" class="filter-btn" data-filter="PENDING">Chờ duyệt</button>
+            <button type="button" class="filter-btn" data-filter="APPROVED">Đã duyệt</button>
+            <button type="button" class="filter-btn" data-filter="REJECTED">Từ chối</button>
+            <input type="text" id="transactionSearch" class="search-input" placeholder="Tìm kiếm theo mã đơn, công ty...">
+          </div>
+        </div>
+
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Mã hóa đơn</th>
+              <th>Tên công ty</th>
+              <th>Gói đăng ký</th>
+              <th>Số tiền</th>
+              <th>Thời gian</th>
+              <th>Trạng thái</th>
+              <th>Hành động</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="transaction-row" data-status="PENDING">
+              <td><strong>INV-20261121-001</strong></td>
+              <td>Highlands Coffee Cần Thơ</td>
+              <td>Gói Tuyển Gấp</td>
+              <td>499.000đ</td>
+              <td>21/11/2026 09:15</td>
+              <td><span class="badge badge-pending">Chờ duyệt</span></td>
+              <td>
+                <div class="action-buttons">
+                  <button type="button" class="btn-sm-success btn-approve">Duyệt</button>
+                  <button type="button" class="btn-sm-danger btn-reject">Từ chối</button>
+                </div>
+              </td>
+            </tr>
+            <tr class="transaction-row" data-status="PENDING">
+              <td><strong>INV-20261121-002</strong></td>
+              <td>Phúc Long Coffee &amp; Tea Ninh Kiều</td>
+              <td>Gói Khởi Đầu</td>
+              <td>199.000đ</td>
+              <td>21/11/2026 10:20</td>
+              <td><span class="badge badge-pending">Chờ duyệt</span></td>
+              <td>
+                <div class="action-buttons">
+                  <button type="button" class="btn-sm-success btn-approve">Duyệt</button>
+                  <button type="button" class="btn-sm-danger btn-reject">Từ chối</button>
+                </div>
+              </td>
+            </tr>
+            <tr class="transaction-row" data-status="APPROVED">
+              <td><strong>INV-20261120-045</strong></td>
+              <td>Cụm Rạp CGV Vincom Hùng Vương</td>
+              <td>Gói Doanh Nghiệp</td>
+              <td>1.299.000đ</td>
+              <td>20/11/2026 14:10</td>
+              <td><span class="badge badge-approved">Đã duyệt</span></td>
+              <td><span style="font-size: 13px; color: #64748B;">Đã xử lý</span></td>
+            </tr>
+            <tr class="transaction-row" data-status="APPROVED">
+              <td><strong>INV-20261119-038</strong></td>
+              <td>Đại Siêu Thị GO! Cần Thơ</td>
+              <td>Gói Tuyển Gấp</td>
+              <td>499.000đ</td>
+              <td>19/11/2026 16:45</td>
+              <td><span class="badge badge-approved">Đã duyệt</span></td>
+              <td><span style="font-size: 13px; color: #64748B;">Đã xử lý</span></td>
+            </tr>
+            <tr class="transaction-row" data-status="APPROVED">
+              <td><strong>INV-20261118-022</strong></td>
+              <td>FPT Software Cần Thơ</td>
+              <td>Gói Doanh Nghiệp</td>
+              <td>1.299.000đ</td>
+              <td>18/11/2026 11:30</td>
+              <td><span class="badge badge-approved">Đã duyệt</span></td>
+              <td><span style="font-size: 13px; color: #64748B;">Đã xử lý</span></td>
+            </tr>
+            <tr class="transaction-row" data-status="REJECTED">
+              <td><strong>INV-20261117-015</strong></td>
+              <td>Công Ty Đầu Tư Tài Chính Toàn Cầu SkyInvest</td>
+              <td>Gói Tuyển Gấp</td>
+              <td>499.000đ</td>
+              <td>17/11/2026 08:50</td>
+              <td><span class="badge badge-rejected">Từ chối</span></td>
+              <td><span style="font-size: 13px; color: #64748B;">Đã xử lý</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="table-panel">
+        <div class="panel-header">
+          <div class="section-title" style="margin-bottom: 0;">Quản Lý Gói Dịch Vụ</div>
+          <button type="button" class="btn-primary" id="btnOpenPackageModal" style="width: auto; padding: 8px 16px;">Thêm gói mới</button>
+        </div>
+
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Tên gói</th>
+              <th>Giá niêm yết</th>
+              <th>Lượt đăng tin</th>
+              <th>Thời hạn</th>
+              <th>Trạng thái</th>
+              <th>Hành động</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Gói Khởi Đầu</strong></td>
+              <td>199.000đ</td>
+              <td>3 lượt</td>
+              <td>30 ngày</td>
+              <td><span class="badge badge-active package-status-badge">Đang bán</span></td>
+              <td>
+                <div class="action-buttons">
+                  <button type="button" class="btn-outline">Sửa</button>
+                  <button type="button" class="btn-sm-danger btn-toggle-status">Tạm ẩn</button>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td><strong>Gói Tuyển Gấp</strong></td>
+              <td>499.000đ</td>
+              <td>10 lượt</td>
+              <td>30 ngày</td>
+              <td><span class="badge badge-active package-status-badge">Đang bán</span></td>
+              <td>
+                <div class="action-buttons">
+                  <button type="button" class="btn-outline">Sửa</button>
+                  <button type="button" class="btn-sm-danger btn-toggle-status">Tạm ẩn</button>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td><strong>Gói Doanh Nghiệp</strong></td>
+              <td>1.299.000đ</td>
+              <td>30 lượt</td>
+              <td>90 ngày</td>
+              <td><span class="badge badge-active package-status-badge">Đang bán</span></td>
+              <td>
+                <div class="action-buttons">
+                  <button type="button" class="btn-outline">Sửa</button>
+                  <button type="button" class="btn-sm-danger btn-toggle-status">Tạm ẩn</button>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td><strong>Gói Trải Nghiệm Tuyển Dụng</strong></td>
+              <td>99.000đ</td>
+              <td>1 lượt</td>
+              <td>15 ngày</td>
+              <td><span class="badge badge-inactive package-status-badge">Tạm ẩn</span></td>
+              <td>
+                <div class="action-buttons">
+                  <button type="button" class="btn-outline">Sửa</button>
+                  <button type="button" class="btn-sm-success btn-toggle-status">Mở bán</button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+</div>
+
+<div class="modal-backdrop" id="packageModal">
+  <div class="modal-dialog">
+    <div class="modal-header">
+      <div class="modal-title">Thêm Gói Dịch Vụ Mới</div>
+      <button type="button" class="modal-close">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label class="form-label">Tên gói dịch vụ</label>
+        <input type="text" class="form-control" placeholder="Ví dụ: Gói Tiêu Chuẩn 60 Ngày">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Giá niêm yết (VNĐ)</label>
+        <input type="number" class="form-control" placeholder="Ví dụ: 799000">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Số lượt đăng tin</label>
+        <input type="number" class="form-control" placeholder="Ví dụ: 15">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Thời hạn (ngày)</label>
+        <input type="number" class="form-control" placeholder="Ví dụ: 60">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Mô tả quyền lợi</label>
+        <textarea class="form-control" placeholder="Nhập các quyền lợi và tính năng của gói dịch vụ..."></textarea>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn-sm-secondary btn-close-modal">Hủy bỏ</button>
+      <button type="button" class="btn-primary" id="btnSavePackage" style="width: auto; padding: 8px 18px;">Lưu gói dịch vụ</button>
+    </div>
+  </div>
+</div>
+
+<script th:src="@{/js/finance.js}"></script>
+</body>
+</html>
