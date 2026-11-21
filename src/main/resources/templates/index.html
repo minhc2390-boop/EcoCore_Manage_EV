@@ -21,8 +21,21 @@
   <div class="scroll-progress" id="scrollProgress"></div>
 
   <header class="main-header">
-    <div class="container-fluid px-3 px-xl-4 header-inner">
-      <a th:href="@{/}" href="index.html" class="brand-logo">JOB <span class="brand-logo-accent">PORTAL</span></a>
+    <div class="header-container header-inner">
+      <a th:href="@{/}" href="index.html" class="brand-logo" aria-label="Job Portal - Trang chủ">
+        <span class="brand-logo-symbol">
+          <svg class="brand-logo-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="7" width="20" height="14" rx="2.5" ry="2.5"></rect>
+            <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+            <circle cx="12" cy="12" r="1.5" fill="#f59e0b" stroke="none"></circle>
+          </svg>
+        </span>
+        <span class="brand-logo-text">
+          <span class="brand-name-main">JOB</span>
+          <span class="brand-name-accent">PORTAL</span>
+          <span class="brand-name-dot">.</span>
+        </span>
+      </a>
 
       <nav class="main-nav" id="mainNav" role="navigation" aria-label="Menu chính">
         <a th:href="@{/#home}" href="#home" class="nav-link active text-nowrap">Trang chủ</a>
@@ -48,8 +61,12 @@
           <i data-lucide="sun" class="light-icon"></i>
         </button>
         <th:block th:if="${session.currentUser == null}">
-          <a th:href="@{/login}" href="login.html" class="btn btn-outline btn-login-header">Đăng nhập</a>
-          <a th:href="@{/register}" href="register.html" class="btn btn-primary">Đăng ký</a>
+          <a th:href="@{/login}" href="login.html" class="btn btn-outline btn-login-header">
+            <i data-lucide="log-in" style="width:15px;height:15px;vertical-align:-2px;margin-right:5px;"></i>Đăng nhập
+          </a>
+          <a th:href="@{/register}" href="register.html" class="btn btn-primary">
+            <i data-lucide="user-plus" style="width:15px;height:15px;vertical-align:-2px;margin-right:5px;"></i>Đăng ký
+          </a>
         </th:block>
         <th:block th:if="${session.currentUser != null}">
           <!-- Chuông Thông Báo Realtime SSE -->
@@ -708,7 +725,20 @@
     <div class="container">
       <div class="footer-grid">
         <div>
-          <div class="footer-brand-title">JOB PORTAL</div>
+          <a th:href="@{/}" class="brand-logo footer-brand-logo mb-3" style="display:inline-flex;margin-bottom:14px;" aria-label="Job Portal Footer">
+            <span class="brand-logo-symbol" style="background: linear-gradient(135deg, #1e40af, #3b82f6); box-shadow: 0 4px 14px rgba(37, 99, 235, 0.35);">
+              <svg class="brand-logo-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="2" y="7" width="20" height="14" rx="2.5" ry="2.5"></rect>
+                <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+                <circle cx="12" cy="12" r="1.5" fill="#f59e0b" stroke="none"></circle>
+              </svg>
+            </span>
+            <span class="brand-logo-text">
+              <span class="brand-name-main" style="color: #ffffff;">JOB</span>
+              <span class="brand-name-accent" style="background: linear-gradient(135deg, #60a5fa, #38bdf8); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">PORTAL</span>
+              <span class="brand-name-dot">.</span>
+            </span>
+          </a>
           <p class="footer-brand-desc">
             Nền tảng kết nối nhân tài và cơ hội việc làm cao cấp. Đồng hành cùng sinh viên và người đi làm kiến tạo sự nghiệp vững bền.
           </p>
