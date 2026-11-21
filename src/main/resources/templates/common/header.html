@@ -18,8 +18,10 @@
 <nav th:fragment="header-nav" class="navbar navbar-expand-xl navbar-dark bg-gradient-primary shadow-sm sticky-top py-2">
     <div class="container-xxl px-3 px-xl-4">
         <a class="navbar-brand fw-bold d-flex align-items-center text-nowrap me-3" th:href="@{/}">
-            <span class="badge bg-warning text-dark me-2 py-2 px-2.5 rounded-3"><i class="bi bi-briefcase-fill fs-5"></i></span>
-            <span>Uni<span class="text-warning">Work</span></span>
+            <span class="brand-logo-symbol me-2" style="width: 36px; height: 36px; min-width: 36px; border-radius: 10px; background: linear-gradient(135deg, #1e40af, #3b82f6); display: inline-flex; align-items: center; justify-content: center; box-shadow: 0 3px 10px rgba(0,0,0,0.25);">
+                <i class="bi bi-briefcase-fill text-white fs-6"></i>
+            </span>
+            <span class="fs-5 text-white">JOB <span class="text-warning">PORTAL</span><span style="color:#f59e0b;">.</span></span>
         </a>
         <button class="navbar-toggler border-white border-opacity-25" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain" aria-controls="navbarMain" aria-expanded="false" aria-label="Menu điều hướng">
             <span class="navbar-toggler-icon"></span>
@@ -47,8 +49,8 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-warning fw-medium text-nowrap" th:href="@{/poly/hello}">
-                        <i class="bi bi-play-circle me-1"></i>Demo Slide 1.1
+                    <a class="nav-link text-white-50 fw-medium text-nowrap" th:href="@{/#companies}">
+                        <i class="bi bi-buildings me-1"></i>Doanh Nghiệp
                     </a>
                 </li>
                 <!-- Menu Cổng Tuyển Dụng dành cho Company Admin (Hùng Anh) -->
@@ -59,9 +61,6 @@
                 </li>
             </ul>
             <div class="d-flex flex-wrap flex-xl-nowrap align-items-center gap-2 mt-3 mt-xl-0 pt-2 pt-xl-0 border-top border-xl-0 border-white border-opacity-10">
-                <a th:href="@{/jobs}" class="btn btn-outline-light btn-sm px-2.5 rounded-pill text-nowrap d-none d-xxl-inline-flex">
-                    <i class="bi bi-compass me-1"></i>Khám phá
-                </a>
                 <a th:href="@{/employer/jobs}" class="btn btn-warning btn-sm px-3 rounded-pill fw-semibold text-dark shadow-sm text-nowrap">
                     <i class="bi bi-building-add me-1"></i>Nhà Tuyển Dụng
                 </a>
