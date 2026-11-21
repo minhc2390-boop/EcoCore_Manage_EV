@@ -2429,6 +2429,26 @@ a.footer-link:hover {
 
 .navbar.bg-gradient-primary .navbar-brand {
   color: #ffffff !important;
+  white-space: nowrap !important;
+  flex-shrink: 0;
+}
+
+.navbar.bg-gradient-primary .nav-link {
+  white-space: nowrap !important;
+  font-size: 14px;
+  padding-left: 0.65rem !important;
+  padding-right: 0.65rem !important;
+  transition: color 0.2s ease, opacity 0.2s ease;
+}
+
+.navbar.bg-gradient-primary .nav-link:hover {
+  color: #ffffff !important;
+  opacity: 1 !important;
+}
+
+.navbar.bg-gradient-primary .btn {
+  white-space: nowrap !important;
+  flex-shrink: 0;
 }
 
 .navbar.bg-gradient-primary .navbar-toggler {

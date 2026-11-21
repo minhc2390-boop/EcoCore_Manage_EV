@@ -15,9 +15,9 @@
     <script th:src="@{/js/realtime-notification.js}" src="/js/realtime-notification.js" defer></script>
 </head>
 <body>
-<nav th:fragment="header-nav" class="navbar navbar-expand-lg navbar-dark bg-gradient-primary shadow-sm sticky-top">
-    <div class="container">
-        <a class="navbar-brand fw-bold d-flex align-items-center" th:href="@{/}">
+<nav th:fragment="header-nav" class="navbar navbar-expand-xl navbar-dark bg-gradient-primary shadow-sm sticky-top py-2">
+    <div class="container-fluid px-3 px-xl-4">
+        <a class="navbar-brand fw-bold d-flex align-items-center text-nowrap me-3" th:href="@{/}">
             <span class="badge bg-warning text-dark me-2 py-2 px-2.5 rounded-3"><i class="bi bi-briefcase-fill fs-5"></i></span>
             <span>Uni<span class="text-warning">Work</span></span>
         </a>
@@ -25,55 +25,55 @@
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarMain">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
+            <ul class="navbar-nav me-auto mb-2 mb-xl-0 ms-xl-2">
                 <li class="nav-item">
-                    <a class="nav-link text-white fw-medium" th:href="@{/}">
+                    <a class="nav-link text-white fw-medium text-nowrap" th:href="@{/}">
                         <i class="bi bi-house-door me-1"></i>Trang Chủ
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-white fw-medium" th:href="@{/jobs}">
+                    <a class="nav-link text-white fw-medium text-nowrap" th:href="@{/jobs}">
                         <i class="bi bi-search me-1"></i>Tìm Việc Làm
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-white-50 fw-medium" th:href="@{/jobs(jobType='Part-time')}">
+                    <a class="nav-link text-white-50 fw-medium text-nowrap" th:href="@{/jobs(jobType='Part-time')}">
                         <i class="bi bi-clock-history me-1"></i>Việc Part-time
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-white-50 fw-medium" th:href="@{/jobs(jobType='Internship')}">
+                    <a class="nav-link text-white-50 fw-medium text-nowrap" th:href="@{/jobs(jobType='Internship')}">
                         <i class="bi bi-award me-1"></i>Thực Tập Sinh
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-warning fw-medium" th:href="@{/poly/hello}">
+                    <a class="nav-link text-warning fw-medium text-nowrap" th:href="@{/poly/hello}">
                         <i class="bi bi-play-circle me-1"></i>Demo Slide 1.1
                     </a>
                 </li>
                 <!-- Menu Cổng Tuyển Dụng dành cho Company Admin (Hùng Anh) -->
                 <li class="nav-item" th:if="${session.currentUser != null and (session.currentUser.role.name() == 'COMPANY_ADMIN' or session.currentUser.role.name() == 'SUPER_ADMIN')}">
-                    <a class="nav-link text-warning fw-bold" th:href="@{/employer/jobs}">
+                    <a class="nav-link text-warning fw-bold text-nowrap" th:href="@{/employer/jobs}">
                         <i class="bi bi-building-gear me-1"></i>Quản Lý Tuyển Dụng
                     </a>
                 </li>
             </ul>
-            <div class="d-flex flex-wrap align-items-center gap-2 mt-3 mt-lg-0 pt-2 pt-lg-0 border-top border-lg-0 border-white border-opacity-10">
-                <a th:href="@{/jobs}" class="btn btn-outline-light btn-sm px-3 rounded-pill">
+            <div class="d-flex flex-wrap flex-xl-nowrap align-items-center gap-2 mt-3 mt-xl-0 pt-2 pt-xl-0 border-top border-xl-0 border-white border-opacity-10">
+                <a th:href="@{/jobs}" class="btn btn-outline-light btn-sm px-2.5 rounded-pill text-nowrap d-none d-xxl-inline-flex">
                     <i class="bi bi-compass me-1"></i>Khám phá
                 </a>
-                <a th:href="@{/employer/jobs}" class="btn btn-warning btn-sm px-3 rounded-pill fw-semibold text-dark shadow-sm">
+                <a th:href="@{/employer/jobs}" class="btn btn-warning btn-sm px-3 rounded-pill fw-semibold text-dark shadow-sm text-nowrap">
                     <i class="bi bi-building-add me-1"></i>Nhà Tuyển Dụng
                 </a>
-                <div th:if="${session.currentUser == null}" class="d-flex align-items-center gap-2 ms-lg-2">
-                    <a th:href="@{/login}" class="btn btn-sm btn-outline-light rounded-pill px-3 py-1">
+                <div th:if="${session.currentUser == null}" class="d-flex align-items-center gap-2 ms-xl-2 flex-nowrap">
+                    <a th:href="@{/login}" class="btn btn-sm btn-outline-light rounded-pill px-3 py-1 text-nowrap">
                         <i class="bi bi-box-arrow-in-right me-1"></i>Đăng nhập
                     </a>
-                    <a th:href="@{/register}" class="btn btn-sm btn-light rounded-pill px-3 py-1 fw-semibold text-dark">
+                    <a th:href="@{/register}" class="btn btn-sm btn-light rounded-pill px-3 py-1 fw-semibold text-dark text-nowrap">
                         <i class="bi bi-person-plus me-1"></i>Đăng ký
                     </a>
                 </div>
-                <div th:if="${session.currentUser != null}" class="d-flex align-items-center gap-2 ms-lg-2">
+                <div th:if="${session.currentUser != null}" class="d-flex align-items-center gap-2 ms-xl-2 flex-nowrap">
                     <!-- Chuông Thông Báo Real-time SSE -->
                     <div class="dropdown position-relative">
                         <button class="btn btn-outline-light btn-sm rounded-circle position-relative d-flex align-items-center justify-content-center" 
