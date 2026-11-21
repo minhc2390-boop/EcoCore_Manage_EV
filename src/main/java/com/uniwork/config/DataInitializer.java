@@ -101,6 +101,50 @@ public class DataInitializer implements CommandLineRunner {
                     .active(true)
                     .build());
         }
+        if (userRepository.findByUsername("tran_thanh_nga").isEmpty()) {
+            userRepository.save(User.builder()
+                    .username("tran_thanh_nga")
+                    .password("123456")
+                    .fullName("Trần Thanh Nga (ĐH Cần Thơ)")
+                    .email("thanhnga.ctu@gmail.com")
+                    .phone("0939888123")
+                    .role(Role.STUDENT)
+                    .active(true)
+                    .build());
+        }
+        if (userRepository.findByUsername("le_hoang_nam").isEmpty()) {
+            userRepository.save(User.builder()
+                    .username("le_hoang_nam")
+                    .password("123456")
+                    .fullName("Lê Hoàng Nam (ĐH Kỹ Thuật Công Nghệ Cần Thơ)")
+                    .email("namlh.ctuet@gmail.com")
+                    .phone("0939555432")
+                    .role(Role.STUDENT)
+                    .active(true)
+                    .build());
+        }
+        if (userRepository.findByUsername("pham_minh_khoi").isEmpty()) {
+            userRepository.save(User.builder()
+                    .username("pham_minh_khoi")
+                    .password("123456")
+                    .fullName("Phạm Minh Khôi (Cao Đẳng Cần Thơ)")
+                    .email("khoipm.cdct@gmail.com")
+                    .phone("0909112233")
+                    .role(Role.STUDENT)
+                    .active(true)
+                    .build());
+        }
+        if (userRepository.findByUsername("nguyen_thi_mai").isEmpty()) {
+            userRepository.save(User.builder()
+                    .username("nguyen_thi_mai")
+                    .password("123456")
+                    .fullName("Nguyễn Thị Mai (ĐH Nam Cần Thơ)")
+                    .email("maintt.nctu@gmail.com")
+                    .phone("0918776655")
+                    .role(Role.STUDENT)
+                    .active(false)
+                    .build());
+        }
 
         // 4. Các Company Admin đại diện cho các doanh nghiệp tại Cần Thơ
         Employer emp1;

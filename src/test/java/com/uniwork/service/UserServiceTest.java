@@ -148,4 +148,44 @@ class UserServiceTest {
         assertEquals("Địa chỉ email đã được đăng ký!", exception.getMessage());
         verify(userRepository, never()).save(any());
     }
+
+    @Test
+    @DisplayName("Kiểm tra chuyển đổi trạng thái khóa/mở khóa tài khoản (toggleUserStatus)")
+    void should_ToggleUserStatus_Successfully() {
+        when(userRepository.findById(1L)).thenReturn(Optional.of(sampleUser));
+        when(userRepository.save(any(User.class))).thenAnswer(invocation -> invocation.getArgument(0));
+
+        User toggled = userService.toggleUserStatus(1L);
+
+        assertFalse(toggled.getActive());
+        verify(userRepository, times(1)).save(sampleUser);
+    }
+
+    @Test
+    @DisplayName("Kiểm tra đặt lại mật khẩu người dùng (resetUserPassword)")
+    void should_ResetUserPassword_Successfully() {
+        when(userRepository.findById(1L)).thenReturn(Optional.of(sampleUser));
+        when(userRepository.save(any(User.class))).thenAnswer(invocation -> invocation.getArgument(0));
+
+        User updated = userService.resetUserPassword(1L, "654321");
+
+        assertEquals("654321", updated.getPassword());
+        verify(userRepository, times(1)).save(sampleUser);
+    }
+
+    @Test
+    @DisplayName("Kiểm tra tìm kiếm và lọc tài khoản theo role và keyword (searchUsers)")
+    void should_SearchUsers_WithKeywordAndStatus() {
+        User student1 = User.builder().id(2L).username("sv_ninhkieu").fullName("Sinh Viên Ninh Kiều").email("sv1@ctu.edu.vn").role(Role.STUDENT).active(true).build();
+        User student2 = User.builder().id(3L).username("sv_cairang").fullName("Sinh Viên Cái Răng").email("sv2@ctu.edu.vn").role(Role.STUDENT).active(false).build();
+        when(userRepository.findByRole(Role.STUDENT)).thenReturn(java.util.List.of(student1, student2));
+
+        java.util.List<User> activeOnly = userService.searchUsers(Role.STUDENT, "ACTIVE", null);
+        assertEquals(1, activeOnly.size());
+        assertEquals("sv_ninhkieu", activeOnly.get(0).getUsername());
+
+        java.util.List<User> searchKw = userService.searchUsers(Role.STUDENT, "ALL", "cairang");
+        assertEquals(1, searchKw.size());
+        assertEquals("sv_cairang", searchKw.get(0).getUsername());
+    }
 }

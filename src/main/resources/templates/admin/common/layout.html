@@ -75,6 +75,25 @@
             <i class="bi bi-bar-chart-line-fill"></i>
             <span>Báo cáo thống kê sàn</span>
         </a>
+
+        <div class="nav-section-label mt-2">Quản Lý Tài Khoản</div>
+
+        <a th:href="@{/admin/users/companies}" class="employer-nav-link" th:classappend="${activeMenu == 'company-users' ? 'active' : ''}">
+            <i class="bi bi-person-workspace"></i>
+            <span>TK Doanh Nghiệp</span>
+        </a>
+
+        <a th:href="@{/admin/users/students}" class="employer-nav-link" th:classappend="${activeMenu == 'student-users' ? 'active' : ''}">
+            <i class="bi bi-people-fill"></i>
+            <span>TK Khách Hàng (SV)</span>
+        </a>
+
+        <div class="nav-section-label mt-2">Tài Chính & Gói Dịch Vụ</div>
+
+        <a th:href="@{/admin/finance}" class="employer-nav-link" th:classappend="${activeMenu == 'finance' ? 'active' : ''}">
+            <i class="bi bi-cash-coin"></i>
+            <span>Quản lý Tài chính</span>
+        </a>
     </div>
 
     <div class="employer-sidebar-footer">

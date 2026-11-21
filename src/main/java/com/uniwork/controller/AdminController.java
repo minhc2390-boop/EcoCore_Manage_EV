@@ -4,10 +4,12 @@ import com.uniwork.entity.Employer;
 import com.uniwork.entity.JobPosting;
 import com.uniwork.entity.Role;
 import com.uniwork.entity.User;
+import com.uniwork.repository.EmployerRepository;
 import com.uniwork.repository.JobApplicationRepository;
 import com.uniwork.repository.JobPostingRepository;
 import com.uniwork.service.EmployerService;
 import com.uniwork.service.JobPostingService;
+import com.uniwork.service.UserService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,9 +32,11 @@ import java.util.List;
 public class AdminController {
 
     private final EmployerService employerService;
+    private final EmployerRepository employerRepository;
     private final JobPostingService jobPostingService;
     private final JobPostingRepository jobPostingRepository;
     private final JobApplicationRepository jobApplicationRepository;
+    private final UserService userService;
 
     private User getAuthenticatedSuperAdmin(HttpSession session) {
         if (session == null) return null;
@@ -201,5 +205,120 @@ public class AdminController {
         model.addAttribute("employedRate", "86.4%");
 
         return "admin/reports";
+    }
+
+    /**
+     * Quản lý danh sách tài khoản doanh nghiệp (COMPANY_ADMIN)
+     */
+    @GetMapping("/users/companies")
+    public String listCompanyUsers(@RequestParam(value = "status", defaultValue = "ALL") String status,
+                                   @RequestParam(value = "keyword", required = false) String keyword,
+                                   HttpSession session,
+                                   Model model,
+                                   RedirectAttributes redirectAttributes) {
+        User superAdmin = getAuthenticatedSuperAdmin(session);
+        if (superAdmin == null) {
+            return "redirect:/login";
+        }
+
+        List<User> companyUsers = userService.searchUsers(Role.COMPANY_ADMIN, status, keyword);
+        for (User u : companyUsers) {
+            if (u.getCompany() == null) {
+                employerRepository.findByUserId(u.getId()).ifPresent(u::setCompany);
+            }
+        }
+
+        long totalCount = userService.countUsersByRole(Role.COMPANY_ADMIN);
+        long activeCount = userService.countUsersByRoleAndStatus(Role.COMPANY_ADMIN, true);
+        long lockedCount = userService.countUsersByRoleAndStatus(Role.COMPANY_ADMIN, false);
+
+        model.addAttribute("superAdmin", superAdmin);
+        model.addAttribute("users", companyUsers);
+        model.addAttribute("currentStatus", status.toUpperCase());
+        model.addAttribute("keyword", keyword != null ? keyword.trim() : "");
+        model.addAttribute("totalCount", totalCount);
+        model.addAttribute("activeCount", activeCount);
+        model.addAttribute("lockedCount", lockedCount);
+
+        return "admin/users/companies";
+    }
+
+    /**
+     * Quản lý danh sách tài khoản khách hàng / sinh viên (STUDENT)
+     */
+    @GetMapping("/users/students")
+    public String listStudentUsers(@RequestParam(value = "status", defaultValue = "ALL") String status,
+                                   @RequestParam(value = "keyword", required = false) String keyword,
+                                   HttpSession session,
+                                   Model model,
+                                   RedirectAttributes redirectAttributes) {
+        User superAdmin = getAuthenticatedSuperAdmin(session);
+        if (superAdmin == null) {
+            return "redirect:/login";
+        }
+
+        List<User> studentUsers = userService.searchUsers(Role.STUDENT, status, keyword);
+        long totalCount = userService.countUsersByRole(Role.STUDENT);
+        long activeCount = userService.countUsersByRoleAndStatus(Role.STUDENT, true);
+        long lockedCount = userService.countUsersByRoleAndStatus(Role.STUDENT, false);
+
+        model.addAttribute("superAdmin", superAdmin);
+        model.addAttribute("users", studentUsers);
+        model.addAttribute("currentStatus", status.toUpperCase());
+        model.addAttribute("keyword", keyword != null ? keyword.trim() : "");
+        model.addAttribute("totalCount", totalCount);
+        model.addAttribute("activeCount", activeCount);
+        model.addAttribute("lockedCount", lockedCount);
+
+        return "admin/users/students";
+    }
+
+    /**
+     * Khóa hoặc Mở khóa tài khoản người dùng
+     */
+    @PostMapping("/users/{id}/toggle-status")
+    public String toggleUserStatus(@PathVariable("id") Long id,
+                                   @RequestParam(value = "redirectType", defaultValue = "companies") String redirectType,
+                                   HttpSession session,
+                                   RedirectAttributes redirectAttributes) {
+        User superAdmin = getAuthenticatedSuperAdmin(session);
+        if (superAdmin == null) return "redirect:/login";
+
+        try {
+            User updated = userService.toggleUserStatus(id);
+            if (Boolean.TRUE.equals(updated.getActive())) {
+                redirectAttributes.addFlashAttribute("success",
+                        "Đã MỞ KHÓA thành công tài khoản: '" + updated.getUsername() + "' (" + updated.getFullName() + ")");
+            } else {
+                redirectAttributes.addFlashAttribute("warning",
+                        "Đã KHÓA tài khoản: '" + updated.getUsername() + "'. Người dùng này sẽ không thể đăng nhập vào hệ thống!");
+            }
+        } catch (Exception ex) {
+            redirectAttributes.addFlashAttribute("error", "Lỗi xử lý tài khoản: " + ex.getMessage());
+        }
+
+        return "redirect:/admin/users/" + redirectType;
+    }
+
+    /**
+     * Đặt lại mật khẩu tài khoản về mặc định 123456
+     */
+    @PostMapping("/users/{id}/reset-password")
+    public String resetUserPassword(@PathVariable("id") Long id,
+                                    @RequestParam(value = "redirectType", defaultValue = "companies") String redirectType,
+                                    HttpSession session,
+                                    RedirectAttributes redirectAttributes) {
+        User superAdmin = getAuthenticatedSuperAdmin(session);
+        if (superAdmin == null) return "redirect:/login";
+
+        try {
+            User updated = userService.resetUserPassword(id, "123456");
+            redirectAttributes.addFlashAttribute("success",
+                    "Đã đặt lại mật khẩu cho tài khoản '" + updated.getUsername() + "' về mặc định '123456' thành công!");
+        } catch (Exception ex) {
+            redirectAttributes.addFlashAttribute("error", "Lỗi đặt lại mật khẩu: " + ex.getMessage());
+        }
+
+        return "redirect:/admin/users/" + redirectType;
     }
 }

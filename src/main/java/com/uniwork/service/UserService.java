@@ -1,7 +1,9 @@
 package com.uniwork.service;
 
+import com.uniwork.entity.Role;
 import com.uniwork.entity.User;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -15,4 +17,10 @@ public interface UserService {
     Optional<User> findById(Long id);
     User registerUser(User user);
     boolean authenticate(String identifier, String password);
+    List<User> getUsersByRole(Role role);
+    List<User> searchUsers(Role role, String status, String keyword);
+    User toggleUserStatus(Long id);
+    User resetUserPassword(Long id, String newPassword);
+    long countUsersByRole(Role role);
+    long countUsersByRoleAndStatus(Role role, Boolean active);
 }
