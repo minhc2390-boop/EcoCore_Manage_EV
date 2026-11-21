@@ -2421,6 +2421,27 @@ a.footer-link:hover {
 }
 
 /* =========================================================================
+   Global Top Navigation Bar (Header)
+   ========================================================================= */
+.bg-gradient-primary {
+  background: linear-gradient(135deg, #142B4A 0%, #1a365d 60%, #203B60 100%) !important;
+}
+
+.navbar.bg-gradient-primary .navbar-brand {
+  color: #ffffff !important;
+}
+
+.navbar.bg-gradient-primary .navbar-toggler {
+  border: 1px solid rgba(255, 255, 255, 0.25) !important;
+  padding: 6px 10px;
+  border-radius: 8px;
+}
+
+.navbar.bg-gradient-primary .navbar-toggler:focus {
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.2) !important;
+}
+
+/* =========================================================================
    Filter Pills Bar (VietnamWorks / TopCV Style Filter Chips)
    ========================================================================= */
 .filter-pills-wrapper {
@@ -2440,7 +2461,7 @@ a.footer-link:hover {
 .search-input-unified .form-control {
   height: 48px;
   padding-left: 44px;
-  padding-right: 120px;
+  padding-right: 125px;
   border-radius: 12px;
   border: 1.5px solid #e2e8f0;
   font-size: 14.5px;
@@ -2491,17 +2512,14 @@ a.footer-link:hover {
   overflow-x: auto;
   white-space: nowrap;
   -webkit-overflow-scrolling: touch;
-  padding-bottom: 4px;
+  padding: 4px 2px 8px 2px;
   width: 100%;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE/Edge */
 }
 
 .filter-pills-scrollable::-webkit-scrollbar {
-  height: 4px;
-}
-
-.filter-pills-scrollable::-webkit-scrollbar-thumb {
-  background: #e2e8f0;
-  border-radius: 4px;
+  display: none; /* Chrome, Safari, Opera */
 }
 
 .filter-pill-btn {
@@ -2520,6 +2538,11 @@ a.footer-link:hover {
   text-decoration: none;
   white-space: nowrap;
   user-select: none;
+}
+
+/* Ẩn dấu tam giác mặc định của Bootstrap ::after để tránh hiển thị 2 mũi tên */
+.filter-pill-btn.dropdown-toggle::after {
+  display: none !important;
 }
 
 .filter-pill-btn:hover {
@@ -2609,4 +2632,62 @@ a.footer-link:hover {
 .filter-pill-clear-btn:hover {
   background-color: #fecaca;
   color: #b91c1c;
+}
+
+/* =========================================================================
+   Mobile Optimization cho Filter Pills & Unified Search (< 576px)
+   ========================================================================= */
+@media (max-width: 576px) {
+  .filter-pills-wrapper {
+    padding: 12px 14px;
+    border-radius: 14px;
+    margin-bottom: 18px;
+  }
+
+  .search-input-unified {
+    margin-bottom: 10px;
+  }
+
+  .search-input-unified .form-control {
+    height: 44px;
+    padding-left: 38px;
+    padding-right: 50px;
+    font-size: 13.5px;
+    border-radius: 10px;
+  }
+
+  .search-input-unified .search-icon-prefix {
+    left: 12px;
+    font-size: 15px;
+  }
+
+  .search-input-unified .btn-search-submit {
+    right: 5px;
+    height: 34px;
+    width: 38px;
+    padding: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+  }
+
+  .search-input-unified .btn-search-submit .btn-search-text {
+    display: none;
+  }
+
+  .search-input-unified .btn-search-submit i {
+    font-size: 14px;
+    margin: 0 !important;
+  }
+
+  .filter-pill-btn {
+    padding: 6px 12px;
+    font-size: 12.5px;
+    gap: 5px;
+  }
+
+  .filter-pill-btn i:first-child {
+    font-size: 12.5px;
+  }
 }
