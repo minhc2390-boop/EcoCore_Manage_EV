@@ -1,202 +1,263 @@
 <!DOCTYPE html>
 <html lang="vi" xmlns:th="http://www.thymeleaf.org">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tài Chính &amp; Gói Dịch Vụ - Nhà Tuyển Dụng</title>
-  <link rel="stylesheet" th:href="@{/css/finance.css}">
-</head>
-<body>
+<head th:replace="~{employer/common/layout :: head('Tài Chính & Gói Dịch Vụ')}"></head>
+<body class="employer-portal">
 
-<div class="finance-layout">
-  <aside class="finance-sidebar">
-    <div class="sidebar-header">
-      <div class="sidebar-brand">JOB <span>PORTAL</span></div>
+<div class="employer-layout">
+    <div th:replace="~{employer/common/layout :: sidebar('finance')}"></div>
+
+    <div class="employer-main">
+        <div th:replace="~{employer/common/layout :: topbar('Tài Chính & Gói Dịch Vụ Tuyển Dụng')}"></div>
+
+        <div class="employer-content">
+            <!-- Thẻ Trạng thái tài khoản hiện tại -->
+            <div class="portal-card mb-4 bg-white border shadow-sm">
+                <div class="portal-card-body p-4">
+                    <div class="row align-items-center g-3">
+                        <div class="col-12 col-md-3">
+                            <div class="text-secondary small fw-semibold">Gói Dịch Vụ Đang Dùng</div>
+                            <div class="h5 fw-bold text-primary mb-0 mt-1">Gói Cơ Bản (Standard)</div>
+                        </div>
+                        <div class="col-12 col-md-3">
+                            <div class="text-secondary small fw-semibold">Lượt Đăng Tin Còn Lại</div>
+                            <div class="h4 fw-bold text-dark mb-0 mt-1">5 lượt</div>
+                        </div>
+                        <div class="col-12 col-md-3">
+                            <div class="text-secondary small fw-semibold">Thời Hạn Sử Dụng</div>
+                            <div class="h5 fw-bold text-dark mb-0 mt-1">31/12/2026</div>
+                        </div>
+                        <div class="col-12 col-md-3 text-md-end">
+                            <a href="#packagesSection" class="btn btn-primary rounded-pill px-3 py-2 fw-bold shadow-sm">
+                                <i class="bi bi-arrow-up-circle me-1"></i>Nâng cấp gói ngay
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bảng Báo Giá 3 Gói Dịch Vụ Tuyển Dụng -->
+            <div id="packagesSection" class="mb-4">
+                <div class="d-flex align-items-center justify-content-between mb-3">
+                    <h5 class="fw-bold mb-0" style="color: var(--navy-primary);">
+                        <i class="bi bi-gem me-2 text-primary"></i>Bảng Giá Các Gói Dịch Vụ Tuyển Dụng
+                    </h5>
+                    <span class="badge bg-light text-secondary border">Áp dụng cho doanh nghiệp tại TP. Cần Thơ</span>
+                </div>
+
+                <div class="row g-4">
+                    <!-- Gói Khởi Đầu -->
+                    <div class="col-12 col-lg-4">
+                        <div class="portal-card h-100 p-4 border d-flex flex-column">
+                            <div class="fw-bold text-dark fs-5 mb-1">Gói Khởi Đầu</div>
+                            <div class="text-secondary small mb-3">Phù hợp hộ kinh doanh &amp; quán cà phê</div>
+                            <div class="display-6 fw-bold text-primary mb-1">199.000đ</div>
+                            <div class="text-muted small pb-3 border-bottom mb-3">Thời hạn sử dụng: 30 ngày</div>
+                            <ul class="list-unstyled mb-4 flex-grow-1 small" style="line-height: 2;">
+                                <li><i class="bi bi-check-circle-fill text-success me-2"></i><strong>3 lượt</strong> đăng tin tuyển dụng mới</li>
+                                <li><i class="bi bi-check-circle-fill text-success me-2"></i>Hiển thị tin tuyển dụng trong 30 ngày</li>
+                                <li><i class="bi bi-check-circle-fill text-success me-2"></i>Hỗ trợ duyệt tin trong giờ hành chính</li>
+                                <li><i class="bi bi-check-circle-fill text-success me-2"></i>Nhận hồ sơ ứng tuyển trực tuyến</li>
+                            </ul>
+                            <button type="button" class="btn btn-outline-primary rounded-pill w-100 py-2 fw-bold btn-buy-package"
+                                    data-package="Gói Khởi Đầu" data-price="199.000đ">
+                                Đăng ký gói
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Gói Tuyển Gấp (Nổi bật) -->
+                    <div class="col-12 col-lg-4">
+                        <div class="portal-card h-100 p-4 border-primary border-2 shadow d-flex flex-column position-relative" style="background: #FAFCFF;">
+                            <span class="badge bg-danger position-absolute top-0 end-0 m-3 px-2.5 py-1.5 rounded-pill">PHỔ BIẾN NHẤT</span>
+                            <div class="fw-bold text-dark fs-5 mb-1">Gói Tuyển Gấp</div>
+                            <div class="text-secondary small mb-3">Tối ưu tuyển dụng sinh viên ca gấp</div>
+                            <div class="display-6 fw-bold text-danger mb-1">499.000đ</div>
+                            <div class="text-muted small pb-3 border-bottom mb-3">Thời hạn sử dụng: 30 ngày</div>
+                            <ul class="list-unstyled mb-4 flex-grow-1 small" style="line-height: 2;">
+                                <li><i class="bi bi-check-circle-fill text-success me-2"></i><strong>10 lượt</strong> đăng tin tuyển dụng mới</li>
+                                <li><i class="bi bi-check-circle-fill text-success me-2"></i>Ưu tiên đẩy tin lên đầu trang danh sách</li>
+                                <li><i class="bi bi-check-circle-fill text-success me-2"></i>Huy hiệu "Tuyển Gấp" thu hút sinh viên</li>
+                                <li><i class="bi bi-check-circle-fill text-success me-2"></i>Hỗ trợ duyệt tin siêu tốc trong 15 phút</li>
+                                <li><i class="bi bi-check-circle-fill text-success me-2"></i>Thông báo ứng viên nộp đơn tức thì</li>
+                            </ul>
+                            <button type="button" class="btn btn-danger rounded-pill w-100 py-2 fw-bold shadow-sm btn-buy-package"
+                                    data-package="Gói Tuyển Gấp" data-price="499.000đ">
+                                Đăng ký ngay
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Gói Doanh Nghiệp -->
+                    <div class="col-12 col-lg-4">
+                        <div class="portal-card h-100 p-4 border d-flex flex-column">
+                            <div class="fw-bold text-dark fs-5 mb-1">Gói Doanh Nghiệp</div>
+                            <div class="text-secondary small mb-3">Giải pháp tuyển dụng quy mô lớn</div>
+                            <div class="display-6 fw-bold text-dark mb-1">1.299.000đ</div>
+                            <div class="text-muted small pb-3 border-bottom mb-3">Thời hạn sử dụng: 90 ngày</div>
+                            <ul class="list-unstyled mb-4 flex-grow-1 small" style="line-height: 2;">
+                                <li><i class="bi bi-check-circle-fill text-success me-2"></i><strong>30 lượt</strong> đăng tin tuyển dụng</li>
+                                <li><i class="bi bi-check-circle-fill text-success me-2"></i>Mở khóa xem thông tin <strong>50 hồ sơ CV</strong></li>
+                                <li><i class="bi bi-check-circle-fill text-success me-2"></i>Vị trí hiển thị ưu tiên tại trang chủ</li>
+                                <li><i class="bi bi-check-circle-fill text-success me-2"></i>Huy hiệu doanh nghiệp uy tín xác thực</li>
+                                <li><i class="bi bi-check-circle-fill text-success me-2"></i>Chuyên viên CSKH hỗ trợ riêng 24/7</li>
+                            </ul>
+                            <button type="button" class="btn btn-outline-primary rounded-pill w-100 py-2 fw-bold btn-buy-package"
+                                    data-package="Gói Doanh Nghiệp" data-price="1.299.000đ">
+                                Đăng ký gói
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bảng Lịch sử Giao dịch -->
+            <div class="portal-card">
+                <div class="portal-card-header d-flex justify-content-between align-items-center">
+                    <h6 class="fw-bold mb-0" style="color: var(--navy-primary);">
+                        <i class="bi bi-clock-history me-2 text-primary"></i>Lịch Sử Giao Dịch &amp; Đăng Ký Gói
+                    </h6>
+                </div>
+                <div class="portal-card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0" style="font-size: 13.5px; min-width: 650px;">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Mã hóa đơn</th>
+                                    <th>Tên gói</th>
+                                    <th>Số tiền</th>
+                                    <th>Ngày tạo</th>
+                                    <th class="text-center text-nowrap" style="width: 130px;">Trạng thái</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong class="text-primary">INV-20261121-001</strong></td>
+                                    <td class="fw-semibold">Gói Tuyển Gấp</td>
+                                    <td class="fw-bold text-dark">499.000đ</td>
+                                    <td class="text-muted small">21/11/2026 09:15</td>
+                                    <td class="text-center text-nowrap"><span class="badge-pending">Chờ duyệt</span></td>
+                                </tr>
+                                <tr>
+                                    <td><strong class="text-primary">INV-20261015-089</strong></td>
+                                    <td class="fw-semibold">Gói Khởi Đầu</td>
+                                    <td class="fw-bold text-dark">199.000đ</td>
+                                    <td class="text-muted small">15/10/2026 14:30</td>
+                                    <td class="text-center text-nowrap"><span class="badge-approved">Đã duyệt</span></td>
+                                </tr>
+                                <tr>
+                                    <td><strong class="text-primary">INV-20260901-042</strong></td>
+                                    <td class="fw-semibold">Gói Doanh Nghiệp</td>
+                                    <td class="fw-bold text-dark">1.299.000đ</td>
+                                    <td class="text-muted small">01/09/2026 10:00</td>
+                                    <td class="text-center text-nowrap"><span class="badge-approved">Đã duyệt</span></td>
+                                </tr>
+                                <tr>
+                                    <td><strong class="text-primary">INV-20260812-018</strong></td>
+                                    <td class="fw-semibold">Gói Tuyển Gấp</td>
+                                    <td class="fw-bold text-dark">499.000đ</td>
+                                    <td class="text-muted small">12/08/2026 16:45</td>
+                                    <td class="text-center text-nowrap"><span class="badge-locked">Từ chối</span></td>
+                                </tr>
+                                <tr>
+                                    <td><strong class="text-primary">INV-20260705-004</strong></td>
+                                    <td class="fw-semibold">Gói Khởi Đầu</td>
+                                    <td class="fw-bold text-dark">199.000đ</td>
+                                    <td class="text-muted small">05/07/2026 08:20</td>
+                                    <td class="text-center text-nowrap"><span class="badge-approved">Đã duyệt</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-    <nav class="sidebar-menu">
-      <a th:href="@{/employer/dashboard}" class="sidebar-link">Tổng quan</a>
-      <a th:href="@{/employer/jobs}" class="sidebar-link">Quản lý tin đăng</a>
-      <a th:href="@{/employer/applications}" class="sidebar-link">Quản lý ứng viên</a>
-      <a th:href="@{/employer/finance}" class="sidebar-link active">Tài chính &amp; Gói dịch vụ</a>
-      <a th:href="@{/employer/profile}" class="sidebar-link">Hồ sơ công ty</a>
-      <a th:href="@{/}" class="sidebar-link">Sàn việc làm</a>
-    </nav>
-    <div class="sidebar-footer">
-      <a th:href="@{/logout}" class="sidebar-link" style="color: #E11D48;">Đăng xuất</a>
-    </div>
-  </aside>
-
-  <main class="finance-main">
-    <header class="finance-topbar">
-      <div class="topbar-title">Quản Lý Tài Chính &amp; Gói Dịch Vụ</div>
-      <div class="topbar-user">
-        Tài khoản: <strong>Nhà tuyển dụng</strong>
-      </div>
-    </header>
-
-    <div class="finance-content">
-      <div class="status-card">
-        <div class="status-group">
-          <div class="status-label">Gói dịch vụ hiện tại</div>
-          <div class="status-value highlight">Gói Cơ Bản</div>
-        </div>
-        <div class="status-group">
-          <div class="status-label">Số lượt đăng tin còn lại</div>
-          <div class="status-value">5 lượt</div>
-        </div>
-        <div class="status-group">
-          <div class="status-label">Thời hạn sử dụng</div>
-          <div class="status-value">31/12/2026</div>
-        </div>
-        <div>
-          <a href="#packagesList" class="btn-primary" style="display: inline-block; padding: 10px 20px; text-decoration: none;">Nâng cấp gói</a>
-        </div>
-      </div>
-
-      <div class="section-title" id="packagesList">Danh Sách Gói Dịch Vụ Tuyển Dụng</div>
-      <div class="pricing-grid">
-        <div class="pricing-card">
-          <div class="pricing-name">Gói Khởi Đầu</div>
-          <div class="pricing-price">199.000đ</div>
-          <div class="pricing-period">Thời hạn: 30 ngày</div>
-          <ul class="pricing-features">
-            <li>3 lượt đăng tin tuyển dụng mới</li>
-            <li>Hiển thị tin tuyển dụng trong 30 ngày</li>
-            <li>Hỗ trợ duyệt tin trong giờ hành chính</li>
-            <li>Nhận hồ sơ ứng tuyển trực tuyến</li>
-          </ul>
-          <button type="button" class="btn-primary btn-open-payment" data-package="Gói Khởi Đầu" data-price="199.000đ">Đăng ký gói</button>
-        </div>
-
-        <div class="pricing-card featured">
-          <div class="featured-badge">Phổ biến nhất</div>
-          <div class="pricing-name">Gói Tuyển Gấp</div>
-          <div class="pricing-price" style="color: #D83995;">499.000đ</div>
-          <div class="pricing-period">Thời hạn: 30 ngày</div>
-          <ul class="pricing-features">
-            <li>10 lượt đăng tin tuyển dụng mới</li>
-            <li>Ưu tiên đẩy tin lên đầu trang danh sách</li>
-            <li>Gắn nhãn tuyển gấp nổi bật thu hút ứng viên</li>
-            <li>Hỗ trợ duyệt tin nhanh trong 15 phút</li>
-            <li>Nhận thông báo ứng viên qua email ngay lập tức</li>
-          </ul>
-          <button type="button" class="btn-accent btn-open-payment" data-package="Gói Tuyển Gấp" data-price="499.000đ">Đăng ký gói</button>
-        </div>
-
-        <div class="pricing-card">
-          <div class="pricing-name">Gói Doanh Nghiệp</div>
-          <div class="pricing-price">1.299.000đ</div>
-          <div class="pricing-period">Thời hạn: 90 ngày</div>
-          <ul class="pricing-features">
-            <li>30 lượt đăng tin tuyển dụng</li>
-            <li>Mở khóa xem thông tin 50 hồ sơ CV tiềm năng</li>
-            <li>Vị trí hiển thị ưu tiên tại trang chủ</li>
-            <li>Huy hiệu doanh nghiệp uy tín đã xác thực</li>
-            <li>Chuyên viên hỗ trợ riêng 24/7</li>
-          </ul>
-          <button type="button" class="btn-primary btn-open-payment" data-package="Gói Doanh Nghiệp" data-price="1.299.000đ">Đăng ký gói</button>
-        </div>
-      </div>
-
-      <div class="table-panel">
-        <div class="panel-header">
-          <div class="section-title" style="margin-bottom: 0;">Lịch Sử Giao Dịch</div>
-        </div>
-        <table class="data-table">
-          <thead>
-            <tr>
-              <th>Mã hóa đơn</th>
-              <th>Tên gói</th>
-              <th>Số tiền</th>
-              <th>Ngày tạo</th>
-              <th>Trạng thái</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><strong>INV-20261121-001</strong></td>
-              <td>Gói Tuyển Gấp</td>
-              <td>499.000đ</td>
-              <td>21/11/2026 09:15</td>
-              <td><span class="badge badge-pending">Chờ duyệt</span></td>
-            </tr>
-            <tr>
-              <td><strong>INV-20261015-089</strong></td>
-              <td>Gói Khởi Đầu</td>
-              <td>199.000đ</td>
-              <td>15/10/2026 14:30</td>
-              <td><span class="badge badge-approved">Đã duyệt</span></td>
-            </tr>
-            <tr>
-              <td><strong>INV-20260901-042</strong></td>
-              <td>Gói Doanh Nghiệp</td>
-              <td>1.299.000đ</td>
-              <td>01/09/2026 10:00</td>
-              <td><span class="badge badge-approved">Đã duyệt</span></td>
-            </tr>
-            <tr>
-              <td><strong>INV-20260812-018</strong></td>
-              <td>Gói Tuyển Gấp</td>
-              <td>499.000đ</td>
-              <td>12/08/2026 16:45</td>
-              <td><span class="badge badge-rejected">Từ chối</span></td>
-            </tr>
-            <tr>
-              <td><strong>INV-20260705-004</strong></td>
-              <td>Gói Khởi Đầu</td>
-              <td>199.000đ</td>
-              <td>05/07/2026 08:20</td>
-              <td><span class="badge badge-approved">Đã duyệt</span></td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </main>
 </div>
 
-<div class="modal-backdrop" id="paymentModal">
-  <div class="modal-dialog">
-    <div class="modal-header">
-      <div class="modal-title">Thông Tin Thanh Toán Chuyển Khoản</div>
-      <button type="button" class="modal-close">&times;</button>
+<!-- Modal Thanh Toán Giả Lập -->
+<div class="modal fade" id="paymentModal" tabindex="-1" aria-labelledby="paymentModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content rounded-4 border-0 shadow">
+            <div class="modal-header border-bottom px-4 pt-4 pb-3">
+                <h5 class="modal-title fw-bold" id="paymentModalLabel" style="color: var(--navy-primary);">
+                    <i class="bi bi-credit-card me-2 text-primary"></i>Thông Tin Chuyển Khoản Thanh Toán
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body px-4 py-3">
+                <div class="p-3 bg-light rounded-3 mb-3 border">
+                    <div class="d-flex justify-content-between mb-2">
+                        <span class="text-secondary small">Gói dịch vụ đăng ký:</span>
+                        <strong class="text-dark" id="modalPackageName">Gói Tuyển Gấp</strong>
+                    </div>
+                    <div class="d-flex justify-content-between mb-2">
+                        <span class="text-secondary small">Số tiền cần thanh toán:</span>
+                        <span class="h5 fw-bold text-danger mb-0" id="modalPackagePrice">499.000đ</span>
+                    </div>
+                </div>
+
+                <div class="p-3 rounded-3 border" style="background: #FAFCFE;">
+                    <div class="small fw-bold text-primary mb-2">
+                        <i class="bi bi-bank me-1"></i>Tài khoản ngân hàng tiếp nhận:
+                    </div>
+                    <div class="d-flex justify-content-between py-1 border-bottom small">
+                        <span class="text-secondary">Ngân hàng:</span>
+                        <strong class="text-dark">Vietcombank (Chi nhánh Cần Thơ)</strong>
+                    </div>
+                    <div class="d-flex justify-content-between py-1 border-bottom small">
+                        <span class="text-secondary">Số tài khoản:</span>
+                        <strong class="text-dark fs-6 text-primary">1029384756</strong>
+                    </div>
+                    <div class="d-flex justify-content-between py-1 border-bottom small">
+                        <span class="text-secondary">Chủ tài khoản:</span>
+                        <strong class="text-dark">UNIWORK CAN THO CO., LTD</strong>
+                    </div>
+                    <div class="d-flex justify-content-between py-1 small">
+                        <span class="text-secondary">Nội dung chuyển khoản:</span>
+                        <strong class="text-danger">INV-20261121-001</strong>
+                    </div>
+                </div>
+
+                <div class="alert alert-info border-info-subtle mt-3 mb-0 small p-2.5">
+                    <i class="bi bi-info-circle me-1"></i>Hệ thống sẽ tự động duyệt và kích hoạt quyền lợi gói trong vòng 15 phút sau khi nhận được chuyển khoản.
+                </div>
+            </div>
+            <div class="modal-footer border-top px-4 py-3 bg-light rounded-bottom-4">
+                <button type="button" class="btn btn-sm btn-outline-secondary px-3" data-bs-dismiss="modal">Đóng</button>
+                <button type="button" class="btn btn-sm btn-success px-3 fw-bold" id="btnConfirmPayment">
+                    <i class="bi bi-check-circle me-1"></i>Tôi đã chuyển khoản
+                </button>
+            </div>
+        </div>
     </div>
-    <div class="modal-body">
-      <div class="payment-row">
-        <span class="payment-label">Gói đăng ký:</span>
-        <span class="payment-value" id="modalPackageName">Gói Tuyển Gấp</span>
-      </div>
-      <div class="payment-row">
-        <span class="payment-label">Số tiền cần thanh toán:</span>
-        <span class="payment-value accent" id="modalPackagePrice">499.000đ</span>
-      </div>
-      <div class="payment-row">
-        <span class="payment-label">Ngân hàng thụ hưởng:</span>
-        <span class="payment-value">Vietcombank - Chi nhánh Cần Thơ</span>
-      </div>
-      <div class="payment-row">
-        <span class="payment-label">Số tài khoản:</span>
-        <span class="payment-value" style="letter-spacing: 1px;">0123456789</span>
-      </div>
-      <div class="payment-row">
-        <span class="payment-label">Chủ tài khoản:</span>
-        <span class="payment-value">CONG TY CO PHAN UNIWORK</span>
-      </div>
-      <div class="payment-row">
-        <span class="payment-label">Nội dung chuyển khoản:</span>
-        <span class="payment-value" style="color: #0297DE; font-weight: 700;">INV-20261121-001</span>
-      </div>
-      <div style="font-size: 12px; color: #64748B; background: #F8FAFC; padding: 10px; border-radius: 4px; border: 1px solid #E2E8F0; line-height: 1.4;">
-        Vui lòng chuyển khoản chính xác số tiền và nội dung chuyển khoản ở trên. Sau khi chuyển khoản thành công, nhấn nút xác nhận bên dưới để hệ thống xử lý kích hoạt gói.
-      </div>
-    </div>
-    <div class="modal-footer">
-      <button type="button" class="btn-outline btn-close-modal">Hủy bỏ</button>
-      <button type="button" class="btn-primary" id="btnConfirmPayment" style="width: auto;">Tôi đã chuyển khoản</button>
-    </div>
-  </div>
 </div>
 
-<script th:src="@{/js/finance.js}"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    var paymentModalEl = document.getElementById("paymentModal");
+    var paymentModal = new bootstrap.Modal(paymentModalEl);
+    var packageNameEl = document.getElementById("modalPackageName");
+    var packagePriceEl = document.getElementById("modalPackagePrice");
+
+    document.querySelectorAll(".btn-buy-package").forEach(function (btn) {
+        btn.addEventListener("click", function () {
+            var pkgName = btn.getAttribute("data-package");
+            var pkgPrice = btn.getAttribute("data-price");
+            if (packageNameEl) packageNameEl.textContent = pkgName;
+            if (packagePriceEl) packagePriceEl.textContent = pkgPrice;
+            paymentModal.show();
+        });
+    });
+
+    var confirmBtn = document.getElementById("btnConfirmPayment");
+    if (confirmBtn) {
+        confirmBtn.addEventListener("click", function () {
+            alert("Yêu cầu thanh toán của bạn đã được ghi nhận. Quản trị viên Super Admin sẽ đối soát và kích hoạt gói trong vòng 15 phút.");
+            paymentModal.hide();
+        });
+    }
+});
+</script>
 </body>
 </html>
