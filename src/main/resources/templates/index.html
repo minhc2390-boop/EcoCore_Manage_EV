@@ -50,7 +50,8 @@
         </th:block>
         <th:block th:if="${session.currentUser != null}">
           <a th:href="@{/profile}" class="nav-link mobile-only-auth"><i data-lucide="user" style="width:16px;height:16px;vertical-align:-2px;margin-right:6px;"></i>Hồ sơ: <span th:text="${session.currentUser.username}">Tài khoản</span></a>
-          <a th:if="${session.currentUser.role.name() == 'COMPANY_ADMIN' or session.currentUser.role.name() == 'SUPER_ADMIN'}" th:href="@{/employer/jobs}" class="nav-link mobile-only-auth"><i data-lucide="layout-dashboard" style="width:16px;height:16px;vertical-align:-2px;margin-right:6px;"></i>Cổng tuyển dụng</a>
+          <a th:if="${session.currentUser.role.name() == 'SUPER_ADMIN'}" th:href="@{/admin/dashboard}" class="nav-link mobile-only-auth" style="color:#dc2626;"><i data-lucide="shield" style="width:16px;height:16px;vertical-align:-2px;margin-right:6px;"></i>Quản trị sàn</a>
+          <a th:if="${session.currentUser.role.name() == 'COMPANY_ADMIN'}" th:href="@{/employer/dashboard}" class="nav-link mobile-only-auth"><i data-lucide="layout-dashboard" style="width:16px;height:16px;vertical-align:-2px;margin-right:6px;"></i>Cổng tuyển dụng</a>
           <a th:href="@{/logout}" class="nav-link mobile-only-auth" style="color:#ef4444;"><i data-lucide="log-out" style="width:16px;height:16px;vertical-align:-2px;margin-right:6px;"></i>Đăng xuất</a>
         </th:block>
       </nav>
